@@ -341,12 +341,11 @@ function desativarCliente() {
 }
 
 function ativarCliente() {
-    fetch('/api/clientes/{{ cliente.id }}', {
+    fetch('/api/clientes/{{ cliente.id }}/ativar', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ativo: true})
+        }
     })
     .then(response => response.json())
     .then(data => {

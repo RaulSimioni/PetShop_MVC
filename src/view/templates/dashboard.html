@@ -5,17 +5,17 @@
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">
-        <i class="fas fa-tachometer-alt"></i> Dashboard
+        <span class="material-symbols-outlined me-2" style="font-size: 2rem; vertical-align: middle;">dashboard</span> Dashboard
     </h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-download"></i> Relatórios
+                <span class="material-symbols-outlined me-1">download</span> Relatórios
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Relatório de Clientes</a></li>
-                <li><a class="dropdown-item" href="#">Relatório de Vendas</a></li>
                 <li><a class="dropdown-item" href="#">Relatório de Pets</a></li>
+                <li><a class="dropdown-item" href="#">Relatório de Agendamentos</a></li>
             </ul>
         </div>
     </div>
@@ -26,14 +26,14 @@
     <div class="col-md-3">
         <div class="card border-0 h-100">
             <div class="card-body text-center">
-                <i class="fas fa-users fa-2x mb-2" style="color: var(--primary-color);"></i>
+                <span class="material-symbols-outlined mb-2" style="color: var(--primary-color); font-size: 2.5rem; display: block;">group</span>
                 <h4 class="card-title">{{ stats.total_clientes or 0 }}</h4>
                 <p class="card-text text-muted">Clientes</p>
                 <small class="text-success">{{ stats.clientes_ativos or 0 }} ativos</small>
             </div>
             <div class="card-footer bg-transparent">
                 <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-primary btn-sm w-100">
-                    <i class="fas fa-eye me-1"></i>Ver Clientes
+                    <span class="material-symbols-outlined me-1">visibility</span>Ver Clientes
                 </a>
             </div>
         </div>
@@ -42,14 +42,14 @@
     <div class="col-md-3">
         <div class="card border-0 h-100">
             <div class="card-body text-center">
-                <i class="fas fa-paw fa-2x mb-2" style="color: var(--success-color);"></i>
+                <span class="material-symbols-outlined mb-2" style="color: var(--success-color); font-size: 2.5rem; display: block;">pets</span>
                 <h4 class="card-title">{{ stats.total_pets or 0 }}</h4>
                 <p class="card-text text-muted">Pets</p>
                 <small class="text-info">{{ stats.pets_ativos or 0 }} ativos</small>
             </div>
             <div class="card-footer bg-transparent">
                 <a href="/pets" class="btn btn-success btn-sm w-100">
-                    <i class="fas fa-eye me-1"></i>Ver Pets
+                    <span class="material-symbols-outlined me-1">visibility</span>Ver Pets
                 </a>
             </div>
         </div>
@@ -58,30 +58,14 @@
     <div class="col-md-3">
         <div class="card border-0 h-100">
             <div class="card-body text-center">
-                <i class="fas fa-shopping-cart fa-2x mb-2" style="color: var(--warning-color);"></i>
-                <h4 class="card-title">{{ stats.total_vendas or 0 }}</h4>
-                <p class="card-text text-muted">Vendas</p>
-                <small class="text-success">R$ {{ "%.2f"|format(stats.valor_vendas or 0) }}</small>
-            </div>
-            <div class="card-footer bg-transparent">
-                <a href="/vendas" class="btn btn-warning btn-sm w-100">
-                    <i class="fas fa-eye me-1"></i>Ver Vendas
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card border-0 h-100">
-            <div class="card-body text-center">
-                <i class="fas fa-calendar fa-2x mb-2" style="color: var(--info-color);"></i>
+                <span class="material-symbols-outlined mb-2" style="color: var(--info-color); font-size: 2.5rem; display: block;">event</span>
                 <h4 class="card-title">{{ stats.agendamentos_hoje or 0 }}</h4>
                 <p class="card-text text-muted">Agend. Hoje</p>
                 <small class="text-warning">{{ stats.agendamentos_pendentes or 0 }} pendentes</small>
             </div>
             <div class="card-footer bg-transparent">
                 <a href="/agendamentos" class="btn btn-info btn-sm w-100">
-                    <i class="fas fa-eye me-1"></i>Ver Agendamentos
+                    <span class="material-symbols-outlined me-1">visibility</span>Ver Agendamentos
                 </a>
             </div>
         </div>
@@ -94,32 +78,26 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-bolt text-warning"></i> Ações Rápidas
+                    <span class="material-symbols-outlined text-warning me-2">bolt</span> Ações Rápidas
                 </h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary w-100">
-                            <i class="fas fa-user-plus mb-2"></i><br>
+                            <span class="material-symbols-outlined mb-2" style="display: block; font-size: 1.5rem;">person_add</span>
                             Novo Cliente
                         </a>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <a href="/pets/novo" class="btn btn-success w-100">
-                            <i class="fas fa-paw mb-2"></i><br>
+                            <span class="material-symbols-outlined mb-2" style="display: block; font-size: 1.5rem;">pets</span>
                             Cadastrar Pet
                         </a>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="/vendas/nova" class="btn btn-warning w-100">
-                            <i class="fas fa-shopping-cart mb-2"></i><br>
-                            Nova Venda
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <a href="/agendamentos/novo" class="btn btn-info w-100">
-                            <i class="fas fa-calendar-plus mb-2"></i><br>
+                            <span class="material-symbols-outlined mb-2" style="display: block; font-size: 1.5rem;">event_available</span>
                             Agendar Serviço
                         </a>
                     </div>
@@ -135,7 +113,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-users"></i> Clientes Recentes
+                    <span class="material-symbols-outlined me-2">group</span> Clientes Recentes
                 </h5>
                 <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-sm btn-outline-primary">
                     Ver Todos
@@ -156,7 +134,7 @@
                             </span>
                             <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}" 
                                class="btn btn-sm btn-outline-info ms-2">
-                                <i class="fas fa-eye"></i>
+                                <span class="material-symbols-outlined">visibility</span>
                             </a>
                         </div>
                     </div>
@@ -164,7 +142,7 @@
                 </div>
                 {% else %}
                 <div class="text-center py-3">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <span class="material-symbols-outlined text-muted mb-3" style="font-size: 3rem; display: block;">group_off</span>
                     <p class="text-muted">Nenhum cliente cadastrado</p>
                     <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary">
                         Cadastrar Primeiro Cliente
@@ -179,7 +157,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-calendar-day"></i> Agendamentos de Hoje
+                    <span class="material-symbols-outlined me-2">today</span> Agendamentos de Hoje
                 </h5>
                 <a href="/agendamentos" class="btn btn-sm btn-outline-info">
                     Ver Agenda
@@ -207,7 +185,7 @@
                 </div>
                 {% else %}
                 <div class="text-center py-3">
-                    <i class="fas fa-calendar-day fa-3x text-muted mb-3"></i>
+                    <span class="material-symbols-outlined text-muted mb-3" style="font-size: 3rem; display: block;">event_busy</span>
                     <p class="text-muted">Nenhum agendamento para hoje</p>
                     <a href="/agendamentos/novo" class="btn btn-info">
                         Novo Agendamento

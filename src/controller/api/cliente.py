@@ -80,6 +80,10 @@ def update_cliente(cliente_id):
         cliente.email = data.get('email', cliente.email)
         cliente.endereco = data.get('endereco', cliente.endereco)
         
+        # Atualizar status ativo se fornecido
+        if 'ativo' in data:
+            cliente.ativo = data.get('ativo', cliente.ativo)
+        
         db.session.commit()
         
         return jsonify(cliente.to_dict()), 200
@@ -96,6 +100,19 @@ def delete_cliente(cliente_id):
         db.session.commit()
         
         return jsonify({'mensagem': 'Cliente desativado com sucesso'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'erro': str(e)}), 500
+
+@cliente_bp.route('/clientes/<int:cliente_id>/ativar', methods=['PUT'])
+def activate_cliente(cliente_id):
+    """Ativar cliente"""
+    try:
+        cliente = Cliente.query.get_or_404(cliente_id)
+        cliente.ativo = True
+        db.session.commit()
+        
+        return jsonify(cliente.to_dict()), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'erro': str(e)}), 500

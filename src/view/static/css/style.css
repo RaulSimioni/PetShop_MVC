@@ -1,274 +1,1232 @@
-/* Estilo personalizado para PetShop ERP */
+/* Estilo personalizado para PetShop ERP - Catppuccin Mocha */
 
-/* Variáveis CSS para cores do tema - Pet Shop Palette */
+/* Variáveis CSS para cores do tema - Catppuccin Mocha Palette */
 :root {
-/* Primary Colors */
-  --primary-color: #29524A;
-  --secondary-color: #99C8C2;
-  --accent-color: #FF6B6B;
+  /* Catppuccin Mocha Palette - Base Colors */
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+
+  /* Catppuccin Mocha Neutral Colors */
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;/* Page transitions */
+.page-transition {
+  animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dashboard specific styles - fixing border radius and component consistency */
+.dashboard-stats .card {
+  border-radius: var(--border-radius-lg) !important;
+  overflow: hidden;
+}
+
+.dashboard-stats .card-footer {
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
+  border-top: 1px solid var(--ctp-surface1);
+  background: var(--ctp-mantle) !important;
+}
+
+.list-group-flush .list-group-item {
+  background: var(--ctp-surface0);
+  color: var(--ctp-text);
+  border-color: var(--ctp-surface1);
+  border-radius: 0;
+}
+
+.list-group-flush .list-group-item:first-child {
+  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+}
+
+.list-group-flush .list-group-item:last-child {
+  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+}
+
+.list-group-flush .list-group-item:only-child {
+  border-radius: var(--border-radius-md);
+}
+
+/* Badge styling with proper text colors */
+.badge.bg-light {
+  background-color: var(--ctp-surface2) !important;
+  color: var(--ctp-text) !important;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+  background: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  color: var(--ctp-text);
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--ctp-surface1);
+  color: var(--ctp-text);
+}
+
+/* Text color fixes for better contrast */
+.text-muted {
+  color: var(--ctp-subtext0) !important;
+}
+
+.text-success {
+  color: var(--ctp-green) !important;
+}
+
+.text-info {
+  color: var(--ctp-sapphire) !important;
+}
+
+.text-warning {
+  color: var(--ctp-yellow) !important;
+}
+
+.text-danger {
+  color: var(--ctp-red) !important;
+}
+
+/* Comprehensive text color overrides to ensure Catpuccin theme consistency */
+
+/* Override Bootstrap default text colors */
+p, span, div, td, th, li, a, label, small, strong, b, em, i {
+  color: inherit;
+}
+
+/* Ensure all text in cards uses theme colors */
+.card, .card * {
+  color: var(--ctp-text) !important;
+}
+
+/* Specific overrides for colored surfaces */
+.bg-primary, .bg-primary *,
+.btn-primary, .btn-primary *,
+.badge.bg-primary, .badge.bg-primary *,
+.btn-primary:hover, .btn-primary:hover * {
+  color: var(--ctp-base) !important; /* Dark text on pink background */
+}
+
+.bg-success, .bg-success *,
+.btn-success, .btn-success *,
+.badge.bg-success, .badge.bg-success *,
+.btn-success:hover, .btn-success:hover * {
+  color: var(--ctp-base) !important; /* Dark text on green background */
+}
+
+.bg-info, .bg-info *,
+.btn-info, .btn-info *,
+.badge.bg-info, .badge.bg-info *,
+.btn-info:hover, .btn-info:hover * {
+  color: var(--ctp-base) !important; /* Dark text on blue/sapphire background */
+}
+
+.bg-warning, .bg-warning *,
+.btn-warning, .btn-warning *,
+.badge.bg-warning, .badge.bg-warning *,
+.btn-warning:hover, .btn-warning:hover * {
+  color: var(--ctp-base) !important; /* Dark text on yellow background */
+}
+
+.bg-danger, .bg-danger *,
+.btn-danger, .btn-danger *,
+.badge.bg-danger, .badge.bg-danger *,
+.btn-danger:hover, .btn-danger:hover * {
+  color: white !important; /* White text on red background */
+}
+
+/* List group text colors */
+.list-group-item,
+.list-group-item * {
+  color: var(--ctp-text) !important;
+}
+
+/* Table text colors - comprehensive override */
+.table,
+.table *,
+.table tbody tr td,
+.table tbody tr td *,
+.table tbody tr th,
+.table tbody tr th * {
+  color: var(--ctp-text) !important;
+}
+
+/* Table header text should be dark on colored background */
+.table thead th,
+.table thead th * {
+  color: var(--ctp-base) !important;
+}
+
+/* Form elements text colors */
+input,
+textarea,
+select,
+option,
+input *,
+textarea *,
+select *,
+option * {
+  color: var(--ctp-text) !important;
+}
+
+/* Strong and bold text should also use theme colors */
+strong,
+b,
+.fw-bold {
+  color: var(--ctp-text) !important;
+  font-weight: 600;
+}
+
+/* Links color */
+a {
+  color: var(--ctp-pink) !important;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ctp-mauve) !important;
+  text-decoration: underline;
+}
+
+/* Button text color overrides are already in place above */
+
+/* Nav items and navigation text */
+.nav-link,
+.navbar-nav .nav-link,
+.navbar-brand {
+  color: var(--ctp-text) !important;
+}
+
+/* Dropdown items */
+.dropdown-item {
+  color: var(--ctp-text) !important;
+}
+
+/* Small text elements */
+small,
+.small {
+  color: var(--ctp-subtext0) !important;
+}
+
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+
+  /* Primary Application Colors - Using Catppuccin Mocha Pink as Primary */
+  --primary-color: var(--ctp-pink);
+  --secondary-color: var(--ctp-mauve);
+  --accent-color: var(--ctp-lavender);
 
   /* Status Colors */
-  --success-color: #58A45C;
-  --warning-color: #F4D35E;
-  --danger-color: #E63946;
-  --info-color: #457B9D;
+  --success-color: var(--ctp-green);
+  --warning-color: var(--ctp-yellow);
+  --danger-color: var(--ctp-red);
+  --info-color: var(--ctp-sapphire);
 
   /* Neutral Colors */
-  --dark-color: #212529;
-  --medium-color: #6c757d;
-  --light-color: #F8F9FA;
-  --white-color: #FFFFFF;
+  --dark-color: var(--ctp-text);
+  --medium-color: var(--ctp-subtext0);
+  --light-color: var(--ctp-surface0);
+  --white-color: var(--ctp-base);
 
   /* Sidebar & Navigation */
-  --sidebar-bg: #29524A;
-  --sidebar-bg-end: #22443D;
-  --sidebar-hover: #3A7469;
-  --sidebar-active: #FF6B6B;
+  --sidebar-bg: var(--ctp-mantle);
+  --sidebar-bg-end: var(--ctp-crust);
+  --sidebar-hover: var(--ctp-surface0);
+  --sidebar-active: var(--ctp-pink);
+  --sidebar-text: var(--ctp-text);
+  --sidebar-text-hover: var(--ctp-text);
 
   /* Background Variations */
-  --bg-primary: #F0F7F6;
-  --bg-secondary: #EBF4F3;
-  --bg-accent: #FFF0F0;
+  --bg-primary: var(--ctp-base);
+  --bg-secondary: var(--ctp-mantle);
+  --bg-accent: var(--ctp-surface0);
 
-  /* Category Colors */
-  --dog-color: #E8A87C;
-  --cat-color: #8D99AE;
-  --bird-color: #A8DADC;
-  --fish-color: #457B9D;
-  --small-pets-color: #C38D9E;
+  /* Category Colors - Catpuccin Style */
+  --dog-color: var(--ctp-peach);
+  --cat-color: var(--ctp-mauve);
+  --bird-color: var(--ctp-sky);
+  --fish-color: var(--ctp-teal);
+  --small-pets-color: var(--ctp-pink);
+
+  /* Border Radius Variables */
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 0.75rem;
+  --border-radius-lg: 1rem;
+  --border-radius-xl: 1.5rem;
+
+  /* Sidebar Width */
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 70px;
 }
 
-/* Layout geral */
+/* Layout geral com Nunito Font e Catppuccin Mocha */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-primary);
+  font-family: "Nunito", "Inter", "Segoe UI", system-ui, -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  background-color: var(--ctp-base);
+  color: var(--ctp-text);
+  line-height: 1.6;
 }
 
-/* Sidebar personalizada */
+/* Main content area */
+.main-content {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.5rem;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Sidebar personalizada com funcionalidade expandir/recolher */
 .sidebar {
-    background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-bg-end) 100%);
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  background: linear-gradient(
+    180deg,
+    var(--sidebar-bg) 0%,
+    var(--sidebar-bg-end) 100%
+  );
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: var(--sidebar-width);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* Toggle Button - Only visible when sidebar is expanded */
+.sidebar-toggle {
+  position: fixed;
+  top: 1rem;
+  left: calc(var(--sidebar-width) - 15px);
+  width: 30px;
+  height: 30px;
+  background: var(--ctp-pink);
+  border: none;
+  border-radius: 50%;
+  color: var(--ctp-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hide toggle button when sidebar is collapsed - using JavaScript class on body */
+body.sidebar-collapsed .sidebar-toggle {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sidebar-toggle:hover {
+  background: var(--ctp-mauve);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--ctp-surface0);
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-header {
+  padding: 1rem 0.5rem;
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ctp-pink);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* When sidebar is collapsed, make the logo more prominent and clickable */
+.sidebar.collapsed .sidebar-logo {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-logo:hover {
+  background: var(--ctp-surface0);
+  transform: scale(1.1);
+}
+
+/* Logo text animation */
+.sidebar.collapsed .sidebar-logo .logo-text {
+  opacity: 0;
+  transform: scale(0);
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-logo .logo-text {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pet paw icon styling for collapsed state */
+.sidebar.collapsed .sidebar-logo .material-symbols-outlined {
+  font-size: 2.5rem !important;
+  transition: all 0.3s ease;
+}
+
+.sidebar-logo .material-symbols-outlined {
+  transition: all 0.3s ease;
 }
 
 .sidebar .nav-link {
-    color: rgba(255, 255, 255, 0.8);
-    padding: 1rem;
-    border-radius: 0.375rem;
-    margin: 0.2rem 0.5rem;
-    transition: all 0.3s ease;
+  color: var(--sidebar-text);
+  padding: 0.875rem 1rem;
+  border-radius: var(--border-radius-md);
+  margin: 0.25rem 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+  padding: 0.875rem 0.5rem;
+}
+
+.sidebar.collapsed .nav-link .nav-text {
+  opacity: 0;
+  transform: translateX(-10px);
+  position: absolute;
+  left: 50px;
+  background: var(--ctp-text);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar.collapsed .nav-link:hover .nav-text {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .sidebar .nav-link:hover {
-    background-color: var(--sidebar-hover);
-    color: white;
-    transform: translateX(5px);
+  background-color: var(--sidebar-hover);
+  color: var(--sidebar-text-hover);
+  transform: translateX(3px);
 }
 
 .sidebar .nav-link.active {
-    background-color: var(--accent-color);
-    color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
+  color: white;
+  box-shadow: 0 4px 12px rgba(234, 118, 203, 0.3);
+  transform: translateX(3px);
 }
 
-/* Cards aprimorados */
+.sidebar .nav-link .material-symbols-outlined {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar .nav-link:hover .material-symbols-outlined {
+  transform: scale(1.1);
+}
+
+/* Cards aprimorados com estilo Catppuccin Mocha */
 .card {
-    border: none;
-    border-radius: 0.75rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    transition: all 0.3s ease;
+  border: 1px solid var(--ctp-surface0);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--ctp-surface0);
+  color: var(--ctp-text);
+  overflow: hidden; /* Ensure content doesn't overflow rounded corners */
 }
 
 .card:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15),
+    0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  border-color: var(--ctp-pink);
 }
 
 .card-header {
-    background-color: transparent;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    font-weight: 600;
+  background: linear-gradient(135deg, var(--ctp-surface1), var(--ctp-surface2));
+  border-bottom: 1px solid var(--ctp-surface1);
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0 !important;
+  font-weight: 600;
+  color: var(--ctp-text);
+  padding: 1rem 1.5rem;
+  margin: 0; /* Remove any margin that might cause spacing issues */
 }
 
-/* Botões personalizados */
+.card-body {
+  padding: 1.5rem;
+  background: var(--ctp-surface0);
+  color: var(--ctp-text);
+  margin: 0; /* Remove any margin that might cause spacing issues */
+}
+
+.card-footer {
+  background: var(--ctp-mantle) !important;
+  border-top: 1px solid var(--ctp-surface1);
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
+  padding: 1rem 1.5rem;
+  margin: 0; /* Remove any margin that might cause spacing issues */
+}
+
+/* Botões personalizados - Catpuccin Style with consistent text colors and effects */
 .btn {
-    border-radius: 0.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  padding: 0.625rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Tabelas aprimoradas */
+.btn-primary {
+  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
+  color: var(--ctp-base) !important; /* Black text on colored background */
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--ctp-mauve), var(--ctp-pink));
+  color: var(--ctp-base) !important; /* Keep black text on hover */
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: var(--ctp-green);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+}
+
+.btn-success:hover {
+  background: var(--ctp-teal);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(166, 227, 161, 0.4);
+}
+
+.btn-warning {
+  background: var(--ctp-yellow);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+}
+
+.btn-warning:hover {
+  background: var(--ctp-peach);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 226, 175, 0.4);
+}
+
+.btn-danger {
+  background: var(--ctp-red);
+  color: white !important; /* White text on dark red background */
+}
+
+.btn-danger:hover {
+  background: var(--ctp-maroon);
+  color: white !important; /* White text on dark background */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(243, 139, 168, 0.4);
+}
+
+.btn-info {
+  background: var(--ctp-sapphire);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+}
+
+.btn-info:hover {
+  background: var(--ctp-sky);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(116, 199, 236, 0.4);
+}
+
+.btn-secondary {
+  background: var(--ctp-surface1);
+  color: var(--ctp-text) !important; /* White text on dark background */
+}
+
+.btn-secondary:hover {
+  background: var(--ctp-surface2);
+  color: var(--ctp-text) !important; /* White text on dark background */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(69, 71, 90, 0.4);
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--ctp-pink);
+  color: var(--ctp-pink) !important;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: var(--ctp-pink);
+  color: var(--ctp-base) !important; /* Black text on colored background */
+  border-color: var(--ctp-pink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
+}
+
+/* Additional outline button variants with Catpuccin colors */
+.btn-outline-success {
+  border: 2px solid var(--ctp-green);
+  color: var(--ctp-green) !important;
+  background: transparent;
+}
+
+.btn-outline-success:hover {
+  background: var(--ctp-green);
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+  border-color: var(--ctp-green);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(166, 227, 161, 0.4);
+}
+
+.btn-outline-info {
+  border: 2px solid var(--ctp-sapphire);
+  color: var(--ctp-sapphire) !important;
+  background: transparent;
+}
+
+.btn-outline-info:hover {
+  background: var(--ctp-sapphire);
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+  border-color: var(--ctp-sapphire);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(116, 199, 236, 0.4);
+}
+
+.btn-outline-warning {
+  border: 2px solid var(--ctp-yellow);
+  color: var(--ctp-yellow) !important;
+  background: transparent;
+}
+
+.btn-outline-warning:hover {
+  background: var(--ctp-yellow);
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+  border-color: var(--ctp-yellow);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 226, 175, 0.4);
+}
+
+.btn-outline-danger {
+  border: 2px solid var(--ctp-red);
+  color: var(--ctp-red) !important;
+  background: transparent;
+}
+
+.btn-outline-danger:hover {
+  background: var(--ctp-red);
+  color: white !important; /* White text on dark red background */
+  border-color: var(--ctp-red);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(243, 139, 168, 0.4);
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--ctp-surface2);
+  color: var(--ctp-subtext0) !important;
+  background: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background: var(--ctp-surface2);
+  color: var(--ctp-text) !important; /* Light text on dark background */
+  border-color: var(--ctp-surface2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(88, 91, 112, 0.4);
+}
+
+/* Additional button hover state overrides to prevent Bootstrap interference */
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  color: var(--ctp-base) !important;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+  color: var(--ctp-base) !important;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+  color: var(--ctp-base) !important;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+  color: var(--ctp-base) !important;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+  color: white !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  color: var(--ctp-text) !important;
+}
+
+/* Button group styling */
+.btn-group {
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-group .btn {
+  border-radius: 0;
+  border-left-width: 1px;
+  border-right-width: 1px;
+}
+
+.btn-group .btn:first-child {
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+}
+
+.btn-group .btn:last-child {
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+.btn-group .btn:only-child {
+  border-radius: var(--border-radius-md);
+}
+
+/* Botões pequenos e arredondados */
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  border-radius: var(--border-radius-lg);
+}
+
+/* Tabelas aprimoradas - Catppuccin Mocha Style */
 .table {
-    border-radius: 0.5rem;
-    overflow: hidden;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--ctp-surface1);
+  background: var(--ctp-surface0);
+  color: var(--ctp-text);
+}
+
+/* Force text color in table cells - override Bootstrap defaults */
+.table td,
+.table th,
+.table td *,
+.table th * {
+  color: var(--ctp-text) !important;
 }
 
 .table th {
-    background-color: var(--dark-color);
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.875rem;
-    letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
+  color: var(--ctp-base) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.05rem;
+  padding: 1rem;
+  border: none;
+}
+
+/* Ensure all child elements in table headers use black text */
+.table th * {
+  color: var(--ctp-base) !important;
+}
+
+.table td {
+  padding: 0.875rem 1rem;
+  vertical-align: middle;
+  border-top: 1px solid var(--ctp-surface1);
+  background: var(--ctp-surface0);
+  color: var(--ctp-text) !important;
 }
 
 .table-hover tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
+  background-color: var(--ctp-surface1) !important;
+  transition: background-color 0.2s ease;
 }
 
-/* Badges personalizados */
+/* Ensure hover state maintains text color */
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover td * {
+  color: var(--ctp-text) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--ctp-surface0);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: var(--ctp-mantle);
+}
+
+.table-responsive {
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Badges personalizados - Catpuccin */
 .badge {
-    font-size: 0.75rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--border-radius-xl);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
-/* Formulários */
-.form-control {
-    border: 2px solid #e9ecef;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
+.badge.bg-success {
+  background-color: var(--ctp-green) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
 }
 
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    transform: scale(1.02);
+.badge.bg-warning {
+  background-color: var(--ctp-yellow) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+}
+
+.badge.bg-danger {
+  background-color: var(--ctp-red) !important;
+  color: white !important; /* White text on dark red background */
+}
+
+.badge.bg-info {
+  background-color: var(--ctp-sapphire) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+}
+
+.badge.bg-primary {
+  background-color: var(--ctp-pink) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+}
+
+/* Formulários - Catppuccin Mocha Style */
+.form-control,
+.form-select {
+  border: 2px solid var(--ctp-surface1);
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.625rem 1rem;
+  background-color: var(--ctp-surface0) !important;
+  color: var(--ctp-text) !important;
+}
+
+/* Placeholder text color */
+.form-control::placeholder,
+.form-select::placeholder {
+  color: var(--ctp-subtext0) !important;
+  opacity: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--ctp-pink);
+  box-shadow: 0 0 0 0.25rem rgba(245, 194, 231, 0.15);
+  transform: scale(1.01);
+  background-color: var(--ctp-surface0) !important;
+  color: var(--ctp-text) !important;
 }
 
 .form-control.is-valid {
-    border-color: var(--success-color);
+  border-color: var(--ctp-green);
+  box-shadow: 0 0 0 0.25rem rgba(166, 227, 161, 0.15);
 }
 
 .form-control.is-invalid {
-    border-color: var(--danger-color);
+  border-color: var(--ctp-red);
+  box-shadow: 0 0 0 0.25rem rgba(243, 139, 168, 0.15);
 }
 
-/* Alertas */
+.input-group-text {
+  background-color: var(--ctp-surface1);
+  border: 2px solid var(--ctp-surface1);
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+  color: var(--ctp-subtext0);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--ctp-text);
+  margin-bottom: 0.5rem;
+}
+
+/* Alertas - Catppuccin Mocha Style */
 .alert {
-    border: none;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.25rem;
+  border-left: 4px solid;
+  background-color: var(--ctp-surface0);
+}
+
+.alert-success {
+  background-color: rgba(166, 227, 161, 0.1);
+  color: var(--ctp-green);
+  border-left-color: var(--ctp-green);
+}
+
+.alert-warning {
+  background-color: rgba(249, 226, 175, 0.1);
+  color: var(--ctp-yellow);
+  border-left-color: var(--ctp-yellow);
+}
+
+.alert-danger {
+  background-color: rgba(243, 139, 168, 0.1);
+  color: var(--ctp-red);
+  border-left-color: var(--ctp-red);
+}
+
+.alert-info {
+  background-color: rgba(116, 199, 236, 0.1);
+  color: var(--ctp-sapphire);
+  border-left-color: var(--ctp-sapphire);
+}
+
+.alert-primary {
+  background-color: rgba(245, 194, 231, 0.1);
+  color: var(--ctp-pink);
+  border-left-color: var(--ctp-pink);
 }
 
 /* Animações */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.card, .alert {
-    animation: fadeIn 0.5s ease-out;
+.card,
+.alert {
+  animation: fadeIn 0.5s ease-out;
 }
 
-/* Responsividade */
+/* Responsividade aprimorada */
 @media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-    
-    .main-content {
-        margin-left: 0 !important;
-        padding: 1rem;
-    }
-    
-    .btn-toolbar {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .table-responsive {
-        border-radius: 0.5rem;
-    }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: var(--sidebar-width);
+    border-radius: 0;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 1rem;
+    padding-top: 4rem;
+  }
+
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .mobile-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1002;
+    width: 40px;
+    height: 40px;
+    background: var(--ctp-pink);
+    border: none;
+    border-radius: var(--border-radius-md);
+    color: var(--ctp-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(245, 194, 231, 0.3);
+  }
+
+  .btn-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .table-responsive {
+    border-radius: var(--border-radius-md);
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-toggle {
+    display: none;
+  }
 }
 
 /* Estados de loading */
 .loading {
-    opacity: 0.6;
-    pointer-events: none;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Dashboard específico */
+/* Dashboard específico - Catpuccin */
 .dashboard-stats .card {
-    border-left: 4px solid var(--primary-color);
+  border-left: 4px solid var(--ctp-pink);
+  background: linear-gradient(135deg, var(--white-color), var(--ctp-mantle));
 }
 
 .dashboard-stats .card:nth-child(2) {
-    border-left-color: var(--success-color);
+  border-left-color: var(--ctp-green);
 }
 
 .dashboard-stats .card:nth-child(3) {
-    border-left-color: var(--warning-color);
+  border-left-color: var(--ctp-yellow);
 }
 
 .dashboard-stats .card:nth-child(4) {
-    border-left-color: var(--info-color);
+  border-left-color: var(--ctp-sapphire);
 }
 
-/* Melhorias visuais para listas */
+.dashboard-stats .card:nth-child(5) {
+  border-left-color: var(--ctp-pink);
+}
+
+/* Melhorias visuais para listas - Catppuccin Mocha */
 .list-group-item {
-    border: none;
-    border-radius: 0.5rem !important;
-    margin-bottom: 0.5rem;
-    background-color: #f8f9fa;
-    transition: all 0.3s ease;
+  border: 1px solid var(--ctp-surface1);
+  border-radius: var(--border-radius-md) !important;
+  margin-bottom: 0.5rem;
+  background-color: var(--ctp-surface0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--ctp-text);
 }
 
 .list-group-item:hover {
-    background-color: #e9ecef;
-    transform: scale(1.02);
+  background-color: var(--ctp-surface1);
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Ícones */
-.fa, .fas, .far {
-    transition: all 0.3s ease;
+.list-group-item:first-child {
+  border-top-left-radius: var(--border-radius-md) !important;
+  border-top-right-radius: var(--border-radius-md) !important;
 }
 
-.btn:hover .fa,
-.btn:hover .fas,
-.btn:hover .far {
-    transform: scale(1.1);
+.list-group-item:last-child {
+  border-bottom-left-radius: var(--border-radius-md) !important;
+  border-bottom-right-radius: var(--border-radius-md) !important;
+}
+
+/* Material Symbols Icons */
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.btn:hover .material-symbols-outlined {
+  transform: scale(1.1);
+}
+
+.nav-link:hover .material-symbols-outlined {
+  transform: scale(1.15);
+}
+
+/* Sidebar JavaScript Controls */
+.sidebar-controls {
+  margin-top: auto;
+  padding: 1rem;
+  border-top: 1px solid var(--ctp-surface0);
+}
+
+/* Smooth scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--ctp-surface0);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--ctp-overlay0);
+  border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--ctp-overlay1);
+}
+
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles */
+.btn:focus,
+.nav-link:focus,
+.form-control:focus {
+  outline: 2px solid var(--ctp-pink);
+  outline-offset: 2px;
+}
+
+/* Page transitions */
+.page-transition {
+  animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Print styles */
 @media print {
-    .sidebar,
-    .btn-toolbar,
-    .btn,
-    .navbar {
-        display: none !important;
-    }
-    
-    .main-content {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-    }
+  .sidebar,
+  .btn-toolbar,
+  .btn,
+  .navbar {
+    display: none !important;
+  }
+
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
 }

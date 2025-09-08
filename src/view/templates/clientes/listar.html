@@ -5,11 +5,12 @@
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">
-        <i class="fas fa-users" style="color: var(--primary-color);"></i> Gerenciar Clientes
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">group</span> 
+        Gerenciar Clientes
     </h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Novo Cliente
+            <span class="material-symbols-outlined me-1">add</span> Novo Cliente
         </a>
     </div>
 </div>
@@ -18,7 +19,7 @@
     <div class="col-md-6">
         <div class="input-group">
             <span class="input-group-text">
-                <i class="fas fa-search"></i>
+                <span class="material-symbols-outlined">search</span>
             </span>
             <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nome, CPF ou email...">
         </div>
@@ -71,21 +72,21 @@
                             <div class="btn-group" role="group">
                                 <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}" 
                                    class="btn btn-sm btn-outline-info" title="Visualizar">
-                                    <i class="fas fa-eye"></i>
+                                    <span class="material-symbols-outlined">visibility</span>
                                 </a>
                                 <a href="{{ url_for('cliente_views.editar_cliente', cliente_id=cliente.id) }}" 
                                    class="btn btn-sm btn-outline-warning" title="Editar">
-                                    <i class="fas fa-edit"></i>
+                                    <span class="material-symbols-outlined">edit</span>
                                 </a>
                                 {% if cliente.ativo %}
                                 <button onclick="confirmarDesativacao({{ cliente.id }}, '{{ cliente.nome }}')" 
                                         class="btn btn-sm btn-outline-danger" title="Desativar">
-                                    <i class="fas fa-times"></i>
+                                    <span class="material-symbols-outlined">close</span>
                                 </button>
                                 {% else %}
                                 <button onclick="ativarCliente({{ cliente.id }})" 
                                         class="btn btn-sm btn-outline-success" title="Ativar">
-                                    <i class="fas fa-check"></i>
+                                    <span class="material-symbols-outlined">check</span>
                                 </button>
                                 {% endif %}
                             </div>
@@ -135,11 +136,11 @@
         
         {% else %}
         <div class="text-center py-5">
-            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <span class="material-symbols-outlined text-muted mb-3" style="font-size: 4rem; display: block;">group_off</span>
             <h4 class="text-muted">Nenhum cliente encontrado</h4>
             <p class="text-muted">Que tal cadastrar o primeiro cliente?</p>
             <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Cadastrar Cliente
+                <span class="material-symbols-outlined me-1">add</span> Cadastrar Cliente
             </a>
         </div>
         {% endif %}
@@ -243,12 +244,11 @@ function desativarCliente(clienteId) {
 }
 
 function ativarCliente(clienteId) {
-    fetch(`/api/clientes/${clienteId}`, {
+    fetch(`/api/clientes/${clienteId}/ativar`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ativo: true})
+        }
     })
     .then(response => response.json())
     .then(data => {

@@ -11,7 +11,7 @@ from datetime import datetime, date
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.main import app
-from src.models import db, Cliente, Pet, Funcionario, Produto, Servico
+from src.model.models import db, Cliente, Pet, Funcionario, Produto, Servico
 
 def init_database():
     """Inicializar banco de dados com dados de exemplo"""
