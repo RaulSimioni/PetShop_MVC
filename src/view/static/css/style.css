@@ -1,8 +1,8 @@
-/* Estilo personalizado para PetShop ERP - Catppuccin Mocha */
+/* PetShop ERP - Catppuccin Mocha Theme */
 
-/* Variáveis CSS para cores do tema - Catppuccin Mocha Palette */
+/* COLOR VARIABLES */
 :root {
-  /* Catppuccin Mocha Palette - Base Colors */
+  /* Catppuccin Mocha Palette */
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo: #f2cdcd;
   --ctp-pink: #f5c2e7;
@@ -18,7 +18,6 @@
   --ctp-blue: #89b4fa;
   --ctp-lavender: #b4befe;
 
-  /* Catppuccin Mocha Neutral Colors */
   --ctp-text: #cdd6f4;
   --ctp-subtext1: #bac2de;
   --ctp-subtext0: #a6adc8;
@@ -26,7 +25,9 @@
   --ctp-overlay1: #7f849c;
   --ctp-overlay0: #6c7086;
   --ctp-surface2: #585b70;
-  --ctp-surface1: #45475a; /* Page transitions */
+  --ctp-surface1: #45475a;
+
+  /* ANIMATIONS */
   .page-transition {
     animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -42,7 +43,7 @@
     }
   }
 
-  /* Dashboard specific styles - fixing border radius and component consistency */
+  /* DASHBOARD CARDS */
   .dashboard-stats .card {
     border-radius: var(--border-radius-lg) !important;
     overflow: hidden;
@@ -54,6 +55,7 @@
     background: var(--ctp-mantle) !important;
   }
 
+  /* LIST GROUPS */
   .list-group-flush .list-group-item {
     background: var(--ctp-surface0);
     color: var(--ctp-text);
@@ -73,13 +75,13 @@
     border-radius: var(--border-radius-md);
   }
 
-  /* Badge styling with proper text colors */
+  /* BADGES */
   .badge.bg-light {
     background-color: var(--ctp-surface2) !important;
     color: var(--ctp-text) !important;
   }
 
-  /* Dropdown menu styling */
+  /* DROPDOWNS */
   .dropdown-menu {
     background: var(--ctp-surface0);
     border: 1px solid var(--ctp-surface1);
@@ -97,7 +99,7 @@
     color: var(--ctp-text);
   }
 
-  /* Text color fixes for better contrast */
+  /* TEXT COLOR UTILITIES */
   .text-muted {
     color: var(--ctp-subtext0) !important;
   }
@@ -118,9 +120,7 @@
     color: var(--ctp-red) !important;
   }
 
-  /* Comprehensive text color overrides to ensure Catpuccin theme consistency */
-
-  /* Override Bootstrap default text colors */
+  /* GLOBAL TEXT COLOR OVERRIDES */
   p,
   span,
   div,
@@ -137,13 +137,12 @@
     color: inherit;
   }
 
-  /* Ensure all text in cards uses theme colors */
   .card,
   .card * {
     color: var(--ctp-text) !important;
   }
 
-  /* Specific overrides for colored surfaces */
+  /* COLORED SURFACE TEXT OVERRIDES */
   .bg-primary,
   .bg-primary *,
   .btn-primary,
@@ -152,7 +151,7 @@
   .badge.bg-primary *,
   .btn-primary:hover,
   .btn-primary:hover * {
-    color: var(--ctp-base) !important; /* Dark text on pink background */
+    color: var(--ctp-base) !important;
   }
 
   .bg-success,
@@ -163,7 +162,7 @@
   .badge.bg-success *,
   .btn-success:hover,
   .btn-success:hover * {
-    color: var(--ctp-base) !important; /* Dark text on green background */
+    color: var(--ctp-base) !important;
   }
 
   .bg-info,
@@ -174,9 +173,7 @@
   .badge.bg-info *,
   .btn-info:hover,
   .btn-info:hover * {
-    color: var(
-      --ctp-base
-    ) !important; /* Dark text on blue/sapphire background */
+    color: var(--ctp-base) !important;
   }
 
   .bg-warning,
@@ -187,7 +184,7 @@
   .badge.bg-warning *,
   .btn-warning:hover,
   .btn-warning:hover * {
-    color: var(--ctp-base) !important; /* Dark text on yellow background */
+    color: var(--ctp-base) !important;
   }
 
   .bg-danger,
@@ -198,16 +195,14 @@
   .badge.bg-danger *,
   .btn-danger:hover,
   .btn-danger:hover * {
-    color: white !important; /* White text on red background */
+    color: white !important;
   }
 
-  /* List group text colors */
   .list-group-item,
   .list-group-item * {
     color: var(--ctp-text) !important;
   }
 
-  /* Table text colors - comprehensive override */
   .table,
   .table *,
   .table tbody tr td,
@@ -217,13 +212,11 @@
     color: var(--ctp-text) !important;
   }
 
-  /* Table header text should be dark on colored background */
   .table thead th,
   .table thead th * {
     color: var(--ctp-base) !important;
   }
 
-  /* Form elements text colors */
   input,
   textarea,
   select,
@@ -235,7 +228,6 @@
     color: var(--ctp-text) !important;
   }
 
-  /* Strong and bold text should also use theme colors */
   strong,
   b,
   .fw-bold {
@@ -243,7 +235,6 @@
     font-weight: 600;
   }
 
-  /* Links color */
   a {
     color: var(--ctp-pink) !important;
     text-decoration: none;
@@ -254,21 +245,16 @@
     text-decoration: underline;
   }
 
-  /* Button text color overrides are already in place above */
-
-  /* Nav items and navigation text */
   .nav-link,
   .navbar-nav .nav-link,
   .navbar-brand {
     color: var(--ctp-text) !important;
   }
 
-  /* Dropdown items */
   .dropdown-item {
     color: var(--ctp-text) !important;
   }
 
-  /* Small text elements */
   small,
   .small {
     color: var(--ctp-subtext0) !important;
@@ -279,24 +265,20 @@
   --ctp-mantle: #181825;
   --ctp-crust: #11111b;
 
-  /* Primary Application Colors - Using Catppuccin Mocha Pink as Primary */
   --primary-color: var(--ctp-pink);
   --secondary-color: var(--ctp-mauve);
   --accent-color: var(--ctp-lavender);
 
-  /* Status Colors */
   --success-color: var(--ctp-green);
   --warning-color: var(--ctp-yellow);
   --danger-color: var(--ctp-red);
   --info-color: var(--ctp-sapphire);
 
-  /* Neutral Colors */
   --dark-color: var(--ctp-text);
   --medium-color: var(--ctp-subtext0);
   --light-color: var(--ctp-surface0);
   --white-color: var(--ctp-base);
 
-  /* Sidebar & Navigation */
   --sidebar-bg: var(--ctp-mantle);
   --sidebar-bg-end: var(--ctp-crust);
   --sidebar-hover: var(--ctp-surface0);
@@ -304,30 +286,26 @@
   --sidebar-text: var(--ctp-text);
   --sidebar-text-hover: var(--ctp-text);
 
-  /* Background Variations */
   --bg-primary: var(--ctp-base);
   --bg-secondary: var(--ctp-mantle);
   --bg-accent: var(--ctp-surface0);
 
-  /* Category Colors - Catpuccin Style */
   --dog-color: var(--ctp-peach);
   --cat-color: var(--ctp-mauve);
   --bird-color: var(--ctp-sky);
   --fish-color: var(--ctp-teal);
   --small-pets-color: var(--ctp-pink);
 
-  /* Border Radius Variables */
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;
   --border-radius-xl: 1.5rem;
 
-  /* Sidebar Width */
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 70px;
 }
 
-/* Layout geral com Nunito Font e Catppuccin Mocha */
+/* LAYOUT */
 body {
   font-family: "Nunito", "Inter", "Segoe UI", system-ui, -apple-system,
     BlinkMacSystemFont, sans-serif;
@@ -336,7 +314,6 @@ body {
   line-height: 1.6;
 }
 
-/* Main content area */
 .main-content {
   margin-left: var(--sidebar-width);
   min-height: 100vh;
@@ -348,7 +325,7 @@ body {
   margin-left: var(--sidebar-collapsed-width);
 }
 
-/* Sidebar personalizada com funcionalidade expandir/recolher */
+/* SIDEBAR */
 .sidebar {
   background: linear-gradient(
     180deg,
@@ -373,7 +350,6 @@ body {
   width: var(--sidebar-collapsed-width);
 }
 
-/* Toggle Button - Only visible when sidebar is expanded */
 .sidebar-toggle {
   position: fixed;
   top: 1rem;
@@ -395,7 +371,6 @@ body {
   visibility: visible;
 }
 
-/* Hide toggle button when sidebar is collapsed - using JavaScript class on body */
 body.sidebar-collapsed .sidebar-toggle {
   opacity: 0;
   visibility: hidden;
@@ -433,7 +408,6 @@ body.sidebar-collapsed .sidebar-toggle {
   cursor: pointer;
 }
 
-/* When sidebar is collapsed, make the logo more prominent and clickable */
 .sidebar.collapsed .sidebar-logo {
   position: relative;
   padding: 0.5rem;
@@ -460,7 +434,6 @@ body.sidebar-collapsed .sidebar-toggle {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Pet paw icon styling for collapsed state */
 .sidebar.collapsed .sidebar-logo .material-symbols-outlined {
   font-size: 2.5rem !important;
   transition: all 0.3s ease;
@@ -515,7 +488,6 @@ body.sidebar-collapsed .sidebar-toggle {
   transform: translateX(3px);
 }
 
-/* Prevent color change on hover for active sidebar items */
 .sidebar .nav-link.active:hover {
   color: white !important; /* Keep white text for active items on hover */
 }
@@ -536,7 +508,7 @@ body.sidebar-collapsed .sidebar-toggle {
   transform: scale(1.1);
 }
 
-/* Cards aprimorados com estilo Catppuccin Mocha */
+/* CARDS */
 .card {
   border: 1px solid var(--ctp-surface0);
   border-radius: var(--border-radius-lg);
@@ -580,7 +552,7 @@ body.sidebar-collapsed .sidebar-toggle {
   margin: 0; /* Remove any margin that might cause spacing issues */
 }
 
-/* Botões personalizados - Catpuccin Style with consistent text colors and effects */
+/* BUTTONS */
 .btn {
   border-radius: var(--border-radius-md);
   font-weight: 500;
@@ -684,7 +656,6 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
 }
 
-/* Additional outline button variants with Catpuccin colors */
 .btn-outline-success {
   border: 2px solid var(--ctp-green);
   color: var(--ctp-green) !important;
@@ -755,7 +726,6 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 12px rgba(88, 91, 112, 0.4);
 }
 
-/* Additional button hover state overrides to prevent Bootstrap interference */
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
@@ -792,7 +762,6 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text) !important;
 }
 
-/* Button group styling */
 .btn-group {
   border-radius: var(--border-radius-md);
   overflow: hidden;
@@ -830,7 +799,6 @@ body.sidebar-collapsed .sidebar-toggle {
   border-radius: var(--border-radius-lg);
 }
 
-/* Tabelas aprimoradas - Catppuccin Mocha Style */
 .table {
   border-radius: var(--border-radius-lg);
   overflow: hidden;
@@ -839,7 +807,7 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text);
 }
 
-/* Force text color in table cells - override Bootstrap defaults */
+/* TABLES */
 .table td,
 .table th,
 .table td *,
@@ -858,7 +826,6 @@ body.sidebar-collapsed .sidebar-toggle {
   border: none;
 }
 
-/* Ensure all child elements in table headers use black text */
 .table th * {
   color: var(--ctp-base) !important;
 }
@@ -876,7 +843,6 @@ body.sidebar-collapsed .sidebar-toggle {
   transition: background-color 0.2s ease;
 }
 
-/* Ensure hover state maintains text color */
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover td * {
   color: var(--ctp-text) !important;
@@ -895,7 +861,7 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Badges personalizados - Catpuccin */
+/* BADGES */
 .badge {
   font-size: 0.75rem;
   padding: 0.5rem 0.875rem;
@@ -927,10 +893,10 @@ body.sidebar-collapsed .sidebar-toggle {
 
 .badge.bg-primary {
   background-color: var(--ctp-pink) !important;
-  color: var(--ctp-base) !important; /* Dark text on colored background */
+  color: var(--ctp-base) !important;
 }
 
-/* Formulários - Catppuccin Mocha Style */
+/* FORMS */
 .form-control,
 .form-select {
   border: 2px solid var(--ctp-surface1);
@@ -941,7 +907,6 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text) !important;
 }
 
-/* Placeholder text color */
 .form-control::placeholder,
 .form-select::placeholder {
   color: var(--ctp-subtext0) !important;
@@ -980,7 +945,7 @@ body.sidebar-collapsed .sidebar-toggle {
   margin-bottom: 0.5rem;
 }
 
-/* Alertas - Catppuccin Mocha Style */
+/* ALERTS */
 .alert {
   border: none;
   border-radius: var(--border-radius-lg);
@@ -1126,7 +1091,7 @@ body.sidebar-collapsed .sidebar-toggle {
   }
 }
 
-/* Dashboard específico - Catpuccin */
+/* DASHBOARD */
 .dashboard-stats .card {
   border-left: 4px solid var(--ctp-pink);
   background: linear-gradient(135deg, var(--white-color), var(--ctp-mantle));
@@ -1148,7 +1113,7 @@ body.sidebar-collapsed .sidebar-toggle {
   border-left-color: var(--ctp-pink);
 }
 
-/* Melhorias visuais para listas - Catppuccin Mocha */
+/* LIST GROUPS */
 .list-group-item {
   border: 1px solid var(--ctp-surface1);
   border-radius: var(--border-radius-md) !important;
@@ -1251,8 +1216,7 @@ body.sidebar-collapsed .sidebar-toggle {
   }
 }
 
-/* Print styles */
-/* Pagination styling - Catpuccin Mocha Theme */
+/* PAGINATION */
 .pagination {
   justify-content: center;
   margin-top: 2rem;
@@ -1308,7 +1272,6 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: none;
 }
 
-/* Pagination styling - Catpuccin Mocha Theme */
 .pagination {
   --bs-pagination-padding-x: 0.75rem;
   --bs-pagination-padding-y: 0.5rem;
