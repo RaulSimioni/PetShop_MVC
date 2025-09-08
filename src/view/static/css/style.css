@@ -1,8 +1,8 @@
-/* Estilo personalizado para PetShop ERP - Catppuccin Mocha */
+/* PetShop ERP - Catppuccin Mocha Theme */
 
-/* Variáveis CSS para cores do tema - Catppuccin Mocha Palette */
+/* COLOR VARIABLES */
 :root {
-  /* Catppuccin Mocha Palette - Base Colors */
+  /* Catppuccin Mocha Palette */
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo: #f2cdcd;
   --ctp-pink: #f5c2e7;
@@ -18,7 +18,6 @@
   --ctp-blue: #89b4fa;
   --ctp-lavender: #b4befe;
 
-  /* Catppuccin Mocha Neutral Colors */
   --ctp-text: #cdd6f4;
   --ctp-subtext1: #bac2de;
   --ctp-subtext0: #a6adc8;
@@ -26,242 +25,260 @@
   --ctp-overlay1: #7f849c;
   --ctp-overlay0: #6c7086;
   --ctp-surface2: #585b70;
-  --ctp-surface1: #45475a;/* Page transitions */
-.page-transition {
-  animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  --ctp-surface1: #45475a;
 
-@keyframes pageSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  /* ANIMATIONS */
+  .page-transition {
+    animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  @keyframes pageSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
 
-/* Dashboard specific styles - fixing border radius and component consistency */
-.dashboard-stats .card {
-  border-radius: var(--border-radius-lg) !important;
-  overflow: hidden;
-}
+  /* DASHBOARD CARDS */
+  .dashboard-stats .card {
+    border-radius: var(--border-radius-lg) !important;
+    overflow: hidden;
+  }
 
-.dashboard-stats .card-footer {
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
-  border-top: 1px solid var(--ctp-surface1);
-  background: var(--ctp-mantle) !important;
-}
+  .dashboard-stats .card-footer {
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
+    border-top: 1px solid var(--ctp-surface1);
+    background: var(--ctp-mantle) !important;
+  }
 
-.list-group-flush .list-group-item {
-  background: var(--ctp-surface0);
-  color: var(--ctp-text);
-  border-color: var(--ctp-surface1);
-  border-radius: 0;
-}
+  /* LIST GROUPS */
+  .list-group-flush .list-group-item {
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-color: var(--ctp-surface1);
+    border-radius: 0;
+  }
 
-.list-group-flush .list-group-item:first-child {
-  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-}
+  .list-group-flush .list-group-item:first-child {
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+  }
 
-.list-group-flush .list-group-item:last-child {
-  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
-}
+  .list-group-flush .list-group-item:last-child {
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+  }
 
-.list-group-flush .list-group-item:only-child {
-  border-radius: var(--border-radius-md);
-}
+  .list-group-flush .list-group-item:only-child {
+    border-radius: var(--border-radius-md);
+  }
 
-/* Badge styling with proper text colors */
-.badge.bg-light {
-  background-color: var(--ctp-surface2) !important;
-  color: var(--ctp-text) !important;
-}
+  /* BADGES */
+  .badge.bg-light {
+    background-color: var(--ctp-surface2) !important;
+    color: var(--ctp-text) !important;
+  }
 
-/* Dropdown menu styling */
-.dropdown-menu {
-  background: var(--ctp-surface0);
-  border: 1px solid var(--ctp-surface1);
-  border-radius: var(--border-radius-md);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+  /* DROPDOWNS */
+  .dropdown-menu {
+    background: var(--ctp-surface0);
+    border: 1px solid var(--ctp-surface1);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
 
-.dropdown-item {
-  color: var(--ctp-text);
-  transition: all 0.2s ease;
-}
+  .dropdown-item {
+    color: var(--ctp-text);
+    transition: all 0.2s ease;
+  }
 
-.dropdown-item:hover {
-  background: var(--ctp-surface1);
-  color: var(--ctp-text);
-}
+  .dropdown-item:hover {
+    background: var(--ctp-surface1);
+    color: var(--ctp-text);
+  }
 
-/* Text color fixes for better contrast */
-.text-muted {
-  color: var(--ctp-subtext0) !important;
-}
+  /* TEXT COLOR UTILITIES */
+  .text-muted {
+    color: var(--ctp-subtext0) !important;
+  }
 
-.text-success {
-  color: var(--ctp-green) !important;
-}
+  .text-success {
+    color: var(--ctp-green) !important;
+  }
 
-.text-info {
-  color: var(--ctp-sapphire) !important;
-}
+  .text-info {
+    color: var(--ctp-sapphire) !important;
+  }
 
-.text-warning {
-  color: var(--ctp-yellow) !important;
-}
+  .text-warning {
+    color: var(--ctp-yellow) !important;
+  }
 
-.text-danger {
-  color: var(--ctp-red) !important;
-}
+  .text-danger {
+    color: var(--ctp-red) !important;
+  }
 
-/* Comprehensive text color overrides to ensure Catpuccin theme consistency */
+  /* GLOBAL TEXT COLOR OVERRIDES */
+  p,
+  span,
+  div,
+  td,
+  th,
+  li,
+  a,
+  label,
+  small,
+  strong,
+  b,
+  em,
+  i {
+    color: inherit;
+  }
 
-/* Override Bootstrap default text colors */
-p, span, div, td, th, li, a, label, small, strong, b, em, i {
-  color: inherit;
-}
+  .card,
+  .card * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Ensure all text in cards uses theme colors */
-.card, .card * {
-  color: var(--ctp-text) !important;
-}
+  /* COLORED SURFACE TEXT OVERRIDES */
+  .bg-primary,
+  .bg-primary *,
+  .btn-primary,
+  .btn-primary *,
+  .badge.bg-primary,
+  .badge.bg-primary *,
+  .btn-primary:hover,
+  .btn-primary:hover * {
+    color: var(--ctp-base) !important;
+  }
 
-/* Specific overrides for colored surfaces */
-.bg-primary, .bg-primary *,
-.btn-primary, .btn-primary *,
-.badge.bg-primary, .badge.bg-primary *,
-.btn-primary:hover, .btn-primary:hover * {
-  color: var(--ctp-base) !important; /* Dark text on pink background */
-}
+  .bg-success,
+  .bg-success *,
+  .btn-success,
+  .btn-success *,
+  .badge.bg-success,
+  .badge.bg-success *,
+  .btn-success:hover,
+  .btn-success:hover * {
+    color: var(--ctp-base) !important;
+  }
 
-.bg-success, .bg-success *,
-.btn-success, .btn-success *,
-.badge.bg-success, .badge.bg-success *,
-.btn-success:hover, .btn-success:hover * {
-  color: var(--ctp-base) !important; /* Dark text on green background */
-}
+  .bg-info,
+  .bg-info *,
+  .btn-info,
+  .btn-info *,
+  .badge.bg-info,
+  .badge.bg-info *,
+  .btn-info:hover,
+  .btn-info:hover * {
+    color: var(--ctp-base) !important;
+  }
 
-.bg-info, .bg-info *,
-.btn-info, .btn-info *,
-.badge.bg-info, .badge.bg-info *,
-.btn-info:hover, .btn-info:hover * {
-  color: var(--ctp-base) !important; /* Dark text on blue/sapphire background */
-}
+  .bg-warning,
+  .bg-warning *,
+  .btn-warning,
+  .btn-warning *,
+  .badge.bg-warning,
+  .badge.bg-warning *,
+  .btn-warning:hover,
+  .btn-warning:hover * {
+    color: var(--ctp-base) !important;
+  }
 
-.bg-warning, .bg-warning *,
-.btn-warning, .btn-warning *,
-.badge.bg-warning, .badge.bg-warning *,
-.btn-warning:hover, .btn-warning:hover * {
-  color: var(--ctp-base) !important; /* Dark text on yellow background */
-}
+  .bg-danger,
+  .bg-danger *,
+  .btn-danger,
+  .btn-danger *,
+  .badge.bg-danger,
+  .badge.bg-danger *,
+  .btn-danger:hover,
+  .btn-danger:hover * {
+    color: white !important;
+  }
 
-.bg-danger, .bg-danger *,
-.btn-danger, .btn-danger *,
-.badge.bg-danger, .badge.bg-danger *,
-.btn-danger:hover, .btn-danger:hover * {
-  color: white !important; /* White text on red background */
-}
+  .list-group-item,
+  .list-group-item * {
+    color: var(--ctp-text) !important;
+  }
 
-/* List group text colors */
-.list-group-item,
-.list-group-item * {
-  color: var(--ctp-text) !important;
-}
+  .table,
+  .table *,
+  .table tbody tr td,
+  .table tbody tr td *,
+  .table tbody tr th,
+  .table tbody tr th * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Table text colors - comprehensive override */
-.table,
-.table *,
-.table tbody tr td,
-.table tbody tr td *,
-.table tbody tr th,
-.table tbody tr th * {
-  color: var(--ctp-text) !important;
-}
+  .table thead th,
+  .table thead th * {
+    color: var(--ctp-base) !important;
+  }
 
-/* Table header text should be dark on colored background */
-.table thead th,
-.table thead th * {
-  color: var(--ctp-base) !important;
-}
+  input,
+  textarea,
+  select,
+  option,
+  input *,
+  textarea *,
+  select *,
+  option * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Form elements text colors */
-input,
-textarea,
-select,
-option,
-input *,
-textarea *,
-select *,
-option * {
-  color: var(--ctp-text) !important;
-}
+  strong,
+  b,
+  .fw-bold {
+    color: var(--ctp-text) !important;
+    font-weight: 600;
+  }
 
-/* Strong and bold text should also use theme colors */
-strong,
-b,
-.fw-bold {
-  color: var(--ctp-text) !important;
-  font-weight: 600;
-}
+  a {
+    color: var(--ctp-pink) !important;
+    text-decoration: none;
+  }
 
-/* Links color */
-a {
-  color: var(--ctp-pink) !important;
-  text-decoration: none;
-}
+  a:hover {
+    color: var(--ctp-mauve) !important;
+    text-decoration: underline;
+  }
 
-a:hover {
-  color: var(--ctp-mauve) !important;
-  text-decoration: underline;
-}
+  .nav-link,
+  .navbar-nav .nav-link,
+  .navbar-brand {
+    color: var(--ctp-text) !important;
+  }
 
-/* Button text color overrides are already in place above */
+  .dropdown-item {
+    color: var(--ctp-text) !important;
+  }
 
-/* Nav items and navigation text */
-.nav-link,
-.navbar-nav .nav-link,
-.navbar-brand {
-  color: var(--ctp-text) !important;
-}
-
-/* Dropdown items */
-.dropdown-item {
-  color: var(--ctp-text) !important;
-}
-
-/* Small text elements */
-small,
-.small {
-  color: var(--ctp-subtext0) !important;
-}
+  small,
+  .small {
+    color: var(--ctp-subtext0) !important;
+  }
 
   --ctp-surface0: #313244;
   --ctp-base: #1e1e2e;
   --ctp-mantle: #181825;
   --ctp-crust: #11111b;
 
-  /* Primary Application Colors - Using Catppuccin Mocha Pink as Primary */
   --primary-color: var(--ctp-pink);
   --secondary-color: var(--ctp-mauve);
   --accent-color: var(--ctp-lavender);
 
-  /* Status Colors */
   --success-color: var(--ctp-green);
   --warning-color: var(--ctp-yellow);
   --danger-color: var(--ctp-red);
   --info-color: var(--ctp-sapphire);
 
-  /* Neutral Colors */
   --dark-color: var(--ctp-text);
   --medium-color: var(--ctp-subtext0);
   --light-color: var(--ctp-surface0);
   --white-color: var(--ctp-base);
 
-  /* Sidebar & Navigation */
   --sidebar-bg: var(--ctp-mantle);
   --sidebar-bg-end: var(--ctp-crust);
   --sidebar-hover: var(--ctp-surface0);
@@ -269,30 +286,26 @@ small,
   --sidebar-text: var(--ctp-text);
   --sidebar-text-hover: var(--ctp-text);
 
-  /* Background Variations */
   --bg-primary: var(--ctp-base);
   --bg-secondary: var(--ctp-mantle);
   --bg-accent: var(--ctp-surface0);
 
-  /* Category Colors - Catpuccin Style */
   --dog-color: var(--ctp-peach);
   --cat-color: var(--ctp-mauve);
   --bird-color: var(--ctp-sky);
   --fish-color: var(--ctp-teal);
   --small-pets-color: var(--ctp-pink);
 
-  /* Border Radius Variables */
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;
   --border-radius-xl: 1.5rem;
 
-  /* Sidebar Width */
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 70px;
 }
 
-/* Layout geral com Nunito Font e Catppuccin Mocha */
+/* LAYOUT */
 body {
   font-family: "Nunito", "Inter", "Segoe UI", system-ui, -apple-system,
     BlinkMacSystemFont, sans-serif;
@@ -301,7 +314,6 @@ body {
   line-height: 1.6;
 }
 
-/* Main content area */
 .main-content {
   margin-left: var(--sidebar-width);
   min-height: 100vh;
@@ -313,7 +325,7 @@ body {
   margin-left: var(--sidebar-collapsed-width);
 }
 
-/* Sidebar personalizada com funcionalidade expandir/recolher */
+/* SIDEBAR */
 .sidebar {
   background: linear-gradient(
     180deg,
@@ -338,7 +350,6 @@ body {
   width: var(--sidebar-collapsed-width);
 }
 
-/* Toggle Button - Only visible when sidebar is expanded */
 .sidebar-toggle {
   position: fixed;
   top: 1rem;
@@ -360,7 +371,6 @@ body {
   visibility: visible;
 }
 
-/* Hide toggle button when sidebar is collapsed - using JavaScript class on body */
 body.sidebar-collapsed .sidebar-toggle {
   opacity: 0;
   visibility: hidden;
@@ -398,7 +408,6 @@ body.sidebar-collapsed .sidebar-toggle {
   cursor: pointer;
 }
 
-/* When sidebar is collapsed, make the logo more prominent and clickable */
 .sidebar.collapsed .sidebar-logo {
   position: relative;
   padding: 0.5rem;
@@ -425,7 +434,6 @@ body.sidebar-collapsed .sidebar-toggle {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Pet paw icon styling for collapsed state */
 .sidebar.collapsed .sidebar-logo .material-symbols-outlined {
   font-size: 2.5rem !important;
   transition: all 0.3s ease;
@@ -480,6 +488,10 @@ body.sidebar-collapsed .sidebar-toggle {
   transform: translateX(3px);
 }
 
+.sidebar .nav-link.active:hover {
+  color: white !important; /* Keep white text for active items on hover */
+}
+
 .sidebar .nav-link.active {
   background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
   color: white;
@@ -496,7 +508,7 @@ body.sidebar-collapsed .sidebar-toggle {
   transform: scale(1.1);
 }
 
-/* Cards aprimorados com estilo Catppuccin Mocha */
+/* CARDS */
 .card {
   border: 1px solid var(--ctp-surface0);
   border-radius: var(--border-radius-lg);
@@ -540,7 +552,7 @@ body.sidebar-collapsed .sidebar-toggle {
   margin: 0; /* Remove any margin that might cause spacing issues */
 }
 
-/* Botões personalizados - Catpuccin Style with consistent text colors and effects */
+/* BUTTONS */
 .btn {
   border-radius: var(--border-radius-md);
   font-weight: 500;
@@ -644,7 +656,6 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
 }
 
-/* Additional outline button variants with Catpuccin colors */
 .btn-outline-success {
   border: 2px solid var(--ctp-green);
   color: var(--ctp-green) !important;
@@ -715,7 +726,6 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 12px rgba(88, 91, 112, 0.4);
 }
 
-/* Additional button hover state overrides to prevent Bootstrap interference */
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
@@ -752,7 +762,6 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text) !important;
 }
 
-/* Button group styling */
 .btn-group {
   border-radius: var(--border-radius-md);
   overflow: hidden;
@@ -790,7 +799,6 @@ body.sidebar-collapsed .sidebar-toggle {
   border-radius: var(--border-radius-lg);
 }
 
-/* Tabelas aprimoradas - Catppuccin Mocha Style */
 .table {
   border-radius: var(--border-radius-lg);
   overflow: hidden;
@@ -799,7 +807,7 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text);
 }
 
-/* Force text color in table cells - override Bootstrap defaults */
+/* TABLES */
 .table td,
 .table th,
 .table td *,
@@ -818,7 +826,6 @@ body.sidebar-collapsed .sidebar-toggle {
   border: none;
 }
 
-/* Ensure all child elements in table headers use black text */
 .table th * {
   color: var(--ctp-base) !important;
 }
@@ -836,7 +843,6 @@ body.sidebar-collapsed .sidebar-toggle {
   transition: background-color 0.2s ease;
 }
 
-/* Ensure hover state maintains text color */
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover td * {
   color: var(--ctp-text) !important;
@@ -855,7 +861,7 @@ body.sidebar-collapsed .sidebar-toggle {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Badges personalizados - Catpuccin */
+/* BADGES */
 .badge {
   font-size: 0.75rem;
   padding: 0.5rem 0.875rem;
@@ -887,10 +893,10 @@ body.sidebar-collapsed .sidebar-toggle {
 
 .badge.bg-primary {
   background-color: var(--ctp-pink) !important;
-  color: var(--ctp-base) !important; /* Dark text on colored background */
+  color: var(--ctp-base) !important;
 }
 
-/* Formulários - Catppuccin Mocha Style */
+/* FORMS */
 .form-control,
 .form-select {
   border: 2px solid var(--ctp-surface1);
@@ -901,7 +907,6 @@ body.sidebar-collapsed .sidebar-toggle {
   color: var(--ctp-text) !important;
 }
 
-/* Placeholder text color */
 .form-control::placeholder,
 .form-select::placeholder {
   color: var(--ctp-subtext0) !important;
@@ -940,7 +945,7 @@ body.sidebar-collapsed .sidebar-toggle {
   margin-bottom: 0.5rem;
 }
 
-/* Alertas - Catppuccin Mocha Style */
+/* ALERTS */
 .alert {
   border: none;
   border-radius: var(--border-radius-lg);
@@ -1086,7 +1091,7 @@ body.sidebar-collapsed .sidebar-toggle {
   }
 }
 
-/* Dashboard específico - Catpuccin */
+/* DASHBOARD */
 .dashboard-stats .card {
   border-left: 4px solid var(--ctp-pink);
   background: linear-gradient(135deg, var(--white-color), var(--ctp-mantle));
@@ -1108,7 +1113,7 @@ body.sidebar-collapsed .sidebar-toggle {
   border-left-color: var(--ctp-pink);
 }
 
-/* Melhorias visuais para listas - Catppuccin Mocha */
+/* LIST GROUPS */
 .list-group-item {
   border: 1px solid var(--ctp-surface1);
   border-radius: var(--border-radius-md) !important;
@@ -1211,7 +1216,137 @@ body.sidebar-collapsed .sidebar-toggle {
   }
 }
 
-/* Print styles */
+/* PAGINATION */
+.pagination {
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.page-item {
+  margin: 0 0.125rem;
+}
+
+.page-link {
+  color: var(--ctp-text) !important;
+  background-color: var(--ctp-surface0) !important;
+  border: 1px solid var(--ctp-surface1) !important;
+  border-radius: var(--border-radius-md) !important;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.page-link:hover {
+  background-color: var(--ctp-surface1) !important;
+  color: var(--ctp-text) !important;
+  border-color: var(--ctp-surface2) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-item.active .page-link {
+  background-color: var(--ctp-pink) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+  border-color: var(--ctp-pink) !important;
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.3);
+}
+
+.page-item.active .page-link:hover {
+  background-color: var(--ctp-mauve) !important;
+  color: var(--ctp-base) !important;
+  border-color: var(--ctp-mauve) !important;
+  transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+  background-color: var(--ctp-mantle) !important;
+  color: var(--ctp-subtext0) !important;
+  border-color: var(--ctp-surface0) !important;
+  cursor: not-allowed;
+}
+
+.page-item.disabled .page-link:hover {
+  background-color: var(--ctp-mantle) !important;
+  color: var(--ctp-subtext0) !important;
+  transform: none;
+  box-shadow: none;
+}
+
+.pagination {
+  --bs-pagination-padding-x: 0.75rem;
+  --bs-pagination-padding-y: 0.5rem;
+  --bs-pagination-font-size: 0.875rem;
+  --bs-pagination-color: var(--ctp-text);
+  --bs-pagination-bg: var(--ctp-surface0);
+  --bs-pagination-border-width: 1px;
+  --bs-pagination-border-color: var(--ctp-surface1);
+  --bs-pagination-border-radius: var(--border-radius-md);
+  --bs-pagination-hover-color: var(--ctp-text);
+  --bs-pagination-hover-bg: var(--ctp-surface1);
+  --bs-pagination-hover-border-color: var(--ctp-pink);
+  --bs-pagination-focus-color: var(--ctp-text);
+  --bs-pagination-focus-bg: var(--ctp-surface1);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(245, 194, 231, 0.25);
+  --bs-pagination-active-color: var(--ctp-base);
+  --bs-pagination-active-bg: var(--ctp-pink);
+  --bs-pagination-active-border-color: var(--ctp-pink);
+  --bs-pagination-disabled-color: var(--ctp-subtext0);
+  --bs-pagination-disabled-bg: var(--ctp-surface0);
+  --bs-pagination-disabled-border-color: var(--ctp-surface1);
+  margin-bottom: 0;
+}
+
+.page-item {
+  margin: 0 0.125rem;
+}
+
+.page-link {
+  background-color: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  color: var(--ctp-text);
+  border-radius: var(--border-radius-md) !important;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.page-link:hover {
+  background-color: var(--ctp-surface1);
+  border-color: var(--ctp-pink);
+  color: var(--ctp-text);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.3);
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
+  border-color: var(--ctp-pink);
+  color: var(--ctp-base) !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
+}
+
+.page-item.active .page-link:hover {
+  background: linear-gradient(135deg, var(--ctp-mauve), var(--ctp-pink));
+  color: var(--ctp-base) !important;
+  transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+  background-color: var(--ctp-surface0);
+  border-color: var(--ctp-surface1);
+  color: var(--ctp-subtext0);
+  opacity: 0.5;
+}
+
+.page-item.disabled .page-link:hover {
+  background-color: var(--ctp-surface0);
+  border-color: var(--ctp-surface1);
+  color: var(--ctp-subtext0);
+  transform: none;
+  box-shadow: none;
+}
+
 @media print {
   .sidebar,
   .btn-toolbar,
