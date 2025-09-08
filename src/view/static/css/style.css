@@ -26,218 +26,253 @@
   --ctp-overlay1: #7f849c;
   --ctp-overlay0: #6c7086;
   --ctp-surface2: #585b70;
-  --ctp-surface1: #45475a;/* Page transitions */
-.page-transition {
-  animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes pageSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  --ctp-surface1: #45475a; /* Page transitions */
+  .page-transition {
+    animation: pageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  @keyframes pageSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
 
-/* Dashboard specific styles - fixing border radius and component consistency */
-.dashboard-stats .card {
-  border-radius: var(--border-radius-lg) !important;
-  overflow: hidden;
-}
+  /* Dashboard specific styles - fixing border radius and component consistency */
+  .dashboard-stats .card {
+    border-radius: var(--border-radius-lg) !important;
+    overflow: hidden;
+  }
 
-.dashboard-stats .card-footer {
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
-  border-top: 1px solid var(--ctp-surface1);
-  background: var(--ctp-mantle) !important;
-}
+  .dashboard-stats .card-footer {
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg) !important;
+    border-top: 1px solid var(--ctp-surface1);
+    background: var(--ctp-mantle) !important;
+  }
 
-.list-group-flush .list-group-item {
-  background: var(--ctp-surface0);
-  color: var(--ctp-text);
-  border-color: var(--ctp-surface1);
-  border-radius: 0;
-}
+  .list-group-flush .list-group-item {
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-color: var(--ctp-surface1);
+    border-radius: 0;
+  }
 
-.list-group-flush .list-group-item:first-child {
-  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-}
+  .list-group-flush .list-group-item:first-child {
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+  }
 
-.list-group-flush .list-group-item:last-child {
-  border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
-}
+  .list-group-flush .list-group-item:last-child {
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+  }
 
-.list-group-flush .list-group-item:only-child {
-  border-radius: var(--border-radius-md);
-}
+  .list-group-flush .list-group-item:only-child {
+    border-radius: var(--border-radius-md);
+  }
 
-/* Badge styling with proper text colors */
-.badge.bg-light {
-  background-color: var(--ctp-surface2) !important;
-  color: var(--ctp-text) !important;
-}
+  /* Badge styling with proper text colors */
+  .badge.bg-light {
+    background-color: var(--ctp-surface2) !important;
+    color: var(--ctp-text) !important;
+  }
 
-/* Dropdown menu styling */
-.dropdown-menu {
-  background: var(--ctp-surface0);
-  border: 1px solid var(--ctp-surface1);
-  border-radius: var(--border-radius-md);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+  /* Dropdown menu styling */
+  .dropdown-menu {
+    background: var(--ctp-surface0);
+    border: 1px solid var(--ctp-surface1);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
 
-.dropdown-item {
-  color: var(--ctp-text);
-  transition: all 0.2s ease;
-}
+  .dropdown-item {
+    color: var(--ctp-text);
+    transition: all 0.2s ease;
+  }
 
-.dropdown-item:hover {
-  background: var(--ctp-surface1);
-  color: var(--ctp-text);
-}
+  .dropdown-item:hover {
+    background: var(--ctp-surface1);
+    color: var(--ctp-text);
+  }
 
-/* Text color fixes for better contrast */
-.text-muted {
-  color: var(--ctp-subtext0) !important;
-}
+  /* Text color fixes for better contrast */
+  .text-muted {
+    color: var(--ctp-subtext0) !important;
+  }
 
-.text-success {
-  color: var(--ctp-green) !important;
-}
+  .text-success {
+    color: var(--ctp-green) !important;
+  }
 
-.text-info {
-  color: var(--ctp-sapphire) !important;
-}
+  .text-info {
+    color: var(--ctp-sapphire) !important;
+  }
 
-.text-warning {
-  color: var(--ctp-yellow) !important;
-}
+  .text-warning {
+    color: var(--ctp-yellow) !important;
+  }
 
-.text-danger {
-  color: var(--ctp-red) !important;
-}
+  .text-danger {
+    color: var(--ctp-red) !important;
+  }
 
-/* Comprehensive text color overrides to ensure Catpuccin theme consistency */
+  /* Comprehensive text color overrides to ensure Catpuccin theme consistency */
 
-/* Override Bootstrap default text colors */
-p, span, div, td, th, li, a, label, small, strong, b, em, i {
-  color: inherit;
-}
+  /* Override Bootstrap default text colors */
+  p,
+  span,
+  div,
+  td,
+  th,
+  li,
+  a,
+  label,
+  small,
+  strong,
+  b,
+  em,
+  i {
+    color: inherit;
+  }
 
-/* Ensure all text in cards uses theme colors */
-.card, .card * {
-  color: var(--ctp-text) !important;
-}
+  /* Ensure all text in cards uses theme colors */
+  .card,
+  .card * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Specific overrides for colored surfaces */
-.bg-primary, .bg-primary *,
-.btn-primary, .btn-primary *,
-.badge.bg-primary, .badge.bg-primary *,
-.btn-primary:hover, .btn-primary:hover * {
-  color: var(--ctp-base) !important; /* Dark text on pink background */
-}
+  /* Specific overrides for colored surfaces */
+  .bg-primary,
+  .bg-primary *,
+  .btn-primary,
+  .btn-primary *,
+  .badge.bg-primary,
+  .badge.bg-primary *,
+  .btn-primary:hover,
+  .btn-primary:hover * {
+    color: var(--ctp-base) !important; /* Dark text on pink background */
+  }
 
-.bg-success, .bg-success *,
-.btn-success, .btn-success *,
-.badge.bg-success, .badge.bg-success *,
-.btn-success:hover, .btn-success:hover * {
-  color: var(--ctp-base) !important; /* Dark text on green background */
-}
+  .bg-success,
+  .bg-success *,
+  .btn-success,
+  .btn-success *,
+  .badge.bg-success,
+  .badge.bg-success *,
+  .btn-success:hover,
+  .btn-success:hover * {
+    color: var(--ctp-base) !important; /* Dark text on green background */
+  }
 
-.bg-info, .bg-info *,
-.btn-info, .btn-info *,
-.badge.bg-info, .badge.bg-info *,
-.btn-info:hover, .btn-info:hover * {
-  color: var(--ctp-base) !important; /* Dark text on blue/sapphire background */
-}
+  .bg-info,
+  .bg-info *,
+  .btn-info,
+  .btn-info *,
+  .badge.bg-info,
+  .badge.bg-info *,
+  .btn-info:hover,
+  .btn-info:hover * {
+    color: var(
+      --ctp-base
+    ) !important; /* Dark text on blue/sapphire background */
+  }
 
-.bg-warning, .bg-warning *,
-.btn-warning, .btn-warning *,
-.badge.bg-warning, .badge.bg-warning *,
-.btn-warning:hover, .btn-warning:hover * {
-  color: var(--ctp-base) !important; /* Dark text on yellow background */
-}
+  .bg-warning,
+  .bg-warning *,
+  .btn-warning,
+  .btn-warning *,
+  .badge.bg-warning,
+  .badge.bg-warning *,
+  .btn-warning:hover,
+  .btn-warning:hover * {
+    color: var(--ctp-base) !important; /* Dark text on yellow background */
+  }
 
-.bg-danger, .bg-danger *,
-.btn-danger, .btn-danger *,
-.badge.bg-danger, .badge.bg-danger *,
-.btn-danger:hover, .btn-danger:hover * {
-  color: white !important; /* White text on red background */
-}
+  .bg-danger,
+  .bg-danger *,
+  .btn-danger,
+  .btn-danger *,
+  .badge.bg-danger,
+  .badge.bg-danger *,
+  .btn-danger:hover,
+  .btn-danger:hover * {
+    color: white !important; /* White text on red background */
+  }
 
-/* List group text colors */
-.list-group-item,
-.list-group-item * {
-  color: var(--ctp-text) !important;
-}
+  /* List group text colors */
+  .list-group-item,
+  .list-group-item * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Table text colors - comprehensive override */
-.table,
-.table *,
-.table tbody tr td,
-.table tbody tr td *,
-.table tbody tr th,
-.table tbody tr th * {
-  color: var(--ctp-text) !important;
-}
+  /* Table text colors - comprehensive override */
+  .table,
+  .table *,
+  .table tbody tr td,
+  .table tbody tr td *,
+  .table tbody tr th,
+  .table tbody tr th * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Table header text should be dark on colored background */
-.table thead th,
-.table thead th * {
-  color: var(--ctp-base) !important;
-}
+  /* Table header text should be dark on colored background */
+  .table thead th,
+  .table thead th * {
+    color: var(--ctp-base) !important;
+  }
 
-/* Form elements text colors */
-input,
-textarea,
-select,
-option,
-input *,
-textarea *,
-select *,
-option * {
-  color: var(--ctp-text) !important;
-}
+  /* Form elements text colors */
+  input,
+  textarea,
+  select,
+  option,
+  input *,
+  textarea *,
+  select *,
+  option * {
+    color: var(--ctp-text) !important;
+  }
 
-/* Strong and bold text should also use theme colors */
-strong,
-b,
-.fw-bold {
-  color: var(--ctp-text) !important;
-  font-weight: 600;
-}
+  /* Strong and bold text should also use theme colors */
+  strong,
+  b,
+  .fw-bold {
+    color: var(--ctp-text) !important;
+    font-weight: 600;
+  }
 
-/* Links color */
-a {
-  color: var(--ctp-pink) !important;
-  text-decoration: none;
-}
+  /* Links color */
+  a {
+    color: var(--ctp-pink) !important;
+    text-decoration: none;
+  }
 
-a:hover {
-  color: var(--ctp-mauve) !important;
-  text-decoration: underline;
-}
+  a:hover {
+    color: var(--ctp-mauve) !important;
+    text-decoration: underline;
+  }
 
-/* Button text color overrides are already in place above */
+  /* Button text color overrides are already in place above */
 
-/* Nav items and navigation text */
-.nav-link,
-.navbar-nav .nav-link,
-.navbar-brand {
-  color: var(--ctp-text) !important;
-}
+  /* Nav items and navigation text */
+  .nav-link,
+  .navbar-nav .nav-link,
+  .navbar-brand {
+    color: var(--ctp-text) !important;
+  }
 
-/* Dropdown items */
-.dropdown-item {
-  color: var(--ctp-text) !important;
-}
+  /* Dropdown items */
+  .dropdown-item {
+    color: var(--ctp-text) !important;
+  }
 
-/* Small text elements */
-small,
-.small {
-  color: var(--ctp-subtext0) !important;
-}
+  /* Small text elements */
+  small,
+  .small {
+    color: var(--ctp-subtext0) !important;
+  }
 
   --ctp-surface0: #313244;
   --ctp-base: #1e1e2e;
@@ -478,6 +513,11 @@ body.sidebar-collapsed .sidebar-toggle {
   background-color: var(--sidebar-hover);
   color: var(--sidebar-text-hover);
   transform: translateX(3px);
+}
+
+/* Prevent color change on hover for active sidebar items */
+.sidebar .nav-link.active:hover {
+  color: white !important; /* Keep white text for active items on hover */
 }
 
 .sidebar .nav-link.active {
@@ -1212,6 +1252,138 @@ body.sidebar-collapsed .sidebar-toggle {
 }
 
 /* Print styles */
+/* Pagination styling - Catpuccin Mocha Theme */
+.pagination {
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.page-item {
+  margin: 0 0.125rem;
+}
+
+.page-link {
+  color: var(--ctp-text) !important;
+  background-color: var(--ctp-surface0) !important;
+  border: 1px solid var(--ctp-surface1) !important;
+  border-radius: var(--border-radius-md) !important;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.page-link:hover {
+  background-color: var(--ctp-surface1) !important;
+  color: var(--ctp-text) !important;
+  border-color: var(--ctp-surface2) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-item.active .page-link {
+  background-color: var(--ctp-pink) !important;
+  color: var(--ctp-base) !important; /* Dark text on colored background */
+  border-color: var(--ctp-pink) !important;
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.3);
+}
+
+.page-item.active .page-link:hover {
+  background-color: var(--ctp-mauve) !important;
+  color: var(--ctp-base) !important;
+  border-color: var(--ctp-mauve) !important;
+  transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+  background-color: var(--ctp-mantle) !important;
+  color: var(--ctp-subtext0) !important;
+  border-color: var(--ctp-surface0) !important;
+  cursor: not-allowed;
+}
+
+.page-item.disabled .page-link:hover {
+  background-color: var(--ctp-mantle) !important;
+  color: var(--ctp-subtext0) !important;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Pagination styling - Catpuccin Mocha Theme */
+.pagination {
+  --bs-pagination-padding-x: 0.75rem;
+  --bs-pagination-padding-y: 0.5rem;
+  --bs-pagination-font-size: 0.875rem;
+  --bs-pagination-color: var(--ctp-text);
+  --bs-pagination-bg: var(--ctp-surface0);
+  --bs-pagination-border-width: 1px;
+  --bs-pagination-border-color: var(--ctp-surface1);
+  --bs-pagination-border-radius: var(--border-radius-md);
+  --bs-pagination-hover-color: var(--ctp-text);
+  --bs-pagination-hover-bg: var(--ctp-surface1);
+  --bs-pagination-hover-border-color: var(--ctp-pink);
+  --bs-pagination-focus-color: var(--ctp-text);
+  --bs-pagination-focus-bg: var(--ctp-surface1);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(245, 194, 231, 0.25);
+  --bs-pagination-active-color: var(--ctp-base);
+  --bs-pagination-active-bg: var(--ctp-pink);
+  --bs-pagination-active-border-color: var(--ctp-pink);
+  --bs-pagination-disabled-color: var(--ctp-subtext0);
+  --bs-pagination-disabled-bg: var(--ctp-surface0);
+  --bs-pagination-disabled-border-color: var(--ctp-surface1);
+  margin-bottom: 0;
+}
+
+.page-item {
+  margin: 0 0.125rem;
+}
+
+.page-link {
+  background-color: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  color: var(--ctp-text);
+  border-radius: var(--border-radius-md) !important;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.page-link:hover {
+  background-color: var(--ctp-surface1);
+  border-color: var(--ctp-pink);
+  color: var(--ctp-text);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 194, 231, 0.3);
+}
+
+.page-item.active .page-link {
+  background: linear-gradient(135deg, var(--ctp-pink), var(--ctp-mauve));
+  border-color: var(--ctp-pink);
+  color: var(--ctp-base) !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(245, 194, 231, 0.4);
+}
+
+.page-item.active .page-link:hover {
+  background: linear-gradient(135deg, var(--ctp-mauve), var(--ctp-pink));
+  color: var(--ctp-base) !important;
+  transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+  background-color: var(--ctp-surface0);
+  border-color: var(--ctp-surface1);
+  color: var(--ctp-subtext0);
+  opacity: 0.5;
+}
+
+.page-item.disabled .page-link:hover {
+  background-color: var(--ctp-surface0);
+  border-color: var(--ctp-surface1);
+  color: var(--ctp-subtext0);
+  transform: none;
+  box-shadow: none;
+}
+
 @media print {
   .sidebar,
   .btn-toolbar,
