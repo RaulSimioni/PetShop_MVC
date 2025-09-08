@@ -8,7 +8,7 @@
         <i class="fas fa-user-plus" style="color: var(--accent-color);"></i> Novo Cliente
     </h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary">
+        <a href="{{ url_for(\'cliente_views.listar_clientes\') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left me-1"></i> Voltar
         </a>
     </div>
@@ -24,7 +24,7 @@
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="nome" name="nome" required 
-                                       value="{{ request.form.nome if request.form else '' }}"
+                                       value="{{ form_data.nome if form_data else request.form.nome if request.form else \'\' }}"
                                        maxlength="100">
                                 <div class="invalid-feedback" id="nome-error"></div>
                             </div>
@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="cpf" name="cpf" required 
-                                       value="{{ request.form.cpf if request.form else '' }}"
+                                       value="{{ form_data.cpf if form_data else request.form.cpf if request.form else \'\' }}"
                                        placeholder="000.000.000-00" maxlength="14">
                                 <div class="invalid-feedback" id="cpf-error"></div>
                             </div>
@@ -45,7 +45,7 @@
                             <div class="mb-3">
                                 <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="telefone" name="telefone" required 
-                                       value="{{ request.form.telefone if request.form else '' }}"
+                                       value="{{ form_data.telefone if form_data else request.form.telefone if request.form else \'\' }}"
                                        placeholder="(00) 00000-0000" maxlength="15">
                                 <div class="invalid-feedback" id="telefone-error"></div>
                             </div>
@@ -54,7 +54,7 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" 
-                                       value="{{ request.form.email if request.form else '' }}"
+                                       value="{{ form_data.email if form_data else request.form.email if request.form else \'\' }}"
                                        maxlength="120">
                                 <div class="invalid-feedback" id="email-error"></div>
                             </div>
@@ -64,7 +64,7 @@
                     <div class="mb-3">
                         <label for="endereco" class="form-label">Endereço</label>
                         <textarea class="form-control" id="endereco" name="endereco" rows="3"
-                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ request.form.endereco if request.form else '' }}</textarea>
+                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ form_data.endereco if form_data else request.form.endereco if request.form else \'\' }}</textarea>
                         <div class="invalid-feedback" id="endereco-error"></div>
                     </div>
 
@@ -73,7 +73,7 @@
                             <i class="fas fa-eraser"></i> Limpar
                         </button>
                         <div>
-                            <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary me-2">
+                            <a href="{{ url_for(\'cliente_views.listar_clientes\') }}" class="btn btn-secondary me-2">
                                 Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">
@@ -136,53 +136,53 @@
 {% block scripts %}
 <script>
 // Máscaras para os campos
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener(\'DOMContentLoaded\', function() {
     // Máscara para CPF
-    const cpfField = document.getElementById('cpf');
-    cpfField.addEventListener('input', function() {
-        let value = this.value.replace(/\D/g, '');
+    const cpfField = document.getElementById(\'cpf\');
+    cpfField.addEventListener(\'input\', function() {
+        let value = this.value.replace(/\\D/g, \'\');
         if (value.length <= 11) {
-            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-            value = value.replace(/(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
-            value = value.replace(/(\d{3})(\d{3})$/, '$1.$2');
-            value = value.replace(/(\d{3})$/, '$1');
+            value = value.replace(/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, \'$1.$2.$3-$4\');
+            value = value.replace(/(\\d{3})(\\d{3})(\\d{3})$/, \'$1.$2.$3\');
+            value = value.replace(/(\\d{3})(\\d{3})$/, \'$1.$2\');
+            value = value.replace(/(\\d{3})$/, \'$1\');
         }
         this.value = value;
     });
 
     // Máscara para telefone
-    const telefoneField = document.getElementById('telefone');
-    telefoneField.addEventListener('input', function() {
-        let value = this.value.replace(/\D/g, '');
+    const telefoneField = document.getElementById(\'telefone\');
+    telefoneField.addEventListener(\'input\', function() {
+        let value = this.value.replace(/\\D/g, \'\');
         if (value.length <= 11) {
             if (value.length >= 11) {
-                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                value = value.replace(/(\\d{2})(\\d{5})(\\d{4})/, \'($1) $2-$3\');
             } else if (value.length >= 10) {
-                value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                value = value.replace(/(\\d{2})(\\d{4})(\\d{4})/, \'($1) $2-$3\');
             } else if (value.length >= 6) {
-                value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+                value = value.replace(/(\\d{2})(\\d{4})(\\d+)/, \'($1) $2-$3\');
             } else if (value.length >= 2) {
-                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+                value = value.replace(/(\\d{2})(\\d+)/, \'($1) $2\');
             }
         }
         this.value = value;
     });
 
     // Atalhos de teclado
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener(\'keydown\', function(e) {
         if (e.ctrlKey) {
             switch(e.key) {
-                case 's':
+                case \'s\':
                     e.preventDefault();
-                    document.getElementById('clienteForm').submit();
+                    document.getElementById(\'clienteForm\').submit();
                     break;
-                case 'l':
+                case \'l\':
                     e.preventDefault();
                     limparFormulario();
                     break;
             }
-        } else if (e.key === 'Escape') {
-            window.location.href = "{{ url_for('cliente_views.listar_clientes') }}";
+        } else if (e.key === \'Escape\') {
+            window.location.href = "{{ url_for(\'cliente_views.listar_clientes\') }}";
         }
     });
 });
@@ -190,47 +190,47 @@ document.addEventListener('DOMContentLoaded', function() {
 // Validação em tempo real
 function validateField(fieldId, validationFunction) {
     const field = document.getElementById(fieldId);
-    const errorDiv = document.getElementById(fieldId + '-error');
+    const errorDiv = document.getElementById(fieldId + \'-error\');
     
-    field.addEventListener('blur', function() {
+    field.addEventListener(\'blur\', function() {
         const result = validationFunction(this.value);
         if (result.valid) {
-            this.classList.remove('is-invalid');
-            this.classList.add('is-valid');
-            errorDiv.textContent = '';
+            this.classList.remove(\'is-invalid\');
+            this.classList.add(\'is-valid\');
+            errorDiv.textContent = \'\';
         } else {
-            this.classList.remove('is-valid');
-            this.classList.add('is-invalid');
+            this.classList.remove(\'is-valid\');
+            this.classList.add(\'is-invalid\');
             errorDiv.textContent = result.message;
         }
     });
 }
 
 // Validações específicas
-validateField('nome', function(value) {
-    if (!value.trim()) return {valid: false, message: 'Nome é obrigatório'};
-    if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
+validateField(\'nome\', function(value) {
+    if (!value.trim()) return {valid: false, message: \'Nome é obrigatório\'};
+    if (value.trim().length < 2) return {valid: false, message: \'Nome deve ter pelo menos 2 caracteres\'};
     return {valid: true};
 });
 
-validateField('cpf', function(value) {
-    if (!value) return {valid: false, message: 'CPF é obrigatório'};
-    const cpf = value.replace(/\D/g, '');
-    if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
-    if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
+validateField(\'cpf\', function(value) {
+    if (!value) return {valid: false, message: \'CPF é obrigatório\'};
+    const cpf = value.replace(/\\D/g, \'\');
+    if (cpf.length !== 11) return {valid: false, message: \'CPF deve ter 11 dígitos\'};
+    if (!validarCPF(cpf)) return {valid: false, message: \'CPF inválido\'};
     return {valid: true};
 });
 
-validateField('telefone', function(value) {
-    if (!value) return {valid: false, message: 'Telefone é obrigatório'};
-    const telefone = value.replace(/\D/g, '');
-    if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
+validateField(\'telefone\', function(value) {
+    if (!value) return {valid: false, message: \'Telefone é obrigatório\'};
+    const telefone = value.replace(/\\D/g, \'\');
+    if (telefone.length < 10) return {valid: false, message: \'Telefone deve ter pelo menos 10 dígitos\'};
     return {valid: true};
 });
 
-validateField('email', function(value) {
-    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        return {valid: false, message: 'Email inválido'};
+validateField(\'email\', function(value) {
+    if (value && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value)) {
+        return {valid: false, message: \'Email inválido\'};
     }
     return {valid: true};
 });
@@ -267,35 +267,35 @@ function validarCPF(cpf) {
 }
 
 function limparFormulario() {
-    document.getElementById('clienteForm').reset();
+    document.getElementById(\'clienteForm\').reset();
     // Remove classes de validação
-    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
-        el.classList.remove('is-valid', 'is-invalid');
+    document.querySelectorAll(\'.is-valid, .is-invalid\').forEach(el => {
+        el.classList.remove(\'is-valid\', \'is-invalid\');
     });
 }
 
 // Validação antes do envio
-document.getElementById('clienteForm').addEventListener('submit', function(e) {
+document.getElementById(\'clienteForm\').addEventListener(\'submit\', function(e) {
     e.preventDefault();
     
     let isValid = true;
     const formData = new FormData(this);
     
     // Validar campos obrigatórios
-    ['nome', 'cpf', 'telefone'].forEach(fieldId => {
+    [\'nome\', \'cpf\', \'telefone\'].forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (!field.value.trim()) {
-            field.classList.add('is-invalid');
-            document.getElementById(fieldId + '-error').textContent = 'Campo obrigatório';
+            field.classList.add(\'is-invalid\');
+            document.getElementById(fieldId + \'-error\').textContent = \'Campo obrigatório\';
             isValid = false;
         }
     });
     
     // Validar CPF
-    const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    const cpf = document.getElementById(\'cpf\').value.replace(/\\D/g, \'\');
     if (cpf && !validarCPF(cpf)) {
-        document.getElementById('cpf').classList.add('is-invalid');
-        document.getElementById('cpf-error').textContent = 'CPF inválido';
+        document.getElementById(\'cpf\').classList.add(\'is-invalid\');
+        document.getElementById(\'cpf-error\').textContent = \'CPF inválido\';
         isValid = false;
     }
     
@@ -303,36 +303,38 @@ document.getElementById('clienteForm').addEventListener('submit', function(e) {
         // Converter FormData para JSON
         const jsonData = {};
         for (let [key, value] of formData.entries()) {
-            if (key === 'cpf') {
-                jsonData[key] = value.replace(/\D/g, '');
-            } else if (key === 'telefone') {
-                jsonData[key] = value.replace(/\D/g, '');
+            if (key === \'cpf\') {
+                jsonData[key] = value.replace(/\\D/g, \'\');
+            } else if (key === \'telefone\') {
+                jsonData[key] = value.replace(/\\D/g, \'\');
             } else {
                 jsonData[key] = value;
             }
         }
         
         // Enviar via API
-        fetch('/api/clientes', {
-            method: 'POST',
+        fetch(\'/api/clientes\', {
+            method: \'POST\',
             headers: {
-                'Content-Type': 'application/json',
+                \'Content-Type\': \'application/json\',
             },
             body: JSON.stringify(jsonData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.id) {
-                window.location.href = "{{ url_for('cliente_views.listar_clientes') }}";
+                window.location.href = "{{ url_for(\'cliente_views.listar_clientes\') }}";
             } else {
-                alert('Erro ao cadastrar cliente: ' + (data.erro || 'Erro desconhecido'));
+                alert(\'Erro ao cadastrar cliente: \' + (data.erro || \'Erro desconhecido\'));
             }
         })
         .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao cadastrar cliente');
+            console.error(\'Erro:\', error);
+            alert(\'Erro ao cadastrar cliente\');
         });
     }
 });
 </script>
 {% endblock %}
+
+

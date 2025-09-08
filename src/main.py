@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from flask import Flask, send_from_directory, render_template
 from flask_cors import CORS
 from src.model.models import db
+from src.model.services.cliente_service import ClienteService
 
 # Importar rotas de API (backend - JSON)
 from src.controller.api.user import user_bp
@@ -55,14 +56,19 @@ with app.app_context():
 @app.route('/dashboard')
 def dashboard():
     """Dashboard principal do sistema"""
-    from src.model.models import Cliente, Pet, Venda, Agendamento
+    from src.model.models import Pet, Venda, Agendamento
     from datetime import datetime, date
     
+    cliente_service = ClienteService()
+
     try:
         # Estatísticas gerais
+        total_clientes = len(cliente_service.get_all_clientes())
+        clientes_ativos = len([c for c in cliente_service.get_all_clientes() if c.ativo])
+
         stats = {
-            'total_clientes': Cliente.query.count(),
-            'clientes_ativos': Cliente.query.filter_by(ativo=True).count(),
+            'total_clientes': total_clientes,
+            'clientes_ativos': clientes_ativos,
             'total_pets': Pet.query.count() if hasattr(db.Model, 'Pet') else 0,
             'pets_ativos': Pet.query.filter_by(ativo=True).count() if hasattr(db.Model, 'Pet') else 0,
             'total_vendas': Venda.query.count() if hasattr(db.Model, 'Venda') else 0,
@@ -72,7 +78,7 @@ def dashboard():
         }
         
         # Clientes recentes (últimos 5)
-        clientes_recentes = Cliente.query.filter_by(ativo=True).order_by(Cliente.data_cadastro.desc()).limit(5).all()
+        clientes_recentes = sorted([c for c in cliente_service.get_all_clientes() if c.ativo], key=lambda x: x.data_cadastro, reverse=True)[:5]
         
         # Agendamentos de hoje
         agendamentos_hoje = []
@@ -182,4 +188,5 @@ def api_info():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 
