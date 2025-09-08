@@ -1,0 +1,274 @@
+/* Estilo personalizado para PetShop ERP */
+
+/* Variáveis CSS para cores do tema - Pet Shop Palette */
+:root {
+/* Primary Colors */
+  --primary-color: #29524A;
+  --secondary-color: #99C8C2;
+  --accent-color: #FF6B6B;
+
+  /* Status Colors */
+  --success-color: #58A45C;
+  --warning-color: #F4D35E;
+  --danger-color: #E63946;
+  --info-color: #457B9D;
+
+  /* Neutral Colors */
+  --dark-color: #212529;
+  --medium-color: #6c757d;
+  --light-color: #F8F9FA;
+  --white-color: #FFFFFF;
+
+  /* Sidebar & Navigation */
+  --sidebar-bg: #29524A;
+  --sidebar-bg-end: #22443D;
+  --sidebar-hover: #3A7469;
+  --sidebar-active: #FF6B6B;
+
+  /* Background Variations */
+  --bg-primary: #F0F7F6;
+  --bg-secondary: #EBF4F3;
+  --bg-accent: #FFF0F0;
+
+  /* Category Colors */
+  --dog-color: #E8A87C;
+  --cat-color: #8D99AE;
+  --bird-color: #A8DADC;
+  --fish-color: #457B9D;
+  --small-pets-color: #C38D9E;
+}
+
+/* Layout geral */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-primary);
+}
+
+/* Sidebar personalizada */
+.sidebar {
+    background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-bg-end) 100%);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin: 0.2rem 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: var(--sidebar-hover);
+    color: white;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Cards aprimorados */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+/* Botões personalizados */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Tabelas aprimoradas */
+.table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--dark-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Badges personalizados */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+}
+
+/* Formulários */
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: scale(1.02);
+}
+
+.form-control.is-valid {
+    border-color: var(--success-color);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+}
+
+/* Alertas */
+.alert {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .alert {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem;
+    }
+    
+    .btn-toolbar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .table-responsive {
+        border-radius: 0.5rem;
+    }
+}
+
+/* Estados de loading */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Dashboard específico */
+.dashboard-stats .card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.dashboard-stats .card:nth-child(2) {
+    border-left-color: var(--success-color);
+}
+
+.dashboard-stats .card:nth-child(3) {
+    border-left-color: var(--warning-color);
+}
+
+.dashboard-stats .card:nth-child(4) {
+    border-left-color: var(--info-color);
+}
+
+/* Melhorias visuais para listas */
+.list-group-item {
+    border: none;
+    border-radius: 0.5rem !important;
+    margin-bottom: 0.5rem;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+    transform: scale(1.02);
+}
+
+/* Ícones */
+.fa, .fas, .far {
+    transition: all 0.3s ease;
+}
+
+.btn:hover .fa,
+.btn:hover .fas,
+.btn:hover .far {
+    transform: scale(1.1);
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .btn-toolbar,
+    .btn,
+    .navbar {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}

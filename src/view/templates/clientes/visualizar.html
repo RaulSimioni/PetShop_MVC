@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}Cliente {{ cliente.nome }} - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-user"></i> {{ cliente.nome }}
+        {% if not cliente.ativo %}
+            <span class="badge bg-danger ms-2">Inativo</span>
+        {% endif %}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{{ url_for('cliente_views.editar_cliente', cliente_id=cliente.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            {% if cliente.ativo %}
+            <button onclick="confirmarDesativacao()" class="btn btn-danger">
+                <i class="fas fa-times"></i> Desativar
+            </button>
+            {% else %}
+            <button onclick="ativarCliente()" class="btn btn-success">
+                <i class="fas fa-check"></i> Ativar
+            </button>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Dados Pessoais -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-circle"></i> Dados Pessoais
+                </h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">ID:</dt>
+                    <dd class="col-sm-8">{{ cliente.id }}</dd>
+                    
+                    <dt class="col-sm-4">Nome:</dt>
+                    <dd class="col-sm-8">{{ cliente.nome }}</dd>
+                    
+                    <dt class="col-sm-4">CPF:</dt>
+                    <dd class="col-sm-8">
+                        <code>{{ cliente.cpf[:3] }}.{{ cliente.cpf[3:6] }}.{{ cliente.cpf[6:9] }}-{{ cliente.cpf[9:] }}</code>
+                    </dd>
+                    
+                    <dt class="col-sm-4">Telefone:</dt>
+                    <dd class="col-sm-8">
+                        {% if cliente.telefone|length == 11 %}
+                            ({{ cliente.telefone[:2] }}) {{ cliente.telefone[2:7] }}-{{ cliente.telefone[7:] }}
+                        {% elif cliente.telefone|length == 10 %}
+                            ({{ cliente.telefone[:2] }}) {{ cliente.telefone[2:6] }}-{{ cliente.telefone[6:] }}
+                        {% else %}
+                            {{ cliente.telefone }}
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">
+                        {% if cliente.email %}
+                            <a href="mailto:{{ cliente.email }}">{{ cliente.email }}</a>
+                        {% else %}
+                            <span class="text-muted">Não informado</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-4">Endereço:</dt>
+                    <dd class="col-sm-8">
+                        {% if cliente.endereco %}
+                            {{ cliente.endereco }}
+                        {% else %}
+                            <span class="text-muted">Não informado</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-4">Cadastro:</dt>
+                    <dd class="col-sm-8">
+                        {{ cliente.data_cadastro.strftime('%d/%m/%Y às %H:%M') if cliente.data_cadastro else 'N/A' }}
+                    </dd>
+                    
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        {% if cliente.ativo %}
+                            <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inativo</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-bar"></i> Estatísticas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <i class="fas fa-paw fa-2x mb-2"></i>
+                                <h3>{{ cliente.pets|selectattr('ativo')|list|length }}</h3>
+                                <p>Pets Ativos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                                <h3>{{ cliente.vendas|length }}</h3>
+                                <p>Vendas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <i class="fas fa-calendar fa-2x mb-2"></i>
+                                <h3>{{ cliente.agendamentos|length }}</h3>
+                                <p>Agendamentos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-bolt"></i> Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/pets/novo?cliente_id={{ cliente.id }}" class="btn btn-primary">
+                        <i class="fas fa-paw"></i> Cadastrar Pet
+                    </a>
+                    <a href="/agendamentos/novo?cliente_id={{ cliente.id }}" class="btn btn-info">
+                        <i class="fas fa-calendar-plus"></i> Agendar Serviço
+                    </a>
+                    <a href="/vendas/nova?cliente_id={{ cliente.id }}" class="btn btn-success">
+                        <i class="fas fa-shopping-cart"></i> Nova Venda
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pets do Cliente -->
+{% if cliente.pets %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-paw"></i> Pets do Cliente
+                </h5>
+                <a href="/pets/novo?cliente_id={{ cliente.id }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Novo Pet
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Espécie</th>
+                                <th>Raça</th>
+                                <th>Idade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pet in cliente.pets %}
+                            <tr>
+                                <td><strong>{{ pet.nome }}</strong></td>
+                                <td>{{ pet.especie }}</td>
+                                <td>{{ pet.raca or '-' }}</td>
+                                <td>
+                                    {% if pet.data_nascimento %}
+                                        {% set idade = (moment().date() - pet.data_nascimento).days // 365 %}
+                                        {{ idade }} anos
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pet.ativo %}
+                                        <span class="badge bg-success">Ativo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inativo</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/pets/{{ pet.id }}" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/pets/{{ pet.id }}/editar" class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Histórico de Vendas -->
+{% if cliente.vendas %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shopping-cart"></i> Histórico de Vendas
+                </h5>
+                <a href="/vendas?cliente_id={{ cliente.id }}" class="btn btn-sm btn-outline-primary">
+                    Ver Todas
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for venda in cliente.vendas[-5:] %}
+                            <tr>
+                                <td>#{{ venda.id }}</td>
+                                <td>{{ venda.data_venda.strftime('%d/%m/%Y') if venda.data_venda else '-' }}</td>
+                                <td>R$ {{ "%.2f"|format(venda.total or 0) }}</td>
+                                <td>
+                                    <span class="badge bg-success">Concluída</span>
+                                </td>
+                                <td>
+                                    <a href="/vendas/{{ venda.id }}" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if cliente.vendas|length > 5 %}
+                <div class="text-center mt-2">
+                    <small class="text-muted">Mostrando as 5 vendas mais recentes</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar ação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmarDesativacao() {
+    document.getElementById('confirmMessage').innerHTML = 
+        `Tem certeza que deseja desativar o cliente <strong>{{ cliente.nome }}</strong>?<br>
+         <small class="text-muted">Esta ação pode ser revertida posteriormente.</small>`;
+    
+    document.getElementById('confirmAction').onclick = function() {
+        desativarCliente();
+    };
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+
+function desativarCliente() {
+    fetch('/api/clientes/{{ cliente.id }}', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.mensagem) {
+            location.reload();
+        } else {
+            alert('Erro ao desativar cliente: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao desativar cliente');
+    });
+}
+
+function ativarCliente() {
+    fetch('/api/clientes/{{ cliente.id }}', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ativo: true})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.id) {
+            location.reload();
+        } else {
+            alert('Erro ao ativar cliente: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao ativar cliente');
+    });
+}
+</script>
+{% endblock %}

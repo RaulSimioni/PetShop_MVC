@@ -3,29 +3,36 @@ import sys
 # DON'T CHANGE THIS !!!
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, render_template
 from flask_cors import CORS
-from src.models import db
-from src.routes.user import user_bp
-from src.routes.cliente import cliente_bp
-from src.routes.pet import pet_bp
-from src.routes.funcionario import funcionario_bp
-from src.routes.produto import produto_bp
-from src.routes.servico import servico_bp
-from src.routes.venda import venda_bp
-from src.routes.agendamento import agendamento_bp
+from src.model.models import db
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
+# Importar rotas de API (backend - JSON)
+from src.controller.api.user import user_bp
+from src.controller.api.cliente import cliente_bp
+from src.controller.api.pet import pet_bp
+from src.controller.api.funcionario import funcionario_bp
+from src.controller.api.produto import produto_bp
+from src.controller.api.servico import servico_bp
+from src.controller.api.venda import venda_bp
+from src.controller.api.agendamento import agendamento_bp
+
+# Importar views (frontend - HTML templates)
+from src.controller.views.cliente import cliente_views_bp
+
+app = Flask(__name__, 
+            static_folder=os.path.join(os.path.dirname(__file__), 'view', 'static'),
+            template_folder=os.path.join(os.path.dirname(__file__), 'view', 'templates'))
 
 # Configurações
 app.config['SECRET_KEY'] = 'petshop_erp_secret_key_2024'
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'model', 'database', 'app.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configurar CORS para permitir requisições de qualquer origem
 CORS(app, origins="*")
 
-# Registrar blueprints
+# Registrar blueprints de API (backend - JSON endpoints)
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(cliente_bp, url_prefix='/api')
 app.register_blueprint(pet_bp, url_prefix='/api')
@@ -35,6 +42,9 @@ app.register_blueprint(servico_bp, url_prefix='/api')
 app.register_blueprint(venda_bp, url_prefix='/api')
 app.register_blueprint(agendamento_bp, url_prefix='/api')
 
+# Registrar blueprints de Views (frontend - HTML templates)
+app.register_blueprint(cliente_views_bp)  # Sem prefixo /api
+
 # Inicializar banco de dados
 db.init_app(app)
 
@@ -42,22 +52,65 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+@app.route('/dashboard')
+def dashboard():
+    """Dashboard principal do sistema"""
+    from src.model.models import Cliente, Pet, Venda, Agendamento
+    from datetime import datetime, date
+    
+    try:
+        # Estatísticas gerais
+        stats = {
+            'total_clientes': Cliente.query.count(),
+            'clientes_ativos': Cliente.query.filter_by(ativo=True).count(),
+            'total_pets': Pet.query.count() if hasattr(db.Model, 'Pet') else 0,
+            'pets_ativos': Pet.query.filter_by(ativo=True).count() if hasattr(db.Model, 'Pet') else 0,
+            'total_vendas': Venda.query.count() if hasattr(db.Model, 'Venda') else 0,
+            'valor_vendas': sum([v.total or 0 for v in Venda.query.all()]) if hasattr(db.Model, 'Venda') else 0,
+            'agendamentos_hoje': 0,
+            'agendamentos_pendentes': 0
+        }
+        
+        # Clientes recentes (últimos 5)
+        clientes_recentes = Cliente.query.filter_by(ativo=True).order_by(Cliente.data_cadastro.desc()).limit(5).all()
+        
+        # Agendamentos de hoje
+        agendamentos_hoje = []
+        
+        return render_template('dashboard.html', 
+                             stats=stats,
+                             clientes_recentes=clientes_recentes,
+                             agendamentos_hoje=agendamentos_hoje)
+    except Exception as e:
+        from flask import render_template
+        return render_template('dashboard.html', 
+                             stats={},
+                             clientes_recentes=[],
+                             agendamentos_hoje=[])
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    """Servir arquivos estáticos (frontend)"""
+    """Servir arquivos estáticos ou redirecionar para dashboard"""
     static_folder_path = app.static_folder
+    
+    # Se path está vazio, redirecionar para dashboard
+    if not path:
+        return dashboard()
+    
     if static_folder_path is None:
         return "Static folder not configured", 404
 
-    if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
+    if os.path.exists(os.path.join(static_folder_path, path)):
         return send_from_directory(static_folder_path, path)
     else:
+        # Se arquivo não existe, verificar se existe index.html
         index_path = os.path.join(static_folder_path, 'index.html')
         if os.path.exists(index_path):
             return send_from_directory(static_folder_path, 'index.html')
         else:
-            return "Sistema ERP Pet Shop - Backend funcionando! Acesse /api para ver as rotas disponíveis.", 200
+            # Redirecionar para dashboard como fallback
+            return dashboard()
 
 @app.route('/api')
 def api_info():

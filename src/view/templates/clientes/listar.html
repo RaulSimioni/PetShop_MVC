@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-users" style="color: var(--primary-color);"></i> Gerenciar Clientes
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Novo Cliente
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nome, CPF ou email...">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <select id="statusFilter" class="form-select">
+            <option value="">Todos os status</option>
+            <option value="true">Ativos</option>
+            <option value="false">Inativos</option>
+        </select>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if clientes %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="clientesTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Email</th>
+                        <th>Cadastro</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr data-status="{{ cliente.ativo|lower }}">
+                        <td>{{ cliente.id }}</td>
+                        <td>
+                            <strong>{{ cliente.nome }}</strong>
+                        </td>
+                        <td>{{ cliente.cpf }}</td>
+                        <td>{{ cliente.telefone }}</td>
+                        <td>{{ cliente.email or '-' }}</td>
+                        <td>{{ cliente.data_cadastro.strftime('%d/%m/%Y') if cliente.data_cadastro else '-' }}</td>
+                        <td>
+                            {% if cliente.ativo %}
+                                <span class="badge bg-success">Ativo</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inativo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}" 
+                                   class="btn btn-sm btn-outline-info" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('cliente_views.editar_cliente', cliente_id=cliente.id) }}" 
+                                   class="btn btn-sm btn-outline-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if cliente.ativo %}
+                                <button onclick="confirmarDesativacao({{ cliente.id }}, '{{ cliente.nome }}')" 
+                                        class="btn btn-sm btn-outline-danger" title="Desativar">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                {% else %}
+                                <button onclick="ativarCliente({{ cliente.id }})" 
+                                        class="btn btn-sm btn-outline-success" title="Ativar">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if pagination %}
+        <nav aria-label="Navegação de páginas">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('cliente_views.listar_clientes', page=pagination.prev_num) }}">Anterior</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in pagination.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != pagination.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('cliente_views.listar_clientes', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('cliente_views.listar_clientes', page=pagination.next_num) }}">Próximo</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">Nenhum cliente encontrado</h4>
+            <p class="text-muted">Que tal cadastrar o primeiro cliente?</p>
+            <a href="{{ url_for('cliente_views.novo_cliente') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Cadastrar Cliente
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar ação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Busca em tempo real
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    filterTable(searchTerm, statusFilter);
+});
+
+// Filtro por status
+document.getElementById('statusFilter').addEventListener('change', function() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = this.value;
+    filterTable(searchTerm, statusFilter);
+});
+
+function filterTable(searchTerm, statusFilter) {
+    const table = document.getElementById('clientesTable');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        const status = row.getAttribute('data-status');
+        
+        let textMatch = false;
+        if (cells.length >= 5) {
+            const searchableText = (
+                cells[1].textContent + ' ' +  // nome
+                cells[2].textContent + ' ' +  // cpf
+                cells[4].textContent          // email
+            ).toLowerCase();
+            textMatch = searchableText.includes(searchTerm);
+        }
+        
+        let statusMatch = true;
+        if (statusFilter !== '') {
+            statusMatch = status === statusFilter;
+        }
+        
+        row.style.display = (textMatch && statusMatch) ? '' : 'none';
+    }
+}
+
+function confirmarDesativacao(clienteId, clienteNome) {
+    document.getElementById('confirmMessage').innerHTML = 
+        `Tem certeza que deseja desativar o cliente <strong>${clienteNome}</strong>?<br>
+         <small class="text-muted">Esta ação pode ser revertida posteriormente.</small>`;
+    
+    document.getElementById('confirmAction').onclick = function() {
+        desativarCliente(clienteId);
+    };
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+
+function desativarCliente(clienteId) {
+    fetch(`/api/clientes/${clienteId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.mensagem) {
+            location.reload();
+        } else {
+            alert('Erro ao desativar cliente: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao desativar cliente');
+    });
+}
+
+function ativarCliente(clienteId) {
+    fetch(`/api/clientes/${clienteId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ativo: true})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.id) {
+            location.reload();
+        } else {
+            alert('Erro ao ativar cliente: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao ativar cliente');
+    });
+}
+</script>
+{% endblock %}
