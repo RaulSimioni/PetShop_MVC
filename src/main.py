@@ -20,6 +20,7 @@ from src.controller.api.agendamento import agendamento_bp
 
 # Importar views (frontend - HTML templates)
 from src.controller.views.cliente import cliente_views_bp
+from src.controller.views.funcionario import funcionario_views_bp
 
 app = Flask(__name__, 
             static_folder=os.path.join(os.path.dirname(__file__), 'view', 'static'),
@@ -45,6 +46,7 @@ app.register_blueprint(agendamento_bp, url_prefix='/api')
 
 # Registrar blueprints de Views (frontend - HTML templates)
 app.register_blueprint(cliente_views_bp)  # Sem prefixo /api
+app.register_blueprint(funcionario_views_bp)  # Sem prefixo /api
 
 # Inicializar banco de dados
 db.init_app(app)

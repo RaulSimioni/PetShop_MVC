@@ -202,8 +202,8 @@ const originalData = {
     telefone: "{{ cliente.telefone }}",
     email: "{{ cliente.email or '' }}",
     endereco: "{{ cliente.endereco or '' }}",
-    ativo: {{ cliente.ativo|lower }}
-};
+    ativo: {{ cliente.ativo|tojson }}
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Máscara para CPF

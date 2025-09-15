@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Funcionário - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--accent-color); font-size: 2rem; vertical-align: middle;">person_add</span> 
+        Novo Funcionário
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('funcionario_views.listar_funcionarios') }}" class="btn btn-secondary">
+            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" id="funcionarioForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nome" name="nome" required 
+                                       value="{{ form_data.nome if form_data else request.form.nome if request.form else '' }}"
+                                       maxlength="100">
+                                <div class="invalid-feedback" id="nome-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cpf" name="cpf" required 
+                                       value="{{ form_data.cpf if form_data else request.form.cpf if request.form else '' }}"
+                                       placeholder="000.000.000-00" maxlength="14">
+                                <div class="invalid-feedback" id="cpf-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="telefone" name="telefone" required 
+                                       value="{{ form_data.telefone if form_data else request.form.telefone if request.form else '' }}"
+                                       placeholder="(00) 00000-0000" maxlength="15">
+                                <div class="invalid-feedback" id="telefone-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ form_data.email if form_data else request.form.email if request.form else '' }}"
+                                       maxlength="120">
+                                <div class="invalid-feedback" id="email-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cargo" class="form-label">Cargo <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cargo" name="cargo" required 
+                                       value="{{ form_data.cargo if form_data else request.form.cargo if request.form else '' }}"
+                                       placeholder="Ex: Veterinário, Atendente, Gerente"
+                                       maxlength="80">
+                                <div class="invalid-feedback" id="cargo-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="salario" class="form-label">Salário</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="salario" name="salario" 
+                                           value="{{ form_data.salario if form_data else request.form.salario if request.form else '' }}"
+                                           step="0.01" min="0" placeholder="0,00">
+                                </div>
+                                <div class="invalid-feedback" id="salario-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="data_admissao" class="form-label">Data de Admissão <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="data_admissao" name="data_admissao" required
+                               value="{{ form_data.data_admissao if form_data else request.form.data_admissao if request.form else '' }}">
+                        <div class="invalid-feedback" id="data_admissao-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="endereco" class="form-label">Endereço</label>
+                        <textarea class="form-control" id="endereco" name="endereco" rows="3"
+                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ form_data.endereco if form_data else request.form.endereco if request.form else '' }}</textarea>
+                        <div class="invalid-feedback" id="endereco-error"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" onclick="limparFormulario()" class="btn btn-outline-secondary">
+                            <span class="material-symbols-outlined me-1">refresh</span> Limpar
+                        </button>
+                        <div>
+                            <a href="{{ url_for('funcionario_views.listar_funcionarios') }}" class="btn btn-secondary me-2">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-symbols-outlined me-1">save</span> Salvar Funcionário
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-1">info</span> Instruções
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-success me-1">check_circle</span>
+                        Campos marcados com <span class="text-danger">*</span> são obrigatórios
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-info me-1">badge</span>
+                        O CPF deve ser único no sistema
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-info me-1">email</span>
+                        O email, se fornecido, deve ser único
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-info me-1">phone</span>
+                        Use o formato: (00) 00000-0000
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-info me-1">work</span>
+                        Especifique o cargo do funcionário
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-1">keyboard</span> Atalhos
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><kbd>Ctrl + S</kbd> - Salvar</li>
+                    <li><kbd>Ctrl + L</kbd> - Limpar</li>
+                    <li><kbd>Esc</kbd> - Cancelar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Máscaras para os campos
+document.addEventListener('DOMContentLoaded', function() {
+    // Máscara para CPF
+    const cpfField = document.getElementById('cpf');
+    cpfField.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            value = value.replace(/(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
+            value = value.replace(/(\d{3})(\d{3})$/, '$1.$2');
+            value = value.replace(/(\d{3})$/, '$1');
+        }
+        this.value = value;
+    });
+
+    // Máscara para telefone
+    const telefoneField = document.getElementById('telefone');
+    telefoneField.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            if (value.length >= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 10) {
+                value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 6) {
+                value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+            } else if (value.length >= 2) {
+                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+            }
+        }
+        this.value = value;
+    });
+
+    // Data padrão (hoje)
+    const dataAdmissaoField = document.getElementById('data_admissao');
+    if (!dataAdmissaoField.value) {
+        const hoje = new Date().toISOString().split('T')[0];
+        dataAdmissaoField.value = hoje;
+    }
+
+    // Atalhos de teclado
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey) {
+            switch(e.key) {
+                case 's':
+                    e.preventDefault();
+                    document.getElementById('funcionarioForm').submit();
+                    break;
+                case 'l':
+                    e.preventDefault();
+                    limparFormulario();
+                    break;
+            }
+        } else if (e.key === 'Escape') {
+            window.location.href = "{{ url_for('funcionario_views.listar_funcionarios') }}";
+        }
+    });
+});
+
+// Validação em tempo real
+function validateField(fieldId, validationFunction) {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.getElementById(fieldId + '-error');
+    
+    field.addEventListener('blur', function() {
+        const result = validationFunction(this.value);
+        if (result.valid) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+            errorDiv.textContent = '';
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+            errorDiv.textContent = result.message;
+        }
+    });
+}
+
+// Validações específicas
+validateField('nome', function(value) {
+    if (!value.trim()) return {valid: false, message: 'Nome é obrigatório'};
+    if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
+    return {valid: true};
+});
+
+validateField('cpf', function(value) {
+    if (!value) return {valid: false, message: 'CPF é obrigatório'};
+    const cpf = value.replace(/\D/g, '');
+    if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
+    if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
+    return {valid: true};
+});
+
+validateField('telefone', function(value) {
+    if (!value) return {valid: false, message: 'Telefone é obrigatório'};
+    const telefone = value.replace(/\D/g, '');
+    if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
+    return {valid: true};
+});
+
+validateField('email', function(value) {
+    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        return {valid: false, message: 'Email inválido'};
+    }
+    return {valid: true};
+});
+
+validateField('cargo', function(value) {
+    if (!value.trim()) return {valid: false, message: 'Cargo é obrigatório'};
+    if (value.trim().length < 2) return {valid: false, message: 'Cargo deve ter pelo menos 2 caracteres'};
+    return {valid: true};
+});
+
+validateField('data_admissao', function(value) {
+    if (!value) return {valid: false, message: 'Data de admissão é obrigatória'};
+    const dataAdmissao = new Date(value);
+    const hoje = new Date();
+    if (dataAdmissao > hoje) return {valid: false, message: 'Data de admissão não pode ser futura'};
+    return {valid: true};
+});
+
+function validarCPF(cpf) {
+    // Elimina CPFs conhecidos que são inválidos
+    if (cpf === "00000000000" || cpf === "11111111111" || 
+        cpf === "22222222222" || cpf === "33333333333" || 
+        cpf === "44444444444" || cpf === "55555555555" || 
+        cpf === "66666666666" || cpf === "77777777777" || 
+        cpf === "88888888888" || cpf === "99999999999") {
+        return false;
+    }
+    
+    // Valida 1º dígito verificador
+    let add = 0;
+    for (let i = 0; i < 9; i++) {
+        add += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(9))) return false;
+    
+    // Valida 2º dígito verificador
+    add = 0;
+    for (let i = 0; i < 10; i++) {
+        add += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(10))) return false;
+    
+    return true;
+}
+
+function limparFormulario() {
+    document.getElementById('funcionarioForm').reset();
+    // Remove classes de validação
+    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+        el.classList.remove('is-valid', 'is-invalid');
+    });
+    // Redefine data padrão
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('data_admissao').value = hoje;
+}
+
+// Enviar formulário
+document.getElementById('funcionarioForm').addEventListener('submit', function(e) {
+    // Permitir envio do formulário padrão
+    // A validação já foi feita pelos campos individuais
+});
+</script>
+{% endblock %}
