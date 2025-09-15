@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/pets">
+                            <a class="nav-link {% if request.endpoint and 'pet' in request.endpoint %}active{% endif %}" href="/pets">
                                 <span class="material-symbols-outlined">pets</span>
                                 <span class="nav-text">Pets</span>
                             </a>

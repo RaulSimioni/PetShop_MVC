@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Pets - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">pets</span> 
+        Gerenciar Pets
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('pet_views.novo_pet') }}" class="btn btn-primary">
+            <span class="material-symbols-outlined me-1">add</span> Novo Pet
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="input-group">
+            <span class="input-group-text">
+                <span class="material-symbols-outlined">search</span>
+            </span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nome, dono ou raça..." value="{{ search }}">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <select id="statusFilter" class="form-select">
+            <option value="">Todos os status</option>
+            <option value="true" {% if status == 'true' %}selected{% endif %}>Ativos</option>
+            <option value="false" {% if status == 'false' %}selected{% endif %}>Inativos</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select id="especieFilter" class="form-select">
+            <option value="">Todas as espécies</option>
+            {% for esp in especies %}
+            <option value="{{ esp }}" {% if especie == esp %}selected{% endif %}>{{ esp }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <a href="{{ url_for('pet_views.listar_pets') }}" class="btn btn-outline-secondary">
+            <span class="material-symbols-outlined me-1">clear</span> Limpar
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if pets %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="petsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Espécie</th>
+                        <th>Raça</th>
+                        <th>Sexo</th>
+                        <th>Dono</th>
+                        <th>Cadastro</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pet in pets %}
+                    <tr data-status="{{ pet.ativo|lower }}" data-especie="{{ pet.especie }}">
+                        <td>{{ pet.id }}</td>
+                        <td>
+                            <strong>{{ pet.nome }}</strong>
+                            {% if pet.cor %}
+                            <br><small class="text-muted">{{ pet.cor }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ pet.especie }}</span>
+                        </td>
+                        <td>{{ pet.raca or '-' }}</td>
+                        <td>
+                            {% if pet.sexo == 'Macho' %}
+                            <span class="badge bg-primary">♂ Macho</span>
+                            {% elif pet.sexo == 'Fêmea' %}
+                            <span class="badge bg-warning">♀ Fêmea</span>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=pet.cliente_id) }}" 
+                               class="text-decoration-none">
+                                {{ pet.dono.nome }}
+                            </a>
+                        </td>
+                        <td>{{ pet.data_cadastro.strftime('%d/%m/%Y') if pet.data_cadastro else '-' }}</td>
+                        <td>
+                            {% if pet.ativo %}
+                                <span class="badge bg-success">Ativo</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inativo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('pet_views.visualizar_pet', pet_id=pet.id) }}" 
+                                   class="btn btn-sm btn-outline-info" title="Visualizar">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                                <a href="{{ url_for('pet_views.editar_pet', pet_id=pet.id) }}" 
+                                   class="btn btn-sm btn-outline-warning" title="Editar">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </a>
+                                {% if pet.ativo %}
+                                <button onclick="confirmarDesativacao({{ pet.id }}, '{{ pet.nome }}')" 
+                                        class="btn btn-sm btn-outline-danger" title="Desativar">
+                                    <span class="material-symbols-outlined">close</span>
+                                </button>
+                                {% else %}
+                                <button onclick="ativarPet({{ pet.id }})" 
+                                        class="btn btn-sm btn-outline-success" title="Ativar">
+                                    <span class="material-symbols-outlined">check</span>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if pagination %}
+        <nav aria-label="Navegação de páginas">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('pet_views.listar_pets', page=pagination.prev_num, search=search, status=status, especie=especie) }}">Anterior</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in pagination.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != pagination.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('pet_views.listar_pets', page=page_num, search=search, status=status, especie=especie) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('pet_views.listar_pets', page=pagination.next_num, search=search, status=status, especie=especie) }}">Próximo</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <span class="material-symbols-outlined text-muted mb-3" style="font-size: 4rem; display: block;">pets</span>
+            <h4 class="text-muted">Nenhum pet encontrado</h4>
+            <p class="text-muted">Que tal cadastrar o primeiro pet?</p>
+            <a href="{{ url_for('pet_views.novo_pet') }}" class="btn btn-primary">
+                <span class="material-symbols-outlined me-1">add</span> Cadastrar Pet
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar ação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Busca em tempo real
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    updateFilters();
+});
+
+// Filtros
+document.getElementById('statusFilter').addEventListener('change', function() {
+    updateFilters();
+});
+
+document.getElementById('especieFilter').addEventListener('change', function() {
+    updateFilters();
+});
+
+function updateFilters() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    const especieFilter = document.getElementById('especieFilter').value;
+    
+    const table = document.getElementById('petsTable');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        const status = row.getAttribute('data-status');
+        const especie = row.getAttribute('data-especie');
+        
+        let textMatch = false;
+        if (cells.length >= 6) {
+            const searchableText = (
+                cells[1].textContent + ' ' +  // nome
+                cells[5].textContent + ' ' +  // dono
+                cells[3].textContent          // raça
+            ).toLowerCase();
+            textMatch = searchableText.includes(searchTerm);
+        }
+        
+        let statusMatch = true;
+        if (statusFilter !== '') {
+            statusMatch = status === statusFilter;
+        }
+        
+        let especieMatch = true;
+        if (especieFilter !== '') {
+            especieMatch = especie === especieFilter;
+        }
+        
+        row.style.display = (textMatch && statusMatch && especieMatch) ? '' : 'none';
+    }
+}
+
+function confirmarDesativacao(petId, petNome) {
+    document.getElementById('confirmMessage').innerHTML = 
+        `Tem certeza que deseja desativar o pet <strong>${petNome}</strong>?<br>
+         <small class="text-muted">Esta ação pode ser revertida posteriormente.</small>`;
+    
+    document.getElementById('confirmAction').onclick = function() {
+        desativarPet(petId);
+    };
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+
+function desativarPet(petId) {
+    fetch(`/api/pets/${petId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.mensagem) {
+            location.reload();
+        } else {
+            alert('Erro ao desativar pet: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao desativar pet');
+    });
+}
+
+function ativarPet(petId) {
+    fetch(`/api/pets/${petId}/ativar`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.id) {
+            location.reload();
+        } else {
+            alert('Erro ao ativar pet: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao ativar pet');
+    });
+}
+</script>
+{% endblock %}

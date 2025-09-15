@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}Editar {{ pet.nome }} - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">edit</span>
+        Editar Pet: {{ pet.nome }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('pet_views.visualizar_pet', pet_id=pet.id) }}" class="btn btn-outline-secondary">
+            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">pets</span>
+                    Dados do Pet
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nome" class="form-label">Nome *</label>
+                            <input type="text" class="form-control" id="nome" name="nome" value="{{ pet.nome }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cliente_id" class="form-label">Dono *</label>
+                            <select class="form-select" id="cliente_id" name="cliente_id" required>
+                                <option value="">Selecione o dono</option>
+                                {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}" {% if pet.cliente_id == cliente.id %}selected{% endif %}>
+                                    {{ cliente.nome }} ({{ cliente.cpf }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="especie" class="form-label">Espécie *</label>
+                            <select class="form-select" id="especie" name="especie" required>
+                                <option value="">Selecione a espécie</option>
+                                {% for esp in especies %}
+                                <option value="{{ esp }}" {% if pet.especie == esp %}selected{% endif %}>{{ esp }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo">
+                                <option value="">Selecione o sexo</option>
+                                {% for s in sexos %}
+                                <option value="{{ s }}" {% if pet.sexo == s %}selected{% endif %}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="raca" class="form-label">Raça</label>
+                            <input type="text" class="form-control" id="raca" name="raca" value="{{ pet.raca or '' }}" 
+                                   placeholder="Ex: Labrador, Siamês, etc.">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cor" class="form-label">Cor</label>
+                            <input type="text" class="form-control" id="cor" name="cor" value="{{ pet.cor or '' }}" 
+                                   placeholder="Ex: Preto, Branco, Caramelo">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" 
+                                   value="{{ pet.data_nascimento.strftime('%Y-%m-%d') if pet.data_nascimento else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="peso" class="form-label">Peso (kg)</label>
+                            <input type="number" step="0.1" min="0" class="form-control" id="peso" name="peso" 
+                                   value="{{ pet.peso or '' }}" placeholder="Ex: 5.2">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
+                                  placeholder="Informações adicionais sobre o pet (alergias, medicamentos, comportamento, etc.)">{{ pet.observacoes or '' }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ativo" name="ativo" {% if pet.ativo %}checked{% endif %}>
+                            <label class="form-check-label" for="ativo">
+                                <span class="material-symbols-outlined me-1" style="font-size: 1.2rem; vertical-align: middle;">check_circle</span>
+                                Pet ativo
+                            </label>
+                        </div>
+                        <small class="text-muted">Pets inativos não aparecem nas listagens principais e não podem ser agendados</small>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('pet_views.visualizar_pet', pet_id=pet.id) }}" class="btn btn-secondary">
+                            <span class="material-symbols-outlined me-1">cancel</span> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined me-1">save</span> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Informações Atuais -->
+        <div class="card bg-light">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">info</span>
+                    Informações Atuais
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <small class="text-muted">Nome:</small>
+                    <div class="fw-bold">{{ pet.nome }}</div>
+                </div>
+                
+                <div class="mb-2">
+                    <small class="text-muted">Dono:</small>
+                    <div>{{ pet.dono.nome }}</div>
+                </div>
+                
+                <div class="mb-2">
+                    <small class="text-muted">Espécie:</small>
+                    <div><span class="badge bg-info">{{ pet.especie }}</span></div>
+                </div>
+                
+                {% if pet.raca %}
+                <div class="mb-2">
+                    <small class="text-muted">Raça:</small>
+                    <div>{{ pet.raca }}</div>
+                </div>
+                {% endif %}
+
+                {% if pet.sexo %}
+                <div class="mb-2">
+                    <small class="text-muted">Sexo:</small>
+                    <div>
+                        {% if pet.sexo == 'Macho' %}
+                        <span class="badge bg-primary">♂ Macho</span>
+                        {% else %}
+                        <span class="badge bg-warning">♀ Fêmea</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mb-2">
+                    <small class="text-muted">Status:</small>
+                    <div>
+                        {% if pet.ativo %}
+                        <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                        <span class="badge bg-danger">Inativo</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <small class="text-muted">Cadastrado em:</small>
+                    <div>{{ pet.data_cadastro.strftime('%d/%m/%Y') if pet.data_cadastro else 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dicas de Edição -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">help</span>
+                    Dicas de Edição
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-primary me-2" style="font-size: 1.2rem;">info</span>
+                        <small>Campos com * são obrigatórios</small>
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-warning me-2" style="font-size: 1.2rem;">warning</span>
+                        <small>Alterar o dono transfere o pet</small>
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-danger me-2" style="font-size: 1.2rem;">cancel</span>
+                        <small>Desativar impede novos agendamentos</small>
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-success me-2" style="font-size: 1.2rem;">check</span>
+                        <small>Verificar se o dono está ativo antes de ativar o pet</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ações Perigosas -->
+        <div class="card mt-3 border-warning">
+            <div class="card-header bg-warning bg-opacity-10">
+                <h6 class="card-title mb-0 text-warning">
+                    <span class="material-symbols-outlined me-2">warning</span>
+                    Ações Perigosas
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if pet.ativo %}
+                    <button onclick="confirmarDesativacao({{ pet.id }}, '{{ pet.nome }}')" 
+                            class="btn btn-outline-danger btn-sm">
+                        <span class="material-symbols-outlined me-1">close</span> Desativar Pet
+                    </button>
+                    {% endif %}
+                </div>
+                <small class="text-muted d-block mt-2">
+                    Use estas ações com cuidado
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar ação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validação de data de nascimento
+    const dataNascimento = document.getElementById('data_nascimento');
+    const hoje = new Date().toISOString().split('T')[0];
+    dataNascimento.setAttribute('max', hoje);
+
+    // Validação do formulário
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const nome = document.getElementById('nome').value.trim();
+        const clienteId = document.getElementById('cliente_id').value;
+        const especie = document.getElementById('especie').value;
+
+        if (!nome) {
+            e.preventDefault();
+            alert('Nome é obrigatório');
+            document.getElementById('nome').focus();
+            return;
+        }
+
+        if (!clienteId) {
+            e.preventDefault();
+            alert('Selecione o dono do pet');
+            document.getElementById('cliente_id').focus();
+            return;
+        }
+
+        if (!especie) {
+            e.preventDefault();
+            alert('Selecione a espécie do pet');
+            document.getElementById('especie').focus();
+            return;
+        }
+    });
+
+    // Limpar espaços em branco ao sair dos campos de texto
+    const textInputs = document.querySelectorAll('input[type="text"], textarea');
+    textInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            this.value = this.value.trim();
+        });
+    });
+
+    // Alerta ao alterar dono
+    const clienteSelect = document.getElementById('cliente_id');
+    const donoOriginal = {{ pet.cliente_id }};
+    clienteSelect.addEventListener('change', function() {
+        if (this.value && this.value != donoOriginal) {
+            alert('Atenção: Você está transferindo este pet para outro dono!');
+        }
+    });
+});
+
+function confirmarDesativacao(petId, petNome) {
+    document.getElementById('confirmMessage').innerHTML = 
+        `Tem certeza que deseja desativar o pet <strong>${petNome}</strong>?<br>
+         <small class="text-muted">Você pode reativar posteriormente na página de edição.</small>`;
+    
+    document.getElementById('confirmAction').onclick = function() {
+        desativarPet(petId);
+    };
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+
+function desativarPet(petId) {
+    fetch(`/api/pets/${petId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.mensagem) {
+            location.reload();
+        } else {
+            alert('Erro ao desativar pet: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao desativar pet');
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pet.nome }} - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">pets</span>
+        {{ pet.nome }}
+        {% if not pet.ativo %}
+        <span class="badge bg-danger ms-2">Inativo</span>
+        {% endif %}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{{ url_for('pet_views.listar_pets') }}" class="btn btn-outline-secondary">
+                <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+            </a>
+            <a href="{{ url_for('pet_views.editar_pet', pet_id=pet.id) }}" class="btn btn-warning">
+                <span class="material-symbols-outlined me-1">edit</span> Editar
+            </a>
+        </div>
+        <div class="btn-group">
+            {% if pet.ativo %}
+            <button onclick="confirmarDesativacao({{ pet.id }}, '{{ pet.nome }}')" class="btn btn-danger">
+                <span class="material-symbols-outlined me-1">close</span> Desativar
+            </button>
+            {% else %}
+            <button onclick="ativarPet({{ pet.id }})" class="btn btn-success">
+                <span class="material-symbols-outlined me-1">check</span> Ativar
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">info</span>
+                    Informações do Pet
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Nome</label>
+                        <p class="form-control-plaintext fw-bold">{{ pet.nome }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Espécie</label>
+                        <p class="form-control-plaintext">
+                            <span class="badge bg-info">{{ pet.especie }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Raça</label>
+                        <p class="form-control-plaintext">{{ pet.raca or '-' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Cor</label>
+                        <p class="form-control-plaintext">{{ pet.cor or '-' }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Sexo</label>
+                        <p class="form-control-plaintext">
+                            {% if pet.sexo == 'Macho' %}
+                            <span class="badge bg-primary">♂ Macho</span>
+                            {% elif pet.sexo == 'Fêmea' %}
+                            <span class="badge bg-warning">♀ Fêmea</span>
+                            {% else %}
+                            <span class="text-muted">Não informado</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Peso</label>
+                        <p class="form-control-plaintext">
+                            {% if pet.peso %}
+                            {{ pet.peso }} kg
+                            {% else %}
+                            <span class="text-muted">Não informado</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Data de Nascimento</label>
+                        <p class="form-control-plaintext">
+                            {% if pet.data_nascimento %}
+                            {{ pet.data_nascimento.strftime('%d/%m/%Y') }}
+                            <small class="text-muted">
+                                ({{ ((moment().date() - pet.data_nascimento).days / 365.25) | round(1) }} anos)
+                            </small>
+                            {% else %}
+                            <span class="text-muted">Não informado</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">Data de Cadastro</label>
+                        <p class="form-control-plaintext">
+                            {{ pet.data_cadastro.strftime('%d/%m/%Y às %H:%M') if pet.data_cadastro else 'Não informado' }}
+                        </p>
+                    </div>
+                </div>
+
+                {% if pet.observacoes %}
+                <div class="mb-3">
+                    <label class="form-label text-muted">Observações</label>
+                    <div class="alert alert-info">
+                        <span class="material-symbols-outlined me-2">note</span>
+                        {{ pet.observacoes }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Histórico de Agendamentos (futuro) -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">schedule</span>
+                    Histórico de Agendamentos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-3 text-muted">
+                    <span class="material-symbols-outlined mb-2" style="font-size: 2rem; display: block;">schedule</span>
+                    <p>Histórico de agendamentos em desenvolvimento</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Informações do Dono -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">person</span>
+                    Dono
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                         style="width: 50px; height: 50px;">
+                        <span class="material-symbols-outlined text-white">person</span>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">{{ pet.dono.nome }}</h6>
+                        <small class="text-muted">Cliente desde {{ pet.dono.data_cadastro.strftime('%m/%Y') if pet.dono.data_cadastro else 'N/A' }}</small>
+                    </div>
+                </div>
+                
+                <div class="mb-2">
+                    <small class="text-muted">CPF:</small>
+                    <div>{{ pet.dono.cpf }}</div>
+                </div>
+                
+                <div class="mb-2">
+                    <small class="text-muted">Telefone:</small>
+                    <div>{{ pet.dono.telefone }}</div>
+                </div>
+                
+                {% if pet.dono.email %}
+                <div class="mb-2">
+                    <small class="text-muted">Email:</small>
+                    <div>{{ pet.dono.email }}</div>
+                </div>
+                {% endif %}
+                
+                {% if pet.dono.endereco %}
+                <div class="mb-2">
+                    <small class="text-muted">Endereço:</small>
+                    <div>{{ pet.dono.endereco }}</div>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=pet.cliente_id) }}" 
+                       class="btn btn-outline-primary btn-sm">
+                        <span class="material-symbols-outlined me-1">visibility</span> Ver Cliente
+                    </a>
+                    <a href="{{ url_for('pet_views.listar_pets', cliente_id=pet.cliente_id) }}" 
+                       class="btn btn-outline-info btn-sm">
+                        <span class="material-symbols-outlined me-1">pets</span> Outros Pets
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status do Pet -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">info</span>
+                    Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                    {% if pet.ativo %}
+                    <span class="material-symbols-outlined text-success me-2">check_circle</span>
+                    <span class="text-success">Ativo</span>
+                    {% else %}
+                    <span class="material-symbols-outlined text-danger me-2">cancel</span>
+                    <span class="text-danger">Inativo</span>
+                    {% endif %}
+                </div>
+                
+                {% if not pet.dono.ativo %}
+                <div class="alert alert-warning mt-2">
+                    <span class="material-symbols-outlined me-2">warning</span>
+                    <small>Atenção: O dono deste pet está inativo</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <span class="material-symbols-outlined me-2">flash_on</span>
+                    Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary btn-sm" disabled>
+                        <span class="material-symbols-outlined me-1">schedule</span> Novo Agendamento
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" disabled>
+                        <span class="material-symbols-outlined me-1">sell</span> Nova Venda
+                    </button>
+                    <a href="{{ url_for('pet_views.novo_pet', cliente_id=pet.cliente_id) }}" 
+                       class="btn btn-outline-info btn-sm">
+                        <span class="material-symbols-outlined me-1">add</span> Novo Pet (mesmo dono)
+                    </a>
+                </div>
+                <small class="text-muted d-block mt-2">
+                    * Algumas funcionalidades estão em desenvolvimento
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar ação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="confirmMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmarDesativacao(petId, petNome) {
+    document.getElementById('confirmMessage').innerHTML = 
+        `Tem certeza que deseja desativar o pet <strong>${petNome}</strong>?<br>
+         <small class="text-muted">Esta ação pode ser revertida posteriormente.</small>`;
+    
+    document.getElementById('confirmAction').onclick = function() {
+        desativarPet(petId);
+    };
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+
+function desativarPet(petId) {
+    fetch(`/api/pets/${petId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.mensagem) {
+            location.reload();
+        } else {
+            alert('Erro ao desativar pet: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao desativar pet');
+    });
+}
+
+function ativarPet(petId) {
+    fetch(`/api/pets/${petId}/ativar`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.id) {
+            location.reload();
+        } else {
+            alert('Erro ao ativar pet: ' + (data.erro || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao ativar pet');
+    });
+}
+</script>
+{% endblock %}
