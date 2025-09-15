@@ -110,8 +110,8 @@
             </div>
             <div class="card-body">
                 <div class="row text-center">
-                    <div class="col-md-4">
-                        <div class="card bg-primary text-white">
+                    <div class="col-md-6">
+                        <div class="card card-stat text-white" style="background: var(--ctp-surface1); border-left: 4px solid var(--ctp-pink);">
                             <div class="card-body">
                                 <i class="fas fa-paw fa-2x mb-2"></i>
                                 <h3>{{ cliente.pets|selectattr('ativo')|list|length }}</h3>
@@ -119,17 +119,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card bg-success text-white">
-                            <div class="card-body">
-                                <i class="fas fa-shopping-cart fa-2x mb-2"></i>
-                                <h3>{{ cliente.vendas|length }}</h3>
-                                <p>Vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card bg-info text-white">
+                    <div class="col-md-6">
+                        <div class="card card-stat text-white" style="background: var(--ctp-surface1); border-left: 4px solid var(--ctp-blue);">
                             <div class="card-body">
                                 <i class="fas fa-calendar fa-2x mb-2"></i>
                                 <h3>{{ cliente.agendamentos|length }}</h3>
@@ -155,9 +146,6 @@
                     </a>
                     <a href="/agendamentos/novo?cliente_id={{ cliente.id }}" class="btn btn-info">
                         <i class="fas fa-calendar-plus"></i> Agendar Serviço
-                    </a>
-                    <a href="/vendas/nova?cliente_id={{ cliente.id }}" class="btn btn-success">
-                        <i class="fas fa-shopping-cart"></i> Nova Venda
                     </a>
                 </div>
             </div>

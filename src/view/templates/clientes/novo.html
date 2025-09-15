@@ -8,7 +8,7 @@
         <i class="fas fa-user-plus" style="color: var(--accent-color);"></i> Novo Cliente
     </h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary">
+    <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left me-1"></i> Voltar
         </a>
     </div>
@@ -24,7 +24,7 @@
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="nome" name="nome" required 
-                                       value="{{ request.form.nome if request.form else '' }}"
+                                       value="{{ form_data.nome if form_data else request.form.nome if request.form else '' }}"
                                        maxlength="100">
                                 <div class="invalid-feedback" id="nome-error"></div>
                             </div>
@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="cpf" name="cpf" required 
-                                       value="{{ request.form.cpf if request.form else '' }}"
+                                       value="{{ form_data.cpf if form_data else request.form.cpf if request.form else '' }}"
                                        placeholder="000.000.000-00" maxlength="14">
                                 <div class="invalid-feedback" id="cpf-error"></div>
                             </div>
@@ -45,7 +45,7 @@
                             <div class="mb-3">
                                 <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="telefone" name="telefone" required 
-                                       value="{{ request.form.telefone if request.form else '' }}"
+                                       value="{{ form_data.telefone if form_data else request.form.telefone if request.form else '' }}"
                                        placeholder="(00) 00000-0000" maxlength="15">
                                 <div class="invalid-feedback" id="telefone-error"></div>
                             </div>
@@ -54,7 +54,7 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" 
-                                       value="{{ request.form.email if request.form else '' }}"
+                                       value="{{ form_data.email if form_data else request.form.email if request.form else '' }}"
                                        maxlength="120">
                                 <div class="invalid-feedback" id="email-error"></div>
                             </div>
@@ -64,7 +64,7 @@
                     <div class="mb-3">
                         <label for="endereco" class="form-label">Endereço</label>
                         <textarea class="form-control" id="endereco" name="endereco" rows="3"
-                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ request.form.endereco if request.form else '' }}</textarea>
+                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ form_data.endereco if form_data else request.form.endereco if request.form else '' }}</textarea>
                         <div class="invalid-feedback" id="endereco-error"></div>
                     </div>
 
@@ -336,3 +336,5 @@ document.getElementById('clienteForm').addEventListener('submit', function(e) {
 });
 </script>
 {% endblock %}
+
+
