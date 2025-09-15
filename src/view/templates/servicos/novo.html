@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Serviço - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">add_circle</span>
+        Novo Serviço
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('servico_views.listar') }}" class="btn btn-secondary">
+            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('servico_views.criar') }}" id="servicoForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome do Serviço <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nome" name="nome" required 
+                                       value="{{ form_data.nome if form_data else request.form.nome if request.form else '' }}"
+                                       maxlength="100" placeholder="Ex: Banho e Tosa Completa">
+                                <div class="invalid-feedback" id="nome-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoria <span class="text-danger">*</span></label>
+                                <select class="form-select" id="categoria" name="categoria" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Banho" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Banho' else '' }}>Banho</option>
+                                    <option value="Tosa" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Tosa' else '' }}>Tosa</option>
+                                    <option value="Consulta" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Consulta' else '' }}>Consulta</option>
+                                    <option value="Cirurgia" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Cirurgia' else '' }}>Cirurgia</option>
+                                    <option value="Vacinação" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Vacinação' else '' }}>Vacinação</option>
+                                    <option value="Outros" {{ 'selected' if (form_data.categoria if form_data else request.form.categoria) == 'Outros' else '' }}>Outros</option>
+                                </select>
+                                <div class="invalid-feedback" id="categoria-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="preco" class="form-label">Preço <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="preco" name="preco" required 
+                                           value="{{ form_data.preco if form_data else request.form.preco if request.form else '' }}"
+                                           min="0" step="0.01" placeholder="0,00">
+                                </div>
+                                <div class="invalid-feedback" id="preco-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="duracao_estimada" class="form-label">Duração Estimada (minutos)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="duracao_estimada" name="duracao_estimada" 
+                                           value="{{ form_data.duracao_estimada if form_data else request.form.duracao_estimada if request.form else '' }}"
+                                           min="1" placeholder="Ex: 60">
+                                    <span class="input-group-text">min</span>
+                                </div>
+                                <div class="invalid-feedback" id="duracao_estimada-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" maxlength="500"
+                                  placeholder="Descreva o que inclui este serviço...">{{ form_data.descricao if form_data else request.form.descricao if request.form else '' }}</textarea>
+                        <div class="form-text">Máximo 500 caracteres</div>
+                        <div class="invalid-feedback" id="descricao-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacoes" name="observacoes" rows="2" maxlength="300"
+                                  placeholder="Observações adicionais sobre o serviço...">{{ form_data.observacoes if form_data else request.form.observacoes if request.form else '' }}</textarea>
+                        <div class="form-text">Máximo 300 caracteres</div>
+                        <div class="invalid-feedback" id="observacoes-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked
+                                   {{ 'checked' if (form_data.ativo if form_data else request.form.ativo if request.form else True) else '' }}>
+                            <label class="form-check-label" for="ativo">
+                                Serviço ativo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined me-1">save</span> Salvar Serviço
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="limparFormulario()">
+                            <span class="material-symbols-outlined me-1">refresh</span> Limpar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-1">info</span>
+                    Dicas
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled small">
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined me-2" style="font-size: 16px; color: var(--ctp-green);">check_circle</span>
+                        Use nomes descritivos para facilitar a busca
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined me-2" style="font-size: 16px; color: var(--ctp-blue);">schedule</span>
+                        A duração estimada ajuda no agendamento
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined me-2" style="font-size: 16px; color: var(--ctp-yellow);">attach_money</span>
+                        Preços precisos facilitam o orçamento
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined me-2" style="font-size: 16px; color: var(--ctp-pink);">category</span>
+                        Categorias organizam seus serviços
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-1">keyboard</span>
+                    Atalhos
+                </h6>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div><kbd>Ctrl + S</kbd> - Salvar</div>
+                    <div><kbd>Ctrl + L</kbd> - Limpar formulário</div>
+                    <div><kbd>Esc</kbd> - Voltar à listagem</div>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Função para validar campo
+function validateField(fieldId, validationFunction) {
+    const field = document.getElementById(fieldId);
+    const errorDiv = document.getElementById(fieldId + '-error');
+    
+    field.addEventListener('blur', function() {
+        const result = validationFunction(this.value);
+        if (result.valid) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+            errorDiv.textContent = '';
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+            errorDiv.textContent = result.message;
+        }
+    });
+}
+
+// Validações específicas
+validateField('nome', function(value) {
+    if (!value.trim()) return {valid: false, message: 'Nome é obrigatório'};
+    if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
+    return {valid: true};
+});
+
+validateField('categoria', function(value) {
+    if (!value) return {valid: false, message: 'Categoria é obrigatória'};
+    return {valid: true};
+});
+
+validateField('preco', function(value) {
+    if (!value) return {valid: false, message: 'Preço é obrigatório'};
+    const preco = parseFloat(value);
+    if (isNaN(preco) || preco <= 0) return {valid: false, message: 'Preço deve ser maior que zero'};
+    return {valid: true};
+});
+
+validateField('duracao_estimada', function(value) {
+    if (value && value !== '') {
+        const duracao = parseInt(value);
+        if (isNaN(duracao) || duracao <= 0) {
+            return {valid: false, message: 'Duração deve ser um número positivo'};
+        }
+    }
+    return {valid: true};
+});
+
+// Limpar formulário
+function limparFormulario() {
+    document.getElementById('servicoForm').reset();
+    // Remove classes de validação
+    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+        el.classList.remove('is-valid', 'is-invalid');
+    });
+    // Marca ativo como checked
+    document.getElementById('ativo').checked = true;
+}
+
+// Submissão do formulário
+document.getElementById('servicoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    let isValid = true;
+    const formData = new FormData(this);
+    
+    // Validar campos obrigatórios
+    ['nome', 'categoria', 'preco'].forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+            field.classList.add('is-invalid');
+            document.getElementById(fieldId + '-error').textContent = 'Campo obrigatório';
+            isValid = false;
+        }
+    });
+    
+    // Validar preço
+    const preco = parseFloat(document.getElementById('preco').value);
+    if (isNaN(preco) || preco <= 0) {
+        document.getElementById('preco').classList.add('is-invalid');
+        document.getElementById('preco-error').textContent = 'Preço deve ser maior que zero';
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Converter FormData para JSON
+        const jsonData = {};
+        for (let [key, value] of formData.entries()) {
+            if (key === 'ativo') {
+                jsonData[key] = formData.has('ativo');
+            } else if (key === 'preco') {
+                jsonData[key] = parseFloat(value);
+            } else if (key === 'duracao_estimada' && value) {
+                jsonData[key] = parseInt(value);
+            } else if (value.trim() !== '') {
+                jsonData[key] = value.trim();
+            }
+        }
+        
+        // Enviar via API
+        fetch('/api/servicos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                window.location.href = "{{ url_for('servico_views.listar') }}";
+            } else {
+                alert('Erro ao cadastrar serviço: '+ (data.erro || 'Erro desconhecido'));
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao cadastrar serviço');
+        });
+    }
+});
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey) {
+        switch(e.key) {
+            case 's':
+                e.preventDefault();
+                document.getElementById('servicoForm').submit();
+                break;
+            case 'l':
+                e.preventDefault();
+                limparFormulario();
+                break;
+        }
+    } else if (e.key === 'Escape') {
+        window.location.href = "{{ url_for('servico_views.listar') }}";
+    }
+});
+
+// Formatação de preço
+document.getElementById('preco').addEventListener('input', function() {
+    let value = this.value;
+    // Remove caracteres não numéricos exceto ponto
+    value = value.replace(/[^0-9.]/g, '');
+    // Garante apenas um ponto decimal
+    if ((value.match(/\./g) || []).length > 1) {
+        value = value.substring(0, value.lastIndexOf('.'));
+    }
+    this.value = value;
+});
+</script>
+{% endblock %}

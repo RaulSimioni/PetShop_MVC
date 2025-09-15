@@ -60,8 +60,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/servicos">
-                                <span class="material-symbols-outlined">content_cut</span>
+                            <a class="nav-link {% if request.endpoint and 'servico' in request.endpoint %}active{% endif %}" href="/servicos">
+                                <span class="material-symbols-outlined">design_services</span>
                                 <span class="nav-text">Serviços</span>
                             </a>
                         </li>
