@@ -1,256 +1,361 @@
-{% extends "base.html" %}
-
-{% block title %}Editar Funcionário - PetShop ERP{% endblock %}
-
-{% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">
-        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">person_edit</span> 
-        Editar Funcionário
-    </h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="{{ url_for('funcionario_views.visualizar_funcionario', funcionario_id=funcionario.id) }}" class="btn btn-outline-info me-2">
-            <span class="material-symbols-outlined me-1">visibility</span> Visualizar
-        </a>
-        <a href="{{ url_for('funcionario_views.listar_funcionarios') }}" class="btn btn-secondary">
-            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
-        </a>
-    </div>
+{% extends "base.html" %} {% block title %}Editar Funcionário - PetShop ERP{%
+endblock %} {% block content %}
+<div
+  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  <h1 class="h2">
+    <span
+      class="material-symbols-outlined me-2"
+      style="
+        color: var(--primary-color);
+        font-size: 2rem;
+        vertical-align: middle;
+      "
+      >person_edit</span
+    >
+    Editar Funcionário
+  </h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a
+      href="{{ url_for('funcionario_views.visualizar_funcionario', funcionario_id=funcionario.id) }}"
+      class="btn btn-outline-info me-2"
+    >
+      <span class="material-symbols-outlined me-1">visibility</span> Visualizar
+    </a>
+    <a
+      href="{{ url_for('funcionario_views.listar_funcionarios') }}"
+      class="btn btn-secondary"
+    >
+      <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+    </a>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    Dados do Funcionário #{{ funcionario.id }}
-                </h6>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          Dados do Funcionário #{{ funcionario.id }}
+        </h6>
+      </div>
+      <div class="card-body">
+        <form method="POST" id="funcionarioForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nome" class="form-label"
+                  >Nome Completo <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nome"
+                  name="nome"
+                  required
+                  value="{{ funcionario.nome }}"
+                  maxlength="100"
+                />
+                <div class="invalid-feedback" id="nome-error"></div>
+              </div>
             </div>
-            <div class="card-body">
-                <form method="POST" id="funcionarioForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nome" name="nome" required 
-                                       value="{{ funcionario.nome }}" maxlength="100">
-                                <div class="invalid-feedback" id="nome-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="cpf" name="cpf" required 
-                                       value="{{ funcionario.cpf }}" placeholder="000.000.000-00" maxlength="14">
-                                <div class="invalid-feedback" id="cpf-error"></div>
-                                <small class="form-text text-muted">Alteração do CPF requer atenção especial</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" required 
-                                       value="{{ funcionario.telefone }}" placeholder="(00) 00000-0000" maxlength="15">
-                                <div class="invalid-feedback" id="telefone-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                       value="{{ funcionario.email or '' }}" maxlength="120">
-                                <div class="invalid-feedback" id="email-error"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cargo" class="form-label">Cargo <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="cargo" name="cargo" required 
-                                       value="{{ funcionario.cargo }}" placeholder="Ex: Veterinário, Atendente, Gerente"
-                                       maxlength="80">
-                                <div class="invalid-feedback" id="cargo-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="salario" class="form-label">Salário</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">R$</span>
-                                    <input type="number" class="form-control" id="salario" name="salario" 
-                                           value="{{ funcionario.salario or '' }}" step="0.01" min="0" placeholder="0,00">
-                                </div>
-                                <div class="invalid-feedback" id="salario-error"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="data_admissao" class="form-label">Data de Admissão <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="data_admissao" name="data_admissao" required
-                                       value="{{ funcionario.data_admissao.strftime('%Y-%m-%d') if funcionario.data_admissao else '' }}">
-                                <div class="invalid-feedback" id="data_admissao-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="data_demissao" class="form-label">Data de Demissão</label>
-                                <input type="date" class="form-control" id="data_demissao" name="data_demissao"
-                                       value="{{ funcionario.data_demissao.strftime('%Y-%m-%d') if funcionario.data_demissao else '' }}">
-                                <div class="invalid-feedback" id="data_demissao-error"></div>
-                                <small class="form-text text-muted">Deixe em branco se ainda ativo</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="endereco" class="form-label">Endereço</label>
-                        <textarea class="form-control" id="endereco" name="endereco" rows="3"
-                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ funcionario.endereco or '' }}</textarea>
-                        <div class="invalid-feedback" id="endereco-error"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="ativo" name="ativo" 
-                                   {{ 'checked' if funcionario.ativo else '' }}>
-                            <label class="form-check-label" for="ativo">
-                                Funcionário ativo
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <button type="button" onclick="resetarFormulario()" class="btn btn-outline-secondary">
-                            <span class="material-symbols-outlined me-1">refresh</span> Resetar
-                        </button>
-                        <div>
-                            <a href="{{ url_for('funcionario_views.listar_funcionarios') }}" class="btn btn-secondary me-2">
-                                Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <span class="material-symbols-outlined me-1">save</span> Salvar Alterações
-                            </button>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="cpf" class="form-label"
+                  >CPF <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cpf"
+                  name="cpf"
+                  required
+                  value="{{ funcionario.cpf }}"
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                />
+                <div class="invalid-feedback" id="cpf-error"></div>
+                <small class="form-text text-muted"
+                  >Alteração do CPF requer atenção especial</small
+                >
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
 
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <span class="material-symbols-outlined me-1">info</span> Informações
-                </h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone" class="form-label"
+                  >Telefone <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="telefone"
+                  name="telefone"
+                  required
+                  value="{{ funcionario.telefone }}"
+                  placeholder="(00) 00000-0000"
+                  maxlength="15"
+                />
+                <div class="invalid-feedback" id="telefone-error"></div>
+              </div>
             </div>
-            <div class="card-body">
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <strong>ID:</strong> {{ funcionario.id }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Cadastrado em:</strong><br>
-                        {{ funcionario.data_cadastro.strftime('%d/%m/%Y às %H:%M') if funcionario.data_cadastro else 'N/A' }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Status:</strong>
-                        {% if funcionario.ativo %}
-                            <span class="badge bg-success">Ativo</span>
-                        {% else %}
-                            <span class="badge bg-danger">Inativo</span>
-                        {% endif %}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Cargo atual:</strong> 
-                        <span class="badge bg-info">{{ funcionario.cargo }}</span>
-                    </li>
-                    {% if funcionario.salario %}
-                    <li class="mb-2">
-                        <strong>Salário:</strong> R$ {{ "%.2f"|format(funcionario.salario) }}
-                    </li>
-                    {% endif %}
-                    <li class="mb-2">
-                        <strong>Vendas realizadas:</strong> {{ funcionario.vendas|length }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Agendamentos:</strong> {{ funcionario.agendamentos|length }}
-                    </li>
-                </ul>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  value="{{ funcionario.email or '' }}"
+                  maxlength="120"
+                />
+                <div class="invalid-feedback" id="email-error"></div>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <span class="material-symbols-outlined me-1">warning</span> Atenção
-                </h6>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="cargo" class="form-label"
+                  >Cargo <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cargo"
+                  name="cargo"
+                  required
+                  value="{{ funcionario.cargo }}"
+                  placeholder="Ex: Veterinário, Atendente, Gerente"
+                  maxlength="80"
+                />
+                <div class="invalid-feedback" id="cargo-error"></div>
+              </div>
             </div>
-            <div class="card-body">
-                <ul class="list-unstyled text-warning">
-                    <li class="mb-2">
-                        <span class="material-symbols-outlined me-1">info</span>
-                        Alterar CPF pode afetar histórico
-                    </li>
-                    <li class="mb-2">
-                        <span class="material-symbols-outlined me-1">info</span>
-                        Desativar funcionário afeta vendas/agendamentos
-                    </li>
-                    {% if funcionario.vendas %}
-                    <li class="mb-2">
-                        <span class="material-symbols-outlined me-1">sell</span>
-                        Funcionário possui vendas vinculadas
-                    </li>
-                    {% endif %}
-                    {% if funcionario.agendamentos %}
-                    <li class="mb-2">
-                        <span class="material-symbols-outlined me-1">calendar_month</span>
-                        Funcionário possui agendamentos
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <span class="material-symbols-outlined me-1">link</span> Ações Relacionadas
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('funcionario_views.visualizar_funcionario', funcionario_id=funcionario.id) }}" 
-                       class="btn btn-outline-info btn-sm">
-                        <span class="material-symbols-outlined me-1">visibility</span> Ver Detalhes
-                    </a>
-                    {% if funcionario.vendas %}
-                    <a href="/vendas?funcionario_id={{ funcionario.id }}" class="btn btn-outline-warning btn-sm">
-                        <span class="material-symbols-outlined me-1">sell</span> Ver Vendas ({{ funcionario.vendas|length }})
-                    </a>
-                    {% endif %}
-                    {% if funcionario.agendamentos %}
-                    <a href="/agendamentos?funcionario_id={{ funcionario.id }}" class="btn btn-outline-success btn-sm">
-                        <span class="material-symbols-outlined me-1">calendar_month</span> Ver Agendamentos ({{ funcionario.agendamentos|length }})
-                    </a>
-                    {% endif %}
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="salario" class="form-label">Salário</label>
+                <div class="input-group">
+                  <span class="input-group-text">R$</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="salario"
+                    name="salario"
+                    value="{{ funcionario.salario or '' }}"
+                    step="0.01"
+                    min="0"
+                    placeholder="0,00"
+                  />
                 </div>
+                <div class="invalid-feedback" id="salario-error"></div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+          </div>
 
-{% block scripts %}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="data_admissao" class="form-label"
+                  >Data de Admissão <span class="text-danger">*</span></label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="data_admissao"
+                  name="data_admissao"
+                  required
+                  value="{{ funcionario.data_admissao.strftime('%Y-%m-%d') if funcionario.data_admissao else '' }}"
+                />
+                <div class="invalid-feedback" id="data_admissao-error"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="data_demissao" class="form-label"
+                  >Data de Demissão</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="data_demissao"
+                  name="data_demissao"
+                  value="{{ funcionario.data_demissao.strftime('%Y-%m-%d') if funcionario.data_demissao else '' }}"
+                />
+                <div class="invalid-feedback" id="data_demissao-error"></div>
+                <small class="form-text text-muted"
+                  >Deixe em branco se ainda ativo</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="endereco" class="form-label">Endereço</label>
+            <textarea
+              class="form-control"
+              id="endereco"
+              name="endereco"
+              rows="3"
+              placeholder="Rua, número, complemento, bairro, cidade - UF"
+            >
+{{ funcionario.endereco or '' }}</textarea
+            >
+            <div class="invalid-feedback" id="endereco-error"></div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="ativo"
+              name="ativo" {{ 'checked' if funcionario.ativo else '' }}>
+              <label class="form-check-label" for="ativo">
+                Funcionário ativo
+              </label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button
+              type="button"
+              onclick="resetarFormulario()"
+              class="btn btn-outline-secondary"
+            >
+              <span class="material-symbols-outlined me-1">refresh</span>
+              Resetar
+            </button>
+            <div>
+              <a
+                href="{{ url_for('funcionario_views.listar_funcionarios') }}"
+                class="btn btn-secondary me-2"
+              >
+                Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary">
+                <span class="material-symbols-outlined me-1">save</span> Salvar
+                Alterações
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <span class="material-symbols-outlined me-1">info</span> Informações
+        </h6>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="mb-2"><strong>ID:</strong> {{ funcionario.id }}</li>
+          <li class="mb-2">
+            <strong>Cadastrado em:</strong><br />
+            {{ funcionario.data_cadastro.strftime('%d/%m/%Y às %H:%M') if
+            funcionario.data_cadastro else 'N/A' }}
+          </li>
+          <li class="mb-2">
+            <strong>Status:</strong>
+            {% if funcionario.ativo %}
+            <span class="badge bg-success">Ativo</span>
+            {% else %}
+            <span class="badge bg-danger">Inativo</span>
+            {% endif %}
+          </li>
+          <li class="mb-2">
+            <strong>Cargo atual:</strong>
+            <span class="badge bg-info">{{ funcionario.cargo }}</span>
+          </li>
+          {% if funcionario.salario %}
+          <li class="mb-2">
+            <strong>Salário:</strong> R$ {{ "%.2f"|format(funcionario.salario)
+            }}
+          </li>
+          {% endif %}
+          <li class="mb-2">
+            <strong>Agendamentos realizados:</strong> {{
+            funcionario.agendamentos|length }}
+          </li>
+          <li class="mb-2">
+            <strong>Agendamentos:</strong> {{ funcionario.agendamentos|length }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <span class="material-symbols-outlined me-1">warning</span> Atenção
+        </h6>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled text-warning">
+          <li class="mb-2">
+            <span class="material-symbols-outlined me-1">info</span>
+            Alterar CPF pode afetar histórico
+          </li>
+          <li class="mb-2">
+            <span class="material-symbols-outlined me-1">info</span>
+            Desativar funcionário afeta agendamentos
+          </li>
+          {% if funcionario.agendamentos %}
+          <li class="mb-2">
+            <span class="material-symbols-outlined me-1">calendar_month</span>
+            Funcionário possui agendamentos
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <span class="material-symbols-outlined me-1">link</span> Ações
+          Relacionadas
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <a
+            href="{{ url_for('funcionario_views.visualizar_funcionario', funcionario_id=funcionario.id) }}"
+            class="btn btn-outline-info btn-sm"
+          >
+            <span class="material-symbols-outlined me-1">visibility</span> Ver
+            Detalhes
+          </a>
+          {% if funcionario.agendamentos %}
+          <a
+            href="/agendamentos?funcionario_id={{ funcionario.id }}"
+            class="btn btn-outline-primary btn-sm"
+          >
+            <span class="material-symbols-outlined me-1">calendar_month</span>
+            Ver Agendamentos ({{ funcionario.agendamentos|length }})
+          </a>
+          {% endif %} {% if funcionario.agendamentos %}
+          <a
+            href="/agendamentos?funcionario_id={{ funcionario.id }}"
+            class="btn btn-outline-success btn-sm"
+          >
+            <span class="material-symbols-outlined me-1">calendar_month</span>
+            Ver Agendamentos ({{ funcionario.agendamentos|length }})
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
 <script>
+<<<<<<< HEAD
 // Dados originais para reset
 const originalData = {
     nome: "{{ funcionario.nome }}",
@@ -296,10 +401,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         this.value = value;
     });
+=======
+  /*
+    Corrigido:
+    - injeção segura dos dados do servidor usando |tojson
+    - verificações de existência de elementos antes de usar addEventListener
+    - pequenas melhorias na formatação inicial
+  */
 
-    // Aplicar máscaras aos valores iniciais
-    formatInitialValues();
+  'use strict';
 
+  // Serializa todo o objeto originalData em JSON (safe)
+  const originalData = {{ {
+      'nome': funcionario.nome,
+      'cpf': funcionario.cpf,
+      'telefone': funcionario.telefone,
+      'email': funcionario.email or '',
+      'endereco': funcionario.endereco or '',
+      'cargo': funcionario.cargo,
+      'salario': funcionario.salario,
+      'data_admissao': funcionario.data_admissao.strftime('%Y-%m-%d') if funcionario.data_admissao else '',
+      'data_demissao': funcionario.data_demissao.strftime('%Y-%m-%d') if funcionario.data_demissao else '',
+      'ativo': funcionario.ativo
+  } | tojson }};
+
+  document.addEventListener('DOMContentLoaded', function() {
+      // Máscara para CPF
+      const cpfField = document.getElementById('cpf');
+      if (cpfField) {
+          cpfField.addEventListener('input', function() {
+              let value = this.value.replace(/\D/g, '');
+              if (value.length > 11) value = value.slice(0, 11);
+              // Formata progressivamente
+              value = value.replace(/(\d{3})(\d)/, '$1.$2');
+              value = value.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+              value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+              this.value = value;
+          });
+      }
+
+      // Máscara para telefone
+      const telefoneField = document.getElementById('telefone');
+      if (telefoneField) {
+          telefoneField.addEventListener('input', function() {
+              let value = this.value.replace(/\D/g, '');
+              if (value.length > 11) value = value.slice(0, 11);
+              if (value.length <= 2) {
+                  this.value = value;
+                  return;
+              }
+              if (value.length <= 6) {
+                  // (xx) xxxx
+                  value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+              } else if (value.length <= 10) {
+                  // (xx) xxxx-xxxx
+                  value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+              } else {
+                  // (xx) xxxxx-xxxx
+                  value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+              }
+              this.value = value;
+          });
+      }
+>>>>>>> 46e10f99890ca309a26f91b499c807e2635fd542
+
+      // Aplicar máscaras aos valores iniciais
+      formatInitialValues();
+
+<<<<<<< HEAD
     // Validar data de demissão não ser anterior à admissão
     const dataAdmissao = document.getElementById('data_admissao');
     const dataDemissao = document.getElementById('data_demissao');
@@ -386,29 +555,139 @@ validateField('nome', function(value) {
     if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
     return {valid: true};
 });
+=======
+      // Validar data de demissão não ser anterior à admissão
+      const dataAdmissao = document.getElementById('data_admissao');
+      const dataDemissao = document.getElementById('data_demissao');
 
-validateField('cpf', function(value) {
-    if (!value) return {valid: false, message: 'CPF é obrigatório'};
-    const cpf = value.replace(/\D/g, '');
-    if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
-    if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
-    return {valid: true};
-});
+      function validarDatas() {
+          if (!dataAdmissao || !dataDemissao) return true;
+          if (dataAdmissao.value && dataDemissao.value) {
+              if (new Date(dataDemissao.value) < new Date(dataAdmissao.value)) {
+                  dataDemissao.setCustomValidity('Data de demissão não pode ser anterior à admissão');
+                  return false;
+              } else {
+                  dataDemissao.setCustomValidity('');
+                  return true;
+              }
+          }
+          dataDemissao.setCustomValidity('');
+          return true;
+      }
 
-validateField('telefone', function(value) {
-    if (!value) return {valid: false, message: 'Telefone é obrigatório'};
-    const telefone = value.replace(/\D/g, '');
-    if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
-    return {valid: true};
-});
+      if (dataAdmissao) dataAdmissao.addEventListener('change', validarDatas);
+      if (dataDemissao) dataDemissao.addEventListener('change', validarDatas);
+  });
 
-validateField('email', function(value) {
-    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        return {valid: false, message: 'Email inválido'};
-    }
-    return {valid: true};
-});
+  function formatInitialValues() {
+      const cpfField = document.getElementById('cpf');
+      if (cpfField && cpfField.value) {
+          const digits = cpfField.value.replace(/\D/g, '');
+          if (digits.length === 11) {
+              cpfField.value = digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+          }
+      }
 
+      const telefoneField = document.getElementById('telefone');
+      if (telefoneField && telefoneField.value) {
+          const digits = telefoneField.value.replace(/\D/g, '');
+          if (digits.length === 11) {
+              telefoneField.value = digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+          } else if (digits.length === 10) {
+              telefoneField.value = digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+          } else {
+              // deixa como está se não bater com 10/11 dígitos
+          }
+      }
+  }
+
+  function resetarFormulario() {
+      // Previne erro caso elementos não existam
+      const get = id => document.getElementById(id);
+
+      const nomeEl = get('nome');
+      const cpfEl = get('cpf');
+      const telEl = get('telefone');
+      const emailEl = get('email');
+      const enderecoEl = get('endereco');
+      const cargoEl = get('cargo');
+      const salarioEl = get('salario');
+      const dataAdmEl = get('data_admissao');
+      const dataDemEl = get('data_demissao');
+      const ativoEl = get('ativo');
+
+      if (nomeEl) nomeEl.value = originalData.nome || '';
+      if (cpfEl) cpfEl.value = originalData.cpf || '';
+      if (telEl) telEl.value = originalData.telefone || '';
+      if (emailEl) emailEl.value = originalData.email || '';
+      if (enderecoEl) enderecoEl.value = originalData.endereco || '';
+      if (cargoEl) cargoEl.value = originalData.cargo || '';
+      if (salarioEl) salarioEl.value = (originalData.salario !== null && originalData.salario !== undefined) ? originalData.salario : '';
+      if (dataAdmEl) dataAdmEl.value = originalData.data_admissao || '';
+      if (dataDemEl) dataDemEl.value = originalData.data_demissao || '';
+      if (ativoEl) ativoEl.checked = !!originalData.ativo;
+
+      // Remove classes de validação
+      document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+          el.classList.remove('is-valid', 'is-invalid');
+      });
+
+      // Reaplica formatação
+      formatInitialValues();
+  }
+
+  // Validação em tempo real
+  function validateField(fieldId, validationFunction) {
+      const field = document.getElementById(fieldId);
+      const errorDiv = document.getElementById(fieldId + '-error');
+
+      if (!field) return;
+
+      field.addEventListener('blur', function() {
+          const result = validationFunction(this.value);
+          if (result.valid) {
+              this.classList.remove('is-invalid');
+              this.classList.add('is-valid');
+              if (errorDiv) errorDiv.textContent = '';
+          } else {
+              this.classList.remove('is-valid');
+              this.classList.add('is-invalid');
+              if (errorDiv) errorDiv.textContent = result.message;
+          }
+      });
+  }
+
+  // Aplicar validações
+  validateField('nome', function(value) {
+      if (!value || !value.trim()) return {valid: false, message: 'Nome é obrigatório'};
+      if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
+      return {valid: true};
+  });
+>>>>>>> 46e10f99890ca309a26f91b499c807e2635fd542
+
+  validateField('cpf', function(value) {
+      if (!value) return {valid: false, message: 'CPF é obrigatório'};
+      const cpf = value.replace(/\D/g, '');
+      if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
+      if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
+      return {valid: true};
+  });
+
+  validateField('telefone', function(value) {
+      if (!value) return {valid: false, message: 'Telefone é obrigatório'};
+      const telefone = value.replace(/\D/g, '');
+      if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
+      return {valid: true};
+  });
+
+  validateField('email', function(value) {
+      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return {valid: false, message: 'Email inválido'};
+      }
+      return {valid: true};
+  });
+
+<<<<<<< HEAD
 validateField('cargo', function(value) {
     if (!value.trim()) return {valid: false, message: 'Cargo é obrigatório'};
     if (value.trim().length < 2) return {valid: false, message: 'Cargo deve ter pelo menos 2 caracteres'};
@@ -456,5 +735,55 @@ document.getElementById('funcionarioForm').addEventListener('submit', function(e
     // Permitir envio do formulário padrão
     // A validação já foi feita pelos campos individuais
 });
+=======
+  validateField('cargo', function(value) {
+      if (!value || !value.trim()) return {valid: false, message: 'Cargo é obrigatório'};
+      if (value.trim().length < 2) return {valid: false, message: 'Cargo deve ter pelo menos 2 caracteres'};
+      return {valid: true};
+  });
+
+  validateField('data_admissao', function(value) {
+      if (!value) return {valid: false, message: 'Data de admissão é obrigatória'};
+      const dataAdmissao = new Date(value);
+      const hoje = new Date();
+      // zera horas para comparação (opcional)
+      hoje.setHours(0,0,0,0);
+      if (dataAdmissao > hoje) return {valid: false, message: 'Data de admissão não pode ser futura'};
+      return {valid: true};
+  });
+
+  function validarCPF(cpf) {
+      if (!cpf || cpf.length !== 11) return false;
+      if (/^(\d)\1+$/.test(cpf)) return false; // sequências repetidas
+
+      let add = 0;
+      for (let i = 0; i < 9; i++) {
+          add += parseInt(cpf.charAt(i), 10) * (10 - i);
+      }
+      let rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(9), 10)) return false;
+
+      add = 0;
+      for (let i = 0; i < 10; i++) {
+          add += parseInt(cpf.charAt(i), 10) * (11 - i);
+      }
+      rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(10), 10)) return false;
+
+      return true;
+  }
+
+  // Enviar formulário
+  const formEl = document.getElementById('funcionarioForm');
+  if (formEl) {
+      formEl.addEventListener('submit', function(e) {
+          // Permitir envio do formulário padrão
+          // Se quiser bloquear e enviar via AJAX, aqui você faz e.preventDefault()
+          // Neste caso mantemos o comportamento padrão.
+      });
+  }
+>>>>>>> 46e10f99890ca309a26f91b499c807e2635fd542
 </script>
 {% endblock %}

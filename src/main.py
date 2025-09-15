@@ -13,9 +13,7 @@ from src.controller.api.user import user_bp
 from src.controller.api.cliente import cliente_bp
 from src.controller.api.pet import pet_bp
 from src.controller.api.funcionario import funcionario_bp
-from src.controller.api.produto import produto_bp
 from src.controller.api.servico import servico_bp
-from src.controller.api.venda import venda_bp
 from src.controller.api.agendamento import agendamento_bp
 
 # Importar views (frontend - HTML templates)
@@ -23,6 +21,7 @@ from src.controller.views.cliente import cliente_views_bp
 from src.controller.views.pet import pet_views_bp
 from src.controller.views.funcionario import funcionario_views_bp
 from src.controller.views.servico import servico_views_bp
+from src.controller.views.agendamento import agendamento_views_bp
 
 app = Flask(__name__, 
             static_folder=os.path.join(os.path.dirname(__file__), 'view', 'static'),
@@ -41,9 +40,7 @@ app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(cliente_bp, url_prefix='/api')
 app.register_blueprint(pet_bp, url_prefix='/api')
 app.register_blueprint(funcionario_bp, url_prefix='/api')
-app.register_blueprint(produto_bp, url_prefix='/api')
 app.register_blueprint(servico_bp, url_prefix='/api')
-app.register_blueprint(venda_bp, url_prefix='/api')
 app.register_blueprint(agendamento_bp, url_prefix='/api')
 
 # Registrar blueprints de Views (frontend - HTML templates)
@@ -51,6 +48,7 @@ app.register_blueprint(cliente_views_bp)  # Sem prefixo /api
 app.register_blueprint(pet_views_bp)  # Sem prefixo /api
 app.register_blueprint(funcionario_views_bp)  # Sem prefixo /api
 app.register_blueprint(servico_views_bp)  # Sem prefixo /api
+app.register_blueprint(agendamento_views_bp)  # Sem prefixo /api
 
 # Inicializar banco de dados
 db.init_app(app)
@@ -62,41 +60,79 @@ with app.app_context():
 @app.route('/dashboard')
 def dashboard():
     """Dashboard principal do sistema"""
-    from src.model.models import Pet, Venda, Agendamento
+    from src.model.models import Cliente, Pet, Funcionario, Servico, Agendamento
     from datetime import datetime, date
     
-    cliente_service = ClienteService()
-
     try:
-        # Estatísticas gerais
-        total_clientes = len(cliente_service.get_all_clientes())
-        clientes_ativos = len([c for c in cliente_service.get_all_clientes() if c.ativo])
+        # Estatísticas básicas usando query direta
+        total_clientes = Cliente.query.count()
+        clientes_ativos = Cliente.query.filter_by(ativo=True).count()
+        
+        total_pets = Pet.query.count()
+        pets_ativos = Pet.query.filter_by(ativo=True).count()
+        
+        total_funcionarios = Funcionario.query.count()
+        funcionarios_ativos = Funcionario.query.filter_by(ativo=True).count()
+        
+        total_servicos = Servico.query.count()
+        servicos_ativos = Servico.query.filter_by(ativo=True).count()
+
+        # Agendamentos
+        total_agendamentos = Agendamento.query.count()
+        
+        # Agendamentos de hoje
+        hoje = date.today()
+        agendamentos_hoje = Agendamento.query.filter(
+            db.func.date(Agendamento.data_agendamento) == hoje
+        ).all()
+        
+        # Agendamentos pendentes (agendado, confirmado, em_andamento)
+        status_pendentes = ['agendado', 'confirmado', 'em_andamento']
+        agendamentos_pendentes = Agendamento.query.filter(
+            Agendamento.status.in_(status_pendentes)
+        ).count()
 
         stats = {
             'total_clientes': total_clientes,
             'clientes_ativos': clientes_ativos,
-            'total_pets': Pet.query.count() if hasattr(db.Model, 'Pet') else 0,
-            'pets_ativos': Pet.query.filter_by(ativo=True).count() if hasattr(db.Model, 'Pet') else 0,
-            'total_vendas': Venda.query.count() if hasattr(db.Model, 'Venda') else 0,
-            'valor_vendas': sum([v.total or 0 for v in Venda.query.all()]) if hasattr(db.Model, 'Venda') else 0,
-            'agendamentos_hoje': 0,
-            'agendamentos_pendentes': 0
+            'total_pets': total_pets,
+            'pets_ativos': pets_ativos,
+            'total_funcionarios': total_funcionarios,
+            'funcionarios_ativos': funcionarios_ativos,
+            'total_servicos': total_servicos,
+            'servicos_ativos': servicos_ativos,
+            'total_agendamentos': total_agendamentos,
+            'agendamentos_hoje': len(agendamentos_hoje),
+            'agendamentos_pendentes': agendamentos_pendentes
         }
         
-        # Clientes recentes (últimos 5)
-        clientes_recentes = sorted([c for c in cliente_service.get_all_clientes() if c.ativo], key=lambda x: x.data_cadastro, reverse=True)[:5]
-        
-        # Agendamentos de hoje
-        agendamentos_hoje = []
+        # Dados recentes para exibição
+        clientes_recentes = Cliente.query.filter_by(ativo=True).order_by(Cliente.data_cadastro.desc()).limit(5).all()
+        agendamentos_hoje_lista = agendamentos_hoje[:5]  # Mostrar apenas os primeiros 5
         
         return render_template('dashboard.html', 
                              stats=stats,
                              clientes_recentes=clientes_recentes,
-                             agendamentos_hoje=agendamentos_hoje)
+                             agendamentos_hoje=agendamentos_hoje_lista)
+                             
     except Exception as e:
-        from flask import render_template
+        print(f"Erro no dashboard: {e}")
+        # Em caso de erro, retornar dashboard com dados vazios
+        stats = {
+            'total_clientes': 0,
+            'clientes_ativos': 0,
+            'total_pets': 0,
+            'pets_ativos': 0,
+            'total_funcionarios': 0,
+            'funcionarios_ativos': 0,
+            'total_servicos': 0,
+            'servicos_ativos': 0,
+            'total_agendamentos': 0,
+            'agendamentos_hoje': 0,
+            'agendamentos_pendentes': 0
+        }
         return render_template('dashboard.html', 
-                             stats={},
+                             stats=stats,
                              clientes_recentes=[],
                              agendamentos_hoje=[])
 
@@ -154,15 +190,6 @@ def api_info():
                 "PUT /api/funcionarios/{id}": "Atualizar funcionário",
                 "DELETE /api/funcionarios/{id}": "Desativar funcionário"
             },
-            "produtos": {
-                "GET /api/produtos": "Listar todos os produtos",
-                "POST /api/produtos": "Criar novo produto",
-                "GET /api/produtos/{id}": "Buscar produto por ID",
-                "PUT /api/produtos/{id}": "Atualizar produto",
-                "DELETE /api/produtos/{id}": "Desativar produto",
-                "GET /api/produtos/estoque-baixo": "Produtos com estoque baixo",
-                "GET /api/produtos/categoria/{categoria}": "Produtos por categoria"
-            },
             "servicos": {
                 "GET /api/servicos": "Listar todos os serviços",
                 "POST /api/servicos": "Criar novo serviço",
@@ -170,13 +197,6 @@ def api_info():
                 "PUT /api/servicos/{id}": "Atualizar serviço",
                 "DELETE /api/servicos/{id}": "Desativar serviço",
                 "GET /api/servicos/categoria/{categoria}": "Serviços por categoria"
-            },
-            "vendas": {
-                "GET /api/vendas": "Listar todas as vendas",
-                "POST /api/vendas": "Criar nova venda",
-                "GET /api/vendas/{id}": "Buscar venda por ID",
-                "PUT /api/vendas/{id}/cancelar": "Cancelar venda",
-                "GET /api/vendas/cliente/{cliente_id}": "Vendas por cliente"
             },
             "agendamentos": {
                 "GET /api/agendamentos": "Listar agendamentos (com filtros opcionais)",

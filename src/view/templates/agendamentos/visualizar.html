@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block title %}Agendamento #{{ agendamento.id }} - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">event</span> 
+        Agendamento #{{ agendamento.id }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agendamento_views.editar', id=agendamento.id) }}" class="btn btn-primary me-2">
+            <span class="material-symbols-outlined me-1">edit</span> Editar
+        </a>
+        <a href="{{ url_for('agendamento_views.listar') }}" class="btn btn-secondary">
+            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Informações Principais -->
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined me-2">event</span>
+                    <strong>Detalhes do Agendamento</strong>
+                </div>
+                {% set status_class = {
+                    'Agendado': 'bg-info',
+                    'Confirmado': 'bg-primary', 
+                    'Em Andamento': 'bg-warning',
+                    'Concluído': 'bg-success',
+                    'Cancelado': 'bg-danger'
+                } %}
+                <span class="badge {{ status_class.get(agendamento.status, 'bg-secondary') }} fs-6">
+                    {{ agendamento.status }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Data e Hora</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-primary">schedule</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.data_agendamento.strftime('%d/%m/%Y') }}</div>
+                                    <div class="text-muted">{{ agendamento.data_agendamento.strftime('%H:%M') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Data de Criação</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">history</span>
+                                <div>
+                                    <div>{{ agendamento.data_criacao.strftime('%d/%m/%Y') }}</div>
+                                    <div class="text-muted">{{ agendamento.data_criacao.strftime('%H:%M') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Cliente</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-primary">person</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.cliente.nome if agendamento.cliente else 'N/A' }}</div>
+                                    {% if agendamento.cliente %}
+                                    <div class="text-muted">{{ agendamento.cliente.telefone }}</div>
+                                    <div class="text-muted">{{ agendamento.cliente.email or 'Email não informado' }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Funcionário</label>
+                            {% if agendamento.funcionario %}
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-primary">badge</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.funcionario.nome }}</div>
+                                    <div class="text-muted">{{ agendamento.funcionario.cargo }}</div>
+                                    <div class="text-muted">{{ agendamento.funcionario.telefone }}</div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">badge</span>
+                                <span class="text-muted">Não atribuído</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Serviço</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-primary">design_services</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.servico.nome if agendamento.servico else 'N/A' }}</div>
+                                    {% if agendamento.servico %}
+                                    <div class="text-muted">{{ agendamento.servico.categoria }}</div>
+                                    {% if agendamento.servico.descricao %}
+                                    <div class="text-muted mt-1">{{ agendamento.servico.descricao }}</div>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Valor Estimado</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-success">payments</span>
+                                <div class="h5 text-success mb-0">
+                                    R$ {{ "%.2f"|format(agendamento.valor_estimado) if agendamento.valor_estimado else '0,00' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Tempo Estimado</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-info">timer</span>
+                                <div>
+                                    {% if agendamento.tempo_estimado %}
+                                        {{ agendamento.tempo_estimado }} minutos
+                                    {% else %}
+                                        Não definido
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if agendamento.observacoes %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Observações</label>
+                            <div class="d-flex align-items-start">
+                                <span class="material-symbols-outlined me-2 text-muted">notes</span>
+                                <div class="bg-light p-3 rounded w-100">
+                                    {{ agendamento.observacoes }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">bolt</span>
+                    Ações Rápidas
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    {% if agendamento.status == 'Agendado' %}
+                    <button class="btn btn-outline-primary" onclick="atualizarStatus('Confirmado')">
+                        <span class="material-symbols-outlined me-1">check_circle</span> Confirmar
+                    </button>
+                    {% endif %}
+                    
+                    {% if agendamento.status in ['Agendado', 'Confirmado'] %}
+                    <button class="btn btn-outline-warning" onclick="atualizarStatus('Em Andamento')">
+                        <span class="material-symbols-outlined me-1">play_circle</span> Iniciar Atendimento
+                    </button>
+                    {% endif %}
+                    
+                    {% if agendamento.status == 'Em Andamento' %}
+                    <button class="btn btn-outline-success" onclick="atualizarStatus('Concluído')">
+                        <span class="material-symbols-outlined me-1">task_alt</span> Concluir
+                    </button>
+                    {% endif %}
+                    
+                    {% if agendamento.status not in ['Cancelado', 'Concluído'] %}
+                    <button class="btn btn-outline-danger" onclick="atualizarStatus('Cancelado')">
+                        <span class="material-symbols-outlined me-1">cancel</span> Cancelar
+                    </button>
+                    {% endif %}
+                    
+                    <button class="btn btn-outline-info" onclick="imprimirAgendamento()">
+                        <span class="material-symbols-outlined me-1">print</span> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Estatísticas Gerais -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">analytics</span>
+                    Estatísticas Gerais
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-primary">
+                            <div class="card-body text-center p-2">
+                                <div class="text-primary h4 mb-0">{{ estatisticas.total }}</div>
+                                <small class="text-muted">Total</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-info">
+                            <div class="card-body text-center p-2">
+                                <div class="text-info h4 mb-0">{{ estatisticas.hoje }}</div>
+                                <small class="text-muted">Hoje</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-success">
+                            <div class="card-body text-center p-2">
+                                <div class="text-success h4 mb-0">{{ estatisticas.concluidos }}</div>
+                                <small class="text-muted">Concluídos</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-warning">
+                            <div class="card-body text-center p-2">
+                                <div class="text-warning h4 mb-0">{{ estatisticas.em_andamento }}</div>
+                                <small class="text-muted">Em Andamento</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline do Status -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">timeline</span>
+                    Histórico de Status
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item {% if agendamento.status == 'Cancelado' %}text-muted{% else %}active{% endif %}">
+                        <div class="timeline-marker bg-info"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Agendado</h6>
+                            <small class="text-muted">{{ agendamento.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                    
+                    {% if agendamento.status in ['Confirmado', 'Em Andamento', 'Concluído'] %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker bg-primary"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Confirmado</h6>
+                            <small class="text-muted">Status confirmado</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if agendamento.status in ['Em Andamento', 'Concluído'] %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker bg-warning"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Em Andamento</h6>
+                            <small class="text-muted">Atendimento iniciado</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if agendamento.status == 'Concluído' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Concluído</h6>
+                            <small class="text-muted">Atendimento finalizado</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if agendamento.status == 'Cancelado' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker bg-danger"></div>
+                        <div class="timeline-content">
+                            <h6 class="mb-1">Cancelado</h6>
+                            <small class="text-muted">Agendamento cancelado</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pet (Futura Implementação) -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">pets</span>
+                    Pet do Agendamento
+                </h6>
+            </div>
+            <div class="card-body text-center">
+                <span class="material-symbols-outlined text-muted" style="font-size: 3rem;">pets</span>
+                <p class="text-muted mt-2">Funcionalidade em desenvolvimento</p>
+                <small class="text-muted">Em breve você poderá ver os detalhes do pet relacionado ao agendamento</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--bs-border-color);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 25px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -33px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.timeline-item.active .timeline-marker {
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.timeline-item:not(.active) {
+    opacity: 0.5;
+}
+</style>
+
+<script>
+function atualizarStatus(novoStatus) {
+    if (confirm(`Tem certeza que deseja alterar o status para "${novoStatus}"?`)) {
+        fetch(`/agendamentos/{{ agendamento.id }}/status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: novoStatus })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erro: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar status');
+        });
+    }
+}
+
+function imprimirAgendamento() {
+    window.print();
+}
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+            case 'e':
+                e.preventDefault();
+                window.location.href = "{{ url_for('agendamento_views.editar', id=agendamento.id) }}";
+                break;
+            case 'p':
+                e.preventDefault();
+                imprimirAgendamento();
+                break;
+        }
+    }
+    if (e.key === 'Escape') {
+        window.location.href = "{{ url_for('agendamento_views.listar') }}";
+    }
+});
+</script>
+{% endblock %}

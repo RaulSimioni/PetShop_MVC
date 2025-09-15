@@ -7,9 +7,7 @@ db = SQLAlchemy()
 from .cliente import Cliente
 from .pet import Pet
 from .funcionario import Funcionario
-from .produto import Produto
 from .servico import Servico
-from .venda import Venda, ItemVenda
 from .agendamento import Agendamento
 from .user import User
 
@@ -19,10 +17,7 @@ __all__ = [
     'Cliente',
     'Pet', 
     'Funcionario',
-    'Produto',
     'Servico',
-    'Venda',
-    'ItemVenda',
     'Agendamento',
     'User'
 ]

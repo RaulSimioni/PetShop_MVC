@@ -11,7 +11,7 @@ from datetime import datetime, date
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.main import app
-from src.model.models import db, Cliente, Pet, Funcionario, Produto, Servico, Venda, ItemVenda, Agendamento
+from src.model.models import db, Cliente, Pet, Funcionario, Servico, Agendamento
 
 def test_models():
     """Testar os modelos do sistema"""
@@ -30,10 +30,6 @@ def test_models():
         # Testar consulta de funcionários
         funcionarios = Funcionario.query.all()
         print(f"✅ {len(funcionarios)} funcionários encontrados")
-        
-        # Testar consulta de produtos
-        produtos = Produto.query.all()
-        print(f"✅ {len(produtos)} produtos encontrados")
         
         # Testar consulta de serviços
         servicos = Servico.query.all()
@@ -80,10 +76,6 @@ def test_api_routes():
         # Testar listagem de funcionários
         response = client.get('/api/funcionarios')
         print(f"✅ GET /api/funcionarios - Status: {response.status_code}")
-        
-        # Testar listagem de produtos
-        response = client.get('/api/produtos')
-        print(f"✅ GET /api/produtos - Status: {response.status_code}")
         
         # Testar listagem de serviços
         response = client.get('/api/servicos')

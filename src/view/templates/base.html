@@ -66,7 +66,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/agendamentos">
+                            <a class="nav-link {% if request.endpoint and 'agendamento' in request.endpoint %}active{% endif %}" href="/agendamentos">
                                 <span class="material-symbols-outlined">event</span>
                                 <span class="nav-text">Agendamentos</span>
                             </a>

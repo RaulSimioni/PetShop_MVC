@@ -19,26 +19,14 @@ Sistema ERP completo para Pet Shop desenvolvido em Flask e Python seguindo o pad
 - Controle de cargo, salário e datas de admissão/demissão
 - Validação de CPF e email únicos
 
-### Gestão de Produtos
-- Cadastro de produtos com controle de estoque
-- Preços de custo e venda
-- Categorização e código de barras
-- Relatório de produtos com estoque baixo
-
 ### Gestão de Serviços
 - Cadastro de serviços oferecidos pelo pet shop
 - Controle de preços e duração estimada
-- Categorização de serviços
 
-### Sistema de Vendas
-- Criação de vendas com múltiplos itens
-- Suporte a produtos e serviços na mesma venda
-- Controle de estoque automático
-- Cálculo de totais e descontos
-- Cancelamento de vendas com reversão de estoque
-
-### Sistema de Agendamentos
-- Agendamento de serviços para pets
+### Gestão de Agendamentos
+- Sistema completo de agendamento de serviços
+- Vinculação de clientes, pets, funcionários e serviços
+- Controle de data/hora e status dos agendamentos
 - Controle de status (Agendado, Confirmado, Em Andamento, Concluído, Cancelado)
 - Validação de conflitos de horário
 - Filtros por data, status e funcionário
