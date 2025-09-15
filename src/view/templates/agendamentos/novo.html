@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Agendamento - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">event_available</span> 
+        Novo Agendamento
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agendamento_views.listar') }}" class="btn btn-secondary">
+            <span class="material-symbols-outlined me-1">arrow_back</span> Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('agendamento_views.criar') }}" id="agendamentoForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cliente_id" class="form-label">Cliente <span class="text-danger">*</span></label>
+                                <select class="form-select" id="cliente_id" name="cliente_id" required>
+                                    <option value="">Selecione um cliente</option>
+                                    {% for cliente in clientes %}
+                                        {% if cliente.ativo %}
+                                        <option value="{{ cliente.id }}">{{ cliente.nome }} - {{ cliente.telefone }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback" id="cliente_id-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="servico_id" class="form-label">Serviço <span class="text-danger">*</span></label>
+                                <select class="form-select" id="servico_id" name="servico_id" required>
+                                    <option value="">Selecione um serviço</option>
+                                    {% for servico in servicos %}
+                                        {% if servico.ativo %}
+                                        <option value="{{ servico.id }}" data-preco="{{ servico.preco }}" data-duracao="{{ servico.duracao_estimada or '' }}">
+                                            {{ servico.nome }} - R$ {{ "%.2f"|format(servico.preco) }}
+                                        </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback" id="servico_id-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="data_agendamento" class="form-label">Data e Hora <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="data_agendamento" name="data_agendamento" required>
+                                <div class="invalid-feedback" id="data_agendamento-error"></div>
+                                <div class="form-text">
+                                    <small id="datetime-support-message" style="display: none;" class="text-warning">
+                                        <span class="material-symbols-outlined me-1" style="font-size: 14px;">info</span>
+                                        Seu navegador pode não suportar seleção de hora. Use o formato: YYYY-MM-DD HH:MM
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="funcionario_id" class="form-label">Funcionário</label>
+                                <select class="form-select" id="funcionario_id" name="funcionario_id">
+                                    <option value="">Selecione um funcionário</option>
+                                    {% for funcionario in funcionarios %}
+                                        {% if funcionario.ativo %}
+                                        <option value="{{ funcionario.id }}">{{ funcionario.nome }} - {{ funcionario.cargo }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Opcional - pode ser atribuído posteriormente</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="valor_estimado" class="form-label">Valor Estimado</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="valor_estimado" name="valor_estimado" 
+                                           step="0.01" min="0" placeholder="0,00">
+                                </div>
+                                <div class="form-text">Será preenchido automaticamente com o valor do serviço se não informado</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Espaço para futura implementação de pets -->
+                            <div class="mb-3">
+                                <label class="form-label">Pet</label>
+                                <div class="form-control bg-light text-muted d-flex align-items-center">
+                                    <span class="material-symbols-outlined me-2">pets</span>
+                                    Funcionalidade em desenvolvimento
+                                </div>
+                                <div class="form-text">Em breve você poderá selecionar o pet do cliente</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
+                                  placeholder="Observações adicionais sobre o agendamento..."></textarea>
+                        <div class="form-text">Informações importantes sobre o agendamento</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" onclick="limparFormulario()">
+                            <span class="material-symbols-outlined me-1">refresh</span> Limpar
+                        </button>
+                        <div>
+                            <button type="button" class="btn btn-outline-primary me-2" onclick="salvarRascunho()">
+                                <span class="material-symbols-outlined me-1">save</span> Salvar Rascunho
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-symbols-outlined me-1">event_available</span> Criar Agendamento
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Resumo do Agendamento -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">summarize</span>
+                    Resumo do Agendamento
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">Cliente Selecionado:</small>
+                    <div id="cliente-resumo" class="fw-bold">Nenhum cliente selecionado</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Serviço Selecionado:</small>
+                    <div id="servico-resumo" class="fw-bold">Nenhum serviço selecionado</div>
+                    <div id="servico-preco" class="text-success"></div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Data e Hora:</small>
+                    <div id="data-resumo" class="fw-bold">Não definida</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Funcionário:</small>
+                    <div id="funcionario-resumo" class="fw-bold">Não atribuído</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Duração Estimada:</small>
+                    <div id="duracao-resumo" class="fw-bold">-</div>
+                </div>
+                <hr>
+                <div class="mb-0">
+                    <small class="text-muted">Valor Total:</small>
+                    <div id="valor-total" class="h5 text-success mb-0">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dicas -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <span class="material-symbols-outlined me-2">lightbulb</span>
+                    Dicas
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-primary me-2" style="font-size: 1rem;">check_circle</span>
+                        <small>Escolha primeiro o cliente e depois o serviço</small>
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-primary me-2" style="font-size: 1rem;">schedule</span>
+                        <small>Verifique disponibilidade antes de agendar</small>
+                    </li>
+                    <li class="mb-2">
+                        <span class="material-symbols-outlined text-primary me-2" style="font-size: 1rem;">badge</span>
+                        <small>O funcionário pode ser atribuído depois</small>
+                    </li>
+                    <li class="mb-0">
+                        <span class="material-symbols-outlined text-primary me-2" style="font-size: 1rem;">pets</span>
+                        <small>Em breve: seleção de pets por cliente</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar data mínima para hoje
+    const dataInput = document.getElementById('data_agendamento');
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    dataInput.min = now.toISOString().slice(0, 16);
+
+    // Verificar suporte a datetime-local (especialmente no Firefox)
+    verificarSuporteDatetime();
+
+    // Atualizar resumo em tempo real
+    const clienteSelect = document.getElementById('cliente_id');
+    const servicoSelect = document.getElementById('servico_id');
+    const funcionarioSelect = document.getElementById('funcionario_id');
+    const valorInput = document.getElementById('valor_estimado');
+
+    clienteSelect.addEventListener('change', atualizarResumo);
+    servicoSelect.addEventListener('change', function() {
+        atualizarResumo();
+        atualizarValorEstimado();
+    });
+    funcionarioSelect.addEventListener('change', atualizarResumo);
+    dataInput.addEventListener('change', atualizarResumo);
+    valorInput.addEventListener('input', atualizarResumo);
+
+    // Validação em tempo real
+    const form = document.getElementById('agendamentoForm');
+    form.addEventListener('submit', function(e) {
+        if (!validarFormulario()) {
+            e.preventDefault();
+        }
+    });
+});
+
+function verificarSuporteDatetime() {
+    const input = document.createElement('input');
+    input.type = 'datetime-local';
+    input.value = 'not-a-date';
+    
+    // Se o navegador não suporta datetime-local, o valor permanece
+    if (input.value === 'not-a-date') {
+        document.getElementById('datetime-support-message').style.display = 'block';
+        
+        // Adicionar placeholder para ajudar o usuário
+        const dataInput = document.getElementById('data_agendamento');
+        dataInput.placeholder = 'YYYY-MM-DDTHH:MM';
+        dataInput.setAttribute('pattern', '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}');
+        dataInput.setAttribute('title', 'Formato: YYYY-MM-DD HH:MM (exemplo: 2025-09-15T14:30)');
+    }
+}
+
+function atualizarResumo() {
+    const clienteSelect = document.getElementById('cliente_id');
+    const servicoSelect = document.getElementById('servico_id');
+    const funcionarioSelect = document.getElementById('funcionario_id');
+    const dataInput = document.getElementById('data_agendamento');
+    const valorInput = document.getElementById('valor_estimado');
+
+    // Cliente
+    const clienteResumo = document.getElementById('cliente-resumo');
+    clienteResumo.textContent = clienteSelect.selectedOptions[0]?.text || 'Nenhum cliente selecionado';
+
+    // Serviço
+    const servicoResumo = document.getElementById('servico-resumo');
+    const servicoPreco = document.getElementById('servico-preco');
+    if (servicoSelect.value) {
+        const servicoOption = servicoSelect.selectedOptions[0];
+        servicoResumo.textContent = servicoOption.text.split(' - ')[0];
+        const preco = servicoOption.dataset.preco;
+        servicoPreco.textContent = `R$ ${parseFloat(preco).toFixed(2)}`;
+        
+        // Duração
+        const duracaoResumo = document.getElementById('duracao-resumo');
+        const duracao = servicoOption.dataset.duracao;
+        duracaoResumo.textContent = duracao ? `${duracao} minutos` : 'Não definida';
+    } else {
+        servicoResumo.textContent = 'Nenhum serviço selecionado';
+        servicoPreco.textContent = '';
+        document.getElementById('duracao-resumo').textContent = '-';
+    }
+
+    // Funcionário
+    const funcionarioResumo = document.getElementById('funcionario-resumo');
+    funcionarioResumo.textContent = funcionarioSelect.selectedOptions[0]?.text.split(' - ')[0] || 'Não atribuído';
+
+    // Data
+    const dataResumo = document.getElementById('data-resumo');
+    if (dataInput.value) {
+        const data = new Date(dataInput.value);
+        dataResumo.textContent = data.toLocaleString('pt-BR');
+    } else {
+        dataResumo.textContent = 'Não definida';
+    }
+
+    // Valor total
+    const valorTotal = document.getElementById('valor-total');
+    const valor = valorInput.value || (servicoSelect.selectedOptions[0]?.dataset.preco || 0);
+    valorTotal.textContent = `R$ ${parseFloat(valor).toFixed(2)}`;
+}
+
+function atualizarValorEstimado() {
+    const servicoSelect = document.getElementById('servico_id');
+    const valorInput = document.getElementById('valor_estimado');
+    
+    if (servicoSelect.value) {
+        const preco = servicoSelect.selectedOptions[0].dataset.preco;
+        const precoFormatado = parseFloat(preco).toFixed(2);
+        
+        // Se o campo estava vazio ou continha o valor de outro serviço, atualizar
+        if (!valorInput.value || valorInput.dataset.fromService) {
+            valorInput.value = precoFormatado;
+            valorInput.dataset.fromService = 'true';
+            
+            // Adicionar feedback visual temporário
+            valorInput.classList.add('border-success');
+            setTimeout(() => {
+                valorInput.classList.remove('border-success');
+            }, 2000);
+        }
+        // Se o usuário já digitou um valor personalizado, manter o valor atual
+        // mas mostrar uma dica visual
+        else if (valorInput.value !== precoFormatado) {
+            const parentDiv = valorInput.closest('.input-group').parentElement;
+            let suggestao = parentDiv.querySelector('.price-suggestion');
+            
+            if (!suggestao) {
+                suggestao = document.createElement('div');
+                suggestao.className = 'price-suggestion form-text text-info mt-1';
+                suggestao.innerHTML = `<small><span class="material-symbols-outlined me-1" style="font-size: 12px;">lightbulb</span>Valor sugerido pelo serviço: R$ ${precoFormatado}</small>`;
+                parentDiv.appendChild(suggestao);
+                
+                // Remover sugestão após 5 segundos
+                setTimeout(() => {
+                    if (suggestao.parentElement) {
+                        suggestao.remove();
+                    }
+                }, 5000);
+            }
+        }
+    } else {
+        // Limpar valor se nenhum serviço selecionado
+        if (valorInput.dataset.fromService) {
+            valorInput.value = '';
+            delete valorInput.dataset.fromService;
+        }
+    }
+}
+
+function validarFormulario() {
+    let valido = true;
+    
+    // Validar cliente
+    const clienteSelect = document.getElementById('cliente_id');
+    if (!clienteSelect.value) {
+        mostrarErro('cliente_id', 'Por favor, selecione um cliente');
+        valido = false;
+    } else {
+        limparErro('cliente_id');
+    }
+
+    // Validar serviço
+    const servicoSelect = document.getElementById('servico_id');
+    if (!servicoSelect.value) {
+        mostrarErro('servico_id', 'Por favor, selecione um serviço');
+        valido = false;
+    } else {
+        limparErro('servico_id');
+    }
+
+    // Validar data
+    const dataInput = document.getElementById('data_agendamento');
+    if (!dataInput.value) {
+        mostrarErro('data_agendamento', 'Por favor, selecione uma data e hora');
+        valido = false;
+    } else if (new Date(dataInput.value) < new Date()) {
+        mostrarErro('data_agendamento', 'A data deve ser futura');
+        valido = false;
+    } else {
+        limparErro('data_agendamento');
+    }
+
+    return valido;
+}
+
+function mostrarErro(campo, mensagem) {
+    const input = document.getElementById(campo);
+    const errorDiv = document.getElementById(campo + '-error');
+    input.classList.add('is-invalid');
+    errorDiv.textContent = mensagem;
+}
+
+function limparErro(campo) {
+    const input = document.getElementById(campo);
+    const errorDiv = document.getElementById(campo + '-error');
+    input.classList.remove('is-invalid');
+    errorDiv.textContent = '';
+}
+
+function limparFormulario() {
+    if (confirm('Tem certeza que deseja limpar todos os campos?')) {
+        document.getElementById('agendamentoForm').reset();
+        atualizarResumo();
+        
+        // Limpar todos os erros
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+    }
+}
+
+function salvarRascunho() {
+    alert('Funcionalidade de rascunho será implementada em breve!');
+}
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+            case 's':
+                e.preventDefault();
+                document.getElementById('agendamentoForm').submit();
+                break;
+            case 'Escape':
+                window.location.href = "{{ url_for('agendamento_views.listar') }}";
+                break;
+        }
+    }
+});
+</script>
+{% endblock %}

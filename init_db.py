@@ -11,13 +11,14 @@ from datetime import datetime, date
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.main import app
-from src.model.models import db, Cliente, Pet, Funcionario, Produto, Servico
+from src.model.models import db, Cliente, Pet, Funcionario, Servico
 
 def init_database():
     """Inicializar banco de dados com dados de exemplo"""
     
     with app.app_context():
-        # Criar todas as tabelas
+        # Dropar e recriar todas as tabelas
+        db.drop_all()
         db.create_all()
         
         print("Criando dados de exemplo...")
@@ -129,49 +130,6 @@ def init_database():
         for pet in pets:
             db.session.add(pet)
         
-        # Criar produtos
-        produtos = [
-            Produto(
-                nome="Ração Premium Cães Adultos",
-                descricao="Ração super premium para cães adultos de porte médio",
-                categoria="Ração",
-                marca="PetFood",
-                codigo_barras="7891234567890",
-                preco_custo=45.00,
-                preco_venda=65.00,
-                estoque_atual=50,
-                estoque_minimo=10,
-                unidade_medida="KG"
-            ),
-            Produto(
-                nome="Shampoo Neutro",
-                descricao="Shampoo neutro para todos os tipos de pelo",
-                categoria="Higiene",
-                marca="PetClean",
-                codigo_barras="7891234567891",
-                preco_custo=12.00,
-                preco_venda=18.00,
-                estoque_atual=30,
-                estoque_minimo=5,
-                unidade_medida="L"
-            ),
-            Produto(
-                nome="Brinquedo Mordedor",
-                descricao="Brinquedo de borracha para cães",
-                categoria="Brinquedo",
-                marca="PetToy",
-                codigo_barras="7891234567892",
-                preco_custo=8.00,
-                preco_venda=15.00,
-                estoque_atual=25,
-                estoque_minimo=5,
-                unidade_medida="UN"
-            )
-        ]
-        
-        for produto in produtos:
-            db.session.add(produto)
-        
         # Criar serviços
         servicos = [
             Servico(
@@ -218,7 +176,6 @@ def init_database():
         print(f"✅ {len(funcionarios)} funcionários criados")
         print(f"✅ {len(clientes)} clientes criados")
         print(f"✅ {len(pets)} pets criados")
-        print(f"✅ {len(produtos)} produtos criados")
         print(f"✅ {len(servicos)} serviços criados")
 
 if __name__ == '__main__':

@@ -18,7 +18,6 @@ class Cliente(db.Model):
     
     # Relacionamentos
     pets = db.relationship('Pet', backref='dono', lazy=True, cascade='all, delete-orphan')
-    vendas = db.relationship('Venda', backref='cliente', lazy=True)
     agendamentos = db.relationship('Agendamento', backref='cliente', lazy=True)
     
     def __repr__(self):

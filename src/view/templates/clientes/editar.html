@@ -1,421 +1,479 @@
-{% extends "base.html" %}
-
-{% block title %}Editar Cliente - PetShop ERP{% endblock %}
-
-{% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">
-        <i class="fas fa-user-edit"></i> Editar Cliente
-    </h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}" class="btn btn-outline-info me-2">
-            <i class="fas fa-eye"></i> Visualizar
-        </a>
-        <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-    </div>
+{% extends "base.html" %} {% block title %}Editar Cliente - PetShop ERP{%
+endblock %} {% block content %}
+<div
+  class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  <h1 class="h2"><i class="fas fa-user-edit"></i> Editar Cliente</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <a
+      href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}"
+      class="btn btn-outline-info me-2"
+    >
+      <i class="fas fa-eye"></i> Visualizar
+    </a>
+    <a
+      href="{{ url_for('cliente_views.listar_clientes') }}"
+      class="btn btn-secondary"
+    >
+      <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    Dados do Cliente #{{ cliente.id }}
-                </h6>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">Dados do Cliente #{{ cliente.id }}</h6>
+      </div>
+      <div class="card-body">
+        <form method="POST" id="clienteForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nome" class="form-label"
+                  >Nome Completo <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nome"
+                  name="nome"
+                  required
+                  value="{{ cliente.nome }}"
+                  maxlength="100"
+                />
+                <div class="invalid-feedback" id="nome-error"></div>
+              </div>
             </div>
-            <div class="card-body">
-                <form method="POST" id="clienteForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nome" name="nome" required 
-                                       value="{{ cliente.nome }}" maxlength="100">
-                                <div class="invalid-feedback" id="nome-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="cpf" name="cpf" required 
-                                       value="{{ cliente.cpf }}" placeholder="000.000.000-00" maxlength="14">
-                                <div class="invalid-feedback" id="cpf-error"></div>
-                                <small class="form-text text-muted">Alteração do CPF requer atenção especial</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" required 
-                                       value="{{ cliente.telefone }}" placeholder="(00) 00000-0000" maxlength="15">
-                                <div class="invalid-feedback" id="telefone-error"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                       value="{{ cliente.email or '' }}" maxlength="120">
-                                <div class="invalid-feedback" id="email-error"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="endereco" class="form-label">Endereço</label>
-                        <textarea class="form-control" id="endereco" name="endereco" rows="3"
-                                  placeholder="Rua, número, complemento, bairro, cidade - UF">{{ cliente.endereco or '' }}</textarea>
-                        <div class="invalid-feedback" id="endereco-error"></div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="ativo" name="ativo" 
-                                   {{ 'checked' if cliente.ativo else '' }}>
-                            <label class="form-check-label" for="ativo">
-                                Cliente ativo
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <button type="button" onclick="resetarFormulario()" class="btn btn-outline-secondary">
-                            <i class="fas fa-undo"></i> Resetar
-                        </button>
-                        <div>
-                            <a href="{{ url_for('cliente_views.listar_clientes') }}" class="btn btn-secondary me-2">
-                                Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Salvar Alterações
-                            </button>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="cpf" class="form-label"
+                  >CPF <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cpf"
+                  name="cpf"
+                  required
+                  value="{{ cliente.cpf }}"
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                />
+                <div class="invalid-feedback" id="cpf-error"></div>
+                <small class="form-text text-muted"
+                  >Alteração do CPF requer atenção especial</small
+                >
+              </div>
             </div>
-        </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="telefone" class="form-label"
+                  >Telefone <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="telefone"
+                  name="telefone"
+                  required
+                  value="{{ cliente.telefone }}"
+                  placeholder="(00) 00000-0000"
+                  maxlength="15"
+                />
+                <div class="invalid-feedback" id="telefone-error"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  value="{{ cliente.email or '' }}"
+                  maxlength="120"
+                />
+                <div class="invalid-feedback" id="email-error"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="endereco" class="form-label">Endereço</label>
+            <textarea
+              class="form-control"
+              id="endereco"
+              name="endereco"
+              rows="3"
+              placeholder="Rua, número, complemento, bairro, cidade - UF"
+            >
+{{ cliente.endereco or '' }}</textarea
+            >
+            <div class="invalid-feedback" id="endereco-error"></div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="ativo"
+              name="ativo" {{ 'checked' if cliente.ativo else '' }}>
+              <label class="form-check-label" for="ativo">
+                Cliente ativo
+              </label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button
+              type="button"
+              onclick="resetarFormulario()"
+              class="btn btn-outline-secondary"
+            >
+              <i class="fas fa-undo"></i> Resetar
+            </button>
+            <div>
+              <a
+                href="{{ url_for('cliente_views.listar_clientes') }}"
+                class="btn btn-secondary me-2"
+              >
+                Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Salvar Alterações
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-info-circle"></i> Informações
+        </h6>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+          <li class="mb-2"><strong>ID:</strong> {{ cliente.id }}</li>
+          <li class="mb-2">
+            <strong>Cadastrado em:</strong><br />
+            {{ cliente.data_cadastro.strftime('%d/%m/%Y às %H:%M') if
+            cliente.data_cadastro else 'N/A' }}
+          </li>
+          <li class="mb-2">
+            <strong>Status:</strong>
+            {% if cliente.ativo %}
+            <span class="badge bg-success">Ativo</span>
+            {% else %}
+            <span class="badge bg-danger">Inativo</span>
+            {% endif %}
+          </li>
+          <li class="mb-2">
+            <strong>Pets cadastrados:</strong> {{ cliente.pets|length }}
+          </li>
+          <li class="mb-2">
+            <strong>Agendamentos realizados:</strong> {{
+            cliente.agendamentos|length }}
+          </li>
+          <li class="mb-2">
+            <strong>Agendamentos:</strong> {{ cliente.agendamentos|length }}
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <i class="fas fa-info-circle"></i> Informações
-                </h6>
-            </div>
-            <div class="card-body">
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <strong>ID:</strong> {{ cliente.id }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Cadastrado em:</strong><br>
-                        {{ cliente.data_cadastro.strftime('%d/%m/%Y às %H:%M') if cliente.data_cadastro else 'N/A' }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Status:</strong>
-                        {% if cliente.ativo %}
-                            <span class="badge bg-success">Ativo</span>
-                        {% else %}
-                            <span class="badge bg-danger">Inativo</span>
-                        {% endif %}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Pets cadastrados:</strong> {{ cliente.pets|length }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Vendas realizadas:</strong> {{ cliente.vendas|length }}
-                    </li>
-                    <li class="mb-2">
-                        <strong>Agendamentos:</strong> {{ cliente.agendamentos|length }}
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <i class="fas fa-exclamation-triangle"></i> Atenção
-                </h6>
-            </div>
-            <div class="card-body">
-                <ul class="list-unstyled text-warning">
-                    <li class="mb-2">
-                        <i class="fas fa-info-circle"></i>
-                        Alterar CPF pode afetar histórico
-                    </li>
-                    <li class="mb-2">
-                        <i class="fas fa-info-circle"></i>
-                        Desativar cliente oculta dos relatórios
-                    </li>
-                    {% if cliente.pets %}
-                    <li class="mb-2">
-                        <i class="fas fa-paw"></i>
-                        Cliente possui pets cadastrados
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="card-title mb-0">
-                    <i class="fas fa-link"></i> Ações Relacionadas
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}" 
-                       class="btn btn-outline-info btn-sm">
-                        <i class="fas fa-eye"></i> Ver Detalhes
-                    </a>
-                    {% if cliente.pets %}
-                    <a href="/pets?cliente_id={{ cliente.id }}" class="btn btn-outline-success btn-sm">
-                        <i class="fas fa-paw"></i> Ver Pets ({{ cliente.pets|length }})
-                    </a>
-                    {% endif %}
-                    {% if cliente.vendas %}
-                    <a href="/vendas?cliente_id={{ cliente.id }}" class="btn btn-outline-warning btn-sm">
-                        <i class="fas fa-shopping-cart"></i> Ver Vendas ({{ cliente.vendas|length }})
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-exclamation-triangle"></i> Atenção
+        </h6>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled text-warning">
+          <li class="mb-2">
+            <i class="fas fa-info-circle"></i>
+            Alterar CPF pode afetar histórico
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-info-circle"></i>
+            Desativar cliente oculta dos relatórios
+          </li>
+          {% if cliente.pets %}
+          <li class="mb-2">
+            <i class="fas fa-paw"></i>
+            Cliente possui pets cadastrados
+          </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-link"></i> Ações Relacionadas
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <a
+            href="{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}"
+            class="btn btn-outline-info btn-sm"
+          >
+            <i class="fas fa-eye"></i> Ver Detalhes
+          </a>
+          {% if cliente.pets %}
+          <a
+            href="/pets?cliente_id={{ cliente.id }}"
+            class="btn btn-outline-success btn-sm"
+          >
+            <i class="fas fa-paw"></i> Ver Pets ({{ cliente.pets|length }})
+          </a>
+          {% endif %} {% if cliente.agendamentos %}
+          <a
+            href="{{ url_for('agendamento_views.listar') }}?cliente_id={{ cliente.id }}"
+            class="btn btn-outline-info btn-sm"
+          >
+            <span class="material-symbols-outlined me-1">event</span> Ver
+            Agendamentos ({{ cliente.agendamentos|length }})
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script>
-// Dados originais para reset
-const originalData = {
-    nome: "{{ cliente.nome }}",
-    cpf: "{{ cliente.cpf }}",
-    telefone: "{{ cliente.telefone }}",
-    email: "{{ cliente.email or '' }}",
-    endereco: "{{ cliente.endereco or '' }}",
-    ativo: {{ cliente.ativo|tojson }}
-}
+  // Dados originais para reset
+  const originalData = {
+      nome: "{{ cliente.nome }}",
+      cpf: "{{ cliente.cpf }}",
+      telefone: "{{ cliente.telefone }}",
+      email: "{{ cliente.email or '' }}",
+      endereco: "{{ cliente.endereco or '' }}",
+      ativo: {{ cliente.ativo|tojson }}
+  }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Máscara para CPF
-    const cpfField = document.getElementById('cpf');
-    cpfField.addEventListener('input', function() {
-        let value = this.value.replace(/\D/g, '');
-        if (value.length <= 11) {
-            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-            value = value.replace(/(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
-            value = value.replace(/(\d{3})(\d{3})$/, '$1.$2');
-            value = value.replace(/(\d{3})$/, '$1');
-        }
-        this.value = value;
-    });
+  document.addEventListener('DOMContentLoaded', function() {
+      // Máscara para CPF
+      const cpfField = document.getElementById('cpf');
+      cpfField.addEventListener('input', function() {
+          let value = this.value.replace(/\D/g, '');
+          if (value.length <= 11) {
+              value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+              value = value.replace(/(\d{3})(\d{3})(\d{3})$/, '$1.$2.$3');
+              value = value.replace(/(\d{3})(\d{3})$/, '$1.$2');
+              value = value.replace(/(\d{3})$/, '$1');
+          }
+          this.value = value;
+      });
 
-    // Máscara para telefone
-    const telefoneField = document.getElementById('telefone');
-    telefoneField.addEventListener('input', function() {
-        let value = this.value.replace(/\D/g, '');
-        if (value.length <= 11) {
-            if (value.length >= 11) {
-                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            } else if (value.length >= 10) {
-                value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-            } else if (value.length >= 6) {
-                value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
-            } else if (value.length >= 2) {
-                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
-            }
-        }
-        this.value = value;
-    });
+      // Máscara para telefone
+      const telefoneField = document.getElementById('telefone');
+      telefoneField.addEventListener('input', function() {
+          let value = this.value.replace(/\D/g, '');
+          if (value.length <= 11) {
+              if (value.length >= 11) {
+                  value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+              } else if (value.length >= 10) {
+                  value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+              } else if (value.length >= 6) {
+                  value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+              } else if (value.length >= 2) {
+                  value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+              }
+          }
+          this.value = value;
+      });
 
-    // Aplicar máscaras aos valores iniciais
-    formatInitialValues();
-});
+      // Aplicar máscaras aos valores iniciais
+      formatInitialValues();
+  });
 
-function formatInitialValues() {
-    const cpfField = document.getElementById('cpf');
-    if (cpfField.value && cpfField.value.length === 11) {
-        const cpf = cpfField.value;
-        cpfField.value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    }
+  function formatInitialValues() {
+      const cpfField = document.getElementById('cpf');
+      if (cpfField.value && cpfField.value.length === 11) {
+          const cpf = cpfField.value;
+          cpfField.value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      }
 
-    const telefoneField = document.getElementById('telefone');
-    if (telefoneField.value && /^\d+$/.test(telefoneField.value)) {
-        const telefone = telefoneField.value;
-        if (telefone.length === 11) {
-            telefoneField.value = telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (telefone.length === 10) {
-            telefoneField.value = telefone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-        }
-    }
-}
+      const telefoneField = document.getElementById('telefone');
+      if (telefoneField.value && /^\d+$/.test(telefoneField.value)) {
+          const telefone = telefoneField.value;
+          if (telefone.length === 11) {
+              telefoneField.value = telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+          } else if (telefone.length === 10) {
+              telefoneField.value = telefone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+          }
+      }
+  }
 
-function resetarFormulario() {
-    document.getElementById('nome').value = originalData.nome;
-    document.getElementById('cpf').value = originalData.cpf;
-    document.getElementById('telefone').value = originalData.telefone;
-    document.getElementById('email').value = originalData.email;
-    document.getElementById('endereco').value = originalData.endereco;
-    document.getElementById('ativo').checked = originalData.ativo;
-    
-    // Remove classes de validação
-    document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
-        el.classList.remove('is-valid', 'is-invalid');
-    });
-    
-    // Reaplica formatação
-    formatInitialValues();
-}
+  function resetarFormulario() {
+      document.getElementById('nome').value = originalData.nome;
+      document.getElementById('cpf').value = originalData.cpf;
+      document.getElementById('telefone').value = originalData.telefone;
+      document.getElementById('email').value = originalData.email;
+      document.getElementById('endereco').value = originalData.endereco;
+      document.getElementById('ativo').checked = originalData.ativo;
 
-// Validação em tempo real
-function validateField(fieldId, validationFunction) {
-    const field = document.getElementById(fieldId);
-    const errorDiv = document.getElementById(fieldId + '-error');
-    
-    field.addEventListener('blur', function() {
-        const result = validationFunction(this.value);
-        if (result.valid) {
-            this.classList.remove('is-invalid');
-            this.classList.add('is-valid');
-            errorDiv.textContent = '';
-        } else {
-            this.classList.remove('is-valid');
-            this.classList.add('is-invalid');
-            errorDiv.textContent = result.message;
-        }
-    });
-}
+      // Remove classes de validação
+      document.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+          el.classList.remove('is-valid', 'is-invalid');
+      });
 
-// Aplicar validações
-validateField('nome', function(value) {
-    if (!value.trim()) return {valid: false, message: 'Nome é obrigatório'};
-    if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
-    return {valid: true};
-});
+      // Reaplica formatação
+      formatInitialValues();
+  }
 
-validateField('cpf', function(value) {
-    if (!value) return {valid: false, message: 'CPF é obrigatório'};
-    const cpf = value.replace(/\D/g, '');
-    if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
-    if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
-    return {valid: true};
-});
+  // Validação em tempo real
+  function validateField(fieldId, validationFunction) {
+      const field = document.getElementById(fieldId);
+      const errorDiv = document.getElementById(fieldId + '-error');
 
-validateField('telefone', function(value) {
-    if (!value) return {valid: false, message: 'Telefone é obrigatório'};
-    const telefone = value.replace(/\D/g, '');
-    if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
-    return {valid: true};
-});
+      field.addEventListener('blur', function() {
+          const result = validationFunction(this.value);
+          if (result.valid) {
+              this.classList.remove('is-invalid');
+              this.classList.add('is-valid');
+              errorDiv.textContent = '';
+          } else {
+              this.classList.remove('is-valid');
+              this.classList.add('is-invalid');
+              errorDiv.textContent = result.message;
+          }
+      });
+  }
 
-validateField('email', function(value) {
-    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        return {valid: false, message: 'Email inválido'};
-    }
-    return {valid: true};
-});
+  // Aplicar validações
+  validateField('nome', function(value) {
+      if (!value.trim()) return {valid: false, message: 'Nome é obrigatório'};
+      if (value.trim().length < 2) return {valid: false, message: 'Nome deve ter pelo menos 2 caracteres'};
+      return {valid: true};
+  });
 
-function validarCPF(cpf) {
-    if (cpf === "00000000000" || cpf === "11111111111" || 
-        cpf === "22222222222" || cpf === "33333333333" || 
-        cpf === "44444444444" || cpf === "55555555555" || 
-        cpf === "66666666666" || cpf === "77777777777" || 
-        cpf === "88888888888" || cpf === "99999999999") {
-        return false;
-    }
-    
-    let add = 0;
-    for (let i = 0; i < 9; i++) {
-        add += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-    let rev = 11 - (add % 11);
-    if (rev === 10 || rev === 11) rev = 0;
-    if (rev !== parseInt(cpf.charAt(9))) return false;
-    
-    add = 0;
-    for (let i = 0; i < 10; i++) {
-        add += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-    rev = 11 - (add % 11);
-    if (rev === 10 || rev === 11) rev = 0;
-    if (rev !== parseInt(cpf.charAt(10))) return false;
-    
-    return true;
-}
+  validateField('cpf', function(value) {
+      if (!value) return {valid: false, message: 'CPF é obrigatório'};
+      const cpf = value.replace(/\D/g, '');
+      if (cpf.length !== 11) return {valid: false, message: 'CPF deve ter 11 dígitos'};
+      if (!validarCPF(cpf)) return {valid: false, message: 'CPF inválido'};
+      return {valid: true};
+  });
 
-// Validação e envio do formulário
-document.getElementById('clienteForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    let isValid = true;
-    const formData = new FormData(this);
-    
-    // Validar campos obrigatórios
-    ['nome', 'cpf', 'telefone'].forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (!field.value.trim()) {
-            field.classList.add('is-invalid');
-            document.getElementById(fieldId + '-error').textContent = 'Campo obrigatório';
-            isValid = false;
-        }
-    });
-    
-    // Validar CPF
-    const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-    if (cpf && !validarCPF(cpf)) {
-        document.getElementById('cpf').classList.add('is-invalid');
-        document.getElementById('cpf-error').textContent = 'CPF inválido';
-        isValid = false;
-    }
-    
-    if (isValid) {
-        const jsonData = {};
-        for (let [key, value] of formData.entries()) {
-            if (key === 'cpf') {
-                jsonData[key] = value.replace(/\D/g, '');
-            } else if (key === 'telefone') {
-                jsonData[key] = value.replace(/\D/g, '');
-            } else if (key === 'ativo') {
-                jsonData[key] = true;
-            } else {
-                jsonData[key] = value;
-            }
-        }
-        
-        if (!formData.has('ativo')) {
-            jsonData.ativo = false;
-        }
-        
-        // Enviar via API
-        fetch('/api/clientes/{{ cliente.id }}', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(jsonData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.id) {
-                window.location.href = "{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}";
-            } else {
-                alert('Erro ao atualizar cliente: ' + (data.erro || 'Erro desconhecido'));
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao atualizar cliente');
-        });
-    }
-});
+  validateField('telefone', function(value) {
+      if (!value) return {valid: false, message: 'Telefone é obrigatório'};
+      const telefone = value.replace(/\D/g, '');
+      if (telefone.length < 10) return {valid: false, message: 'Telefone deve ter pelo menos 10 dígitos'};
+      return {valid: true};
+  });
+
+  validateField('email', function(value) {
+      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return {valid: false, message: 'Email inválido'};
+      }
+      return {valid: true};
+  });
+
+  function validarCPF(cpf) {
+      if (cpf === "00000000000" || cpf === "11111111111" ||
+          cpf === "22222222222" || cpf === "33333333333" ||
+          cpf === "44444444444" || cpf === "55555555555" ||
+          cpf === "66666666666" || cpf === "77777777777" ||
+          cpf === "88888888888" || cpf === "99999999999") {
+          return false;
+      }
+
+      let add = 0;
+      for (let i = 0; i < 9; i++) {
+          add += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(9))) return false;
+
+      add = 0;
+      for (let i = 0; i < 10; i++) {
+          add += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      rev = 11 - (add % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(cpf.charAt(10))) return false;
+
+      return true;
+  }
+
+  // Validação e envio do formulário
+  document.getElementById('clienteForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      let isValid = true;
+      const formData = new FormData(this);
+
+      // Validar campos obrigatórios
+      ['nome', 'cpf', 'telefone'].forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          if (!field.value.trim()) {
+              field.classList.add('is-invalid');
+              document.getElementById(fieldId + '-error').textContent = 'Campo obrigatório';
+              isValid = false;
+          }
+      });
+
+      // Validar CPF
+      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+      if (cpf && !validarCPF(cpf)) {
+          document.getElementById('cpf').classList.add('is-invalid');
+          document.getElementById('cpf-error').textContent = 'CPF inválido';
+          isValid = false;
+      }
+
+      if (isValid) {
+          const jsonData = {};
+          for (let [key, value] of formData.entries()) {
+              if (key === 'cpf') {
+                  jsonData[key] = value.replace(/\D/g, '');
+              } else if (key === 'telefone') {
+                  jsonData[key] = value.replace(/\D/g, '');
+              } else if (key === 'ativo') {
+                  jsonData[key] = true;
+              } else {
+                  jsonData[key] = value;
+              }
+          }
+
+          if (!formData.has('ativo')) {
+              jsonData.ativo = false;
+          }
+
+          // Enviar via API
+          fetch('/api/clientes/{{ cliente.id }}', {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(jsonData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.id) {
+                  window.location.href = "{{ url_for('cliente_views.visualizar_cliente', cliente_id=cliente.id) }}";
+              } else {
+                  alert('Erro ao atualizar cliente: ' + (data.erro || 'Erro desconhecido'));
+              }
+          })
+          .catch(error => {
+              console.error('Erro:', error);
+              alert('Erro ao atualizar cliente');
+          });
+      }
+  });
 </script>
 {% endblock %}

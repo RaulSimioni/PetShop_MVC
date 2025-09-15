@@ -19,7 +19,6 @@ class Servico(db.Model):
     
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='servico', lazy=True)
-    itens_venda = db.relationship('ItemVenda', backref='servico', lazy=True)
     
     def __repr__(self):
         return f'<Servico {self.nome}>'

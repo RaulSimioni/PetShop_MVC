@@ -110,12 +110,6 @@ class FuncionarioService:
             return funcionario
         return None
 
-    def get_vendas_by_funcionario_id(self, funcionario_id):
-        funcionario = self.funcionario_repository.get_by_id(funcionario_id)
-        if funcionario:
-            return funcionario.vendas
-        return None
-
     def get_agendamentos_by_funcionario_id(self, funcionario_id):
         funcionario = self.funcionario_repository.get_by_id(funcionario_id)
         if funcionario:

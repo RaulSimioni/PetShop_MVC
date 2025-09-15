@@ -134,9 +134,9 @@
                     <div class="col-6">
                         <div class="card card-stat text-white" style="background: var(--ctp-base); border-left: 4px solid var(--ctp-green);">
                             <div class="card-body">
-                                <span class="material-symbols-outlined">shopping_cart</span>
-                                <h3>{{ servico.itens_venda|length }}</h3>
-                                <p>Vendas</p>
+                                <span class="material-symbols-outlined">event_available</span>
+                                <h3>{{ servico.agendamentos|length }}</h3>
+                                <p>Total Agendamentos</p>
                             </div>
                         </div>
                     </div>
@@ -147,21 +147,22 @@
         <div class="card mt-3">
             <div class="card-header">
                 <h6 class="mb-0">
-                    <span class="material-symbols-outlined me-1">payments</span>
-                    Resumo Financeiro
+                    <span class="material-symbols-outlined me-1">info</span>
+                    Informações do Serviço
                 </h6>
             </div>
             <div class="card-body">
-                {% set total_vendas = servico.itens_venda|sum(attribute='quantidade') * servico.preco %}
                 <div class="text-center">
                     <div class="mb-2">
-                        <small class="text-muted">Total Faturado</small>
-                        <div class="h4 text-success">R$ {{ "%.2f"|format(total_vendas or 0) }}</div>
+                        <small class="text-muted">Preço do Serviço</small>
+                        <div class="h4 text-primary">R$ {{ "%.2f"|format(servico.preco) }}</div>
                     </div>
+                    {% if servico.duracao_estimada %}
                     <div class="mb-2">
-                        <small class="text-muted">Preço Unitário</small>
-                        <div class="h5 text-primary">R$ {{ "%.2f"|format(servico.preco) }}</div>
+                        <small class="text-muted">Duração Estimada</small>
+                        <div class="h5 text-info">{{ servico.duracao_estimada }} minutos</div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

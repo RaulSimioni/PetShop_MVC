@@ -21,7 +21,6 @@ class Funcionario(db.Model):
     ativo = db.Column(db.Boolean, default=True)
     
     # Relacionamentos
-    vendas = db.relationship('Venda', backref='funcionario', lazy=True)
     agendamentos = db.relationship('Agendamento', backref='funcionario', lazy=True)
     
     def __repr__(self):

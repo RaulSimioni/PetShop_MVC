@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Agendamentos - PetShop ERP{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <span class="material-symbols-outlined me-2" style="color: var(--primary-color); font-size: 2rem; vertical-align: middle;">event</span> 
+        Gerenciar Agendamentos
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agendamento_views.novo') }}" class="btn btn-primary">
+            <span class="material-symbols-outlined me-1">add</span> Novo Agendamento
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-text">
+                <span class="material-symbols-outlined">search</span>
+            </span>
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar por cliente, serviço, funcionário..." value="{{ search }}">
+        </div>
+    </div>
+    <div class="col-md-6 text-end">
+        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filtrosAvancados">
+            <span class="material-symbols-outlined me-1">tune</span> Filtros
+        </button>
+    </div>
+</div>
+
+<!-- Filtros Avançados -->
+<div class="collapse mb-3" id="filtrosAvancados">
+    <div class="card card-body">
+        <form method="GET" id="filtroForm">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Todos os status</option>
+                        {% for status_opt in status_disponiveis %}
+                            <option value="{{ status_opt }}" {% if status_filtro == status_opt %}selected{% endif %}>{{ status_opt }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="cliente_id" class="form-label">Cliente</label>
+                    <select class="form-select" id="cliente_id" name="cliente_id">
+                        <option value="">Todos os clientes</option>
+                        {% for cliente in clientes %}
+                            <option value="{{ cliente.id }}" {% if cliente_filtro == cliente.id|string %}selected{% endif %}>{{ cliente.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="funcionario_id" class="form-label">Funcionário</label>
+                    <select class="form-select" id="funcionario_id" name="funcionario_id">
+                        <option value="">Todos os funcionários</option>
+                        {% for funcionario in funcionarios %}
+                            <option value="{{ funcionario.id }}" {% if funcionario_filtro == funcionario.id|string %}selected{% endif %}>{{ funcionario.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="data_inicio" class="form-label">Data Início</label>
+                    <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ data_inicio_filtro }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="data_fim" class="form-label">Data Fim</label>
+                    <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ data_fim_filtro }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="per_page" class="form-label">Itens por página</label>
+                    <select class="form-select" id="per_page" name="per_page">
+                        <option value="10" {% if pagination.per_page == 10 %}selected{% endif %}>10</option>
+                        <option value="25" {% if pagination.per_page == 25 %}selected{% endif %}>25</option>
+                        <option value="50" {% if pagination.per_page == 50 %}selected{% endif %}>50</option>
+                        <option value="100" {% if pagination.per_page == 100 %}selected{% endif %}>100</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary me-2">
+                        <span class="material-symbols-outlined me-1">filter_list</span> Aplicar Filtros
+                    </button>
+                    <a href="{{ url_for('agendamento_views.listar') }}" class="btn btn-outline-secondary">
+                        <span class="material-symbols-outlined me-1">clear</span> Limpar
+                    </a>
+                </div>
+            </div>
+            <input type="hidden" id="searchField" name="search" value="{{ search }}">
+        </form>
+    </div>
+</div>
+
+<!-- Lista de Agendamentos -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Cliente</th>
+                        <th>Serviço</th>
+                        <th>Funcionário</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agendamento in agendamentos %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">schedule</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.data_agendamento.strftime('%d/%m/%Y') }}</div>
+                                    <small class="text-muted">{{ agendamento.data_agendamento.strftime('%H:%M') }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">person</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.cliente.nome if agendamento.cliente else 'N/A' }}</div>
+                                    {% if agendamento.cliente %}
+                                    <small class="text-muted">{{ agendamento.cliente.telefone }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">design_services</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.servico.nome if agendamento.servico else 'N/A' }}</div>
+                                    {% if agendamento.servico %}
+                                    <small class="text-muted">{{ agendamento.servico.categoria }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if agendamento.funcionario %}
+                                <div class="d-flex align-items-center">
+                                    <span class="material-symbols-outlined me-2 text-muted">badge</span>
+                                    <span>{{ agendamento.funcionario.nome }}</span>
+                                </div>
+                            {% else %}
+                                <span class="text-muted">Não atribuído</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set status_class = {
+                                'Agendado': 'bg-info',
+                                'Confirmado': 'bg-primary', 
+                                'Em Andamento': 'bg-warning',
+                                'Concluído': 'bg-success',
+                                'Cancelado': 'bg-danger'
+                            } %}
+                            <span class="badge {{ status_class.get(agendamento.status, 'bg-secondary') }}">
+                                {{ agendamento.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if agendamento.valor_estimado %}
+                                <span class="fw-bold text-success">R$ {{ "%.2f"|format(agendamento.valor_estimado) }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('agendamento_views.visualizar', id=agendamento.id) }}" 
+                                   class="btn btn-outline-info" title="Visualizar">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                                <a href="{{ url_for('agendamento_views.editar', id=agendamento.id) }}" 
+                                   class="btn btn-outline-primary" title="Editar">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </a>
+                                {% if agendamento.status != 'Cancelado' %}
+                                <button class="btn btn-outline-danger" title="Cancelar" 
+                                        onclick="cancelarAgendamento({{ agendamento.id }})">
+                                    <span class="material-symbols-outlined">cancel</span>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <div class="text-muted">
+                                <span class="material-symbols-outlined" style="font-size: 3rem;">event_busy</span>
+                                <p class="mt-2">Nenhum agendamento encontrado</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if pagination and pagination.pages > 1 %}
+        <nav aria-label="Navegação de páginas" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('agendamento_views.listar', page=pagination.prev_num) }}">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for page_num in range(1, pagination.pages + 1) %}
+                    {% if page_num != pagination.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('agendamento_views.listar', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('agendamento_views.listar', page=pagination.next_num) }}">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Estatísticas rápidas -->
+{% if agendamentos %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-primary">
+            <div class="card-body text-center">
+                <h6 class="card-title text-primary">Ações Rápidas</h6>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="filtrarPorStatus('Agendado')">
+                        <span class="material-symbols-outlined me-1">schedule</span> Agendados
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="filtrarPorStatus('Confirmado')">
+                        <span class="material-symbols-outlined me-1">check_circle</span> Confirmados
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm" onclick="filtrarPorStatus('Em Andamento')">
+                        <span class="material-symbols-outlined me-1">play_circle</span> Em Andamento
+                    </button>
+                    <a href="{{ url_for('agendamento_views.novo') }}" class="btn btn-primary btn-sm">
+                        <span class="material-symbols-outlined me-1">add</span> Novo Agendamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <div class="card border-primary">
+            <div class="card-body">
+                <span class="material-symbols-outlined text-primary" style="font-size: 4rem;">event_available</span>
+                <h4 class="mt-3 text-primary">Comece agendando seu primeiro serviço!</h4>
+                <p class="text-muted">Organize os atendimentos do seu pet shop de forma eficiente.</p>
+                <a href="{{ url_for('agendamento_views.novo') }}" class="btn btn-primary">
+                    <span class="material-symbols-outlined me-1">add</span> Criar Primeiro Agendamento
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca em tempo real
+    const searchInput = document.getElementById('searchInput');
+    const searchField = document.getElementById('searchField');
+    
+    if (searchInput) {
+        let timeoutId;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(function() {
+                searchField.value = searchInput.value;
+                document.getElementById('filtroForm').submit();
+            }, 500);
+        });
+    }
+});
+
+function filtrarPorStatus(status) {
+    const statusSelect = document.getElementById('status');
+    if (statusSelect) {
+        statusSelect.value = status;
+        document.getElementById('filtroForm').submit();
+    }
+}
+
+function cancelarAgendamento(agendamentoId) {
+    if (confirm('Tem certeza que deseja cancelar este agendamento?')) {
+        fetch(`/agendamentos/${agendamentoId}/cancelar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erro: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao cancelar agendamento');
+        });
+    }
+}
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+            case 'n':
+                e.preventDefault();
+                window.location.href = "{{ url_for('agendamento_views.novo') }}";
+                break;
+            case 'f':
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+                break;
+        }
+    }
+});
+</script>
+{% endblock %}
