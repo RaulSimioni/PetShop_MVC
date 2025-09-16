@@ -2,10 +2,14 @@
 .vscode/
 
 # Python
-__pycache__/
 *.py[cod]
 *$py.class
 *.so
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.py.class
 .Python
 build/
 develop-eggs/
