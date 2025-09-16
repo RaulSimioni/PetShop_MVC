@@ -1,9 +1,7 @@
 import os
 import sys
-# DON'T CHANGE THIS !!!
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from flask import Flask, send_from_directory, render_template
+from flask import Flask, send_from_directory, render_template, session, redirect, url_for, flash, request
+from functools import wraps
 from flask_cors import CORS
 from src.model.models import db
 from src.model.services.cliente_service import ClienteService
@@ -22,6 +20,7 @@ from src.controller.views.pet import pet_views_bp
 from src.controller.views.funcionario import funcionario_views_bp
 from src.controller.views.servico import servico_views_bp
 from src.controller.views.agendamento import agendamento_views_bp
+from src.controller.views.auth import auth_views_bp
 
 app = Flask(__name__, 
             static_folder=os.path.join(os.path.dirname(__file__), 'view', 'static'),
@@ -49,6 +48,7 @@ app.register_blueprint(pet_views_bp)  # Sem prefixo /api
 app.register_blueprint(funcionario_views_bp)  # Sem prefixo /api
 app.register_blueprint(servico_views_bp)  # Sem prefixo /api
 app.register_blueprint(agendamento_views_bp)  # Sem prefixo /api
+app.register_blueprint(auth_views_bp)  # Sem prefixo /api
 
 # Inicializar banco de dados
 db.init_app(app)
@@ -57,7 +57,28 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session or not session['logged_in']:
+            flash('Por favor, faça login para acessar esta página.', 'warning')
+            return redirect(url_for('auth_views.login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.before_request
+def before_request():
+    if request.endpoint and 'static' not in request.endpoint and request.endpoint != 'auth_views.login' and request.endpoint != 'auth_views.register' and request.endpoint != 'api_info':
+        if 'logged_in' not in session or not session['logged_in']:
+            if request.blueprint == 'auth_views':
+                pass
+            elif request.blueprint == 'api':
+                pass
+            else:
+                return redirect(url_for('auth_views.login'))
+
 @app.route('/dashboard')
+@login_required
 def dashboard():
     """Dashboard principal do sistema"""
     from src.model.models import Cliente, Pet, Funcionario, Servico, Agendamento
@@ -143,7 +164,9 @@ def serve(path):
     static_folder_path = app.static_folder
     
     # Se path está vazio, redirecionar para dashboard
-    if not path:
+    if not path or path == 'index.html':
+        if 'logged_in' not in session or not session['logged_in']:
+            return redirect(url_for('auth_views.login'))
         return dashboard()
     
     if static_folder_path is None:
@@ -214,5 +237,3 @@ def api_info():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
-
