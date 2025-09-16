@@ -25,6 +25,16 @@ class Pet(db.Model):
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='pet', lazy=True)
     
+    @property
+    def idade(self):
+        """Calcula a idade do pet em anos"""
+        if self.data_nascimento:
+            from datetime import date
+            hoje = date.today()
+            idade_dias = (hoje - self.data_nascimento).days
+            return round(idade_dias / 365.25, 1)
+        return None
+    
     def __repr__(self):
         return f'<Pet {self.nome}>'
     

@@ -23,6 +23,17 @@ class Funcionario(db.Model):
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='funcionario', lazy=True)
     
+    @property 
+    def dias_empresa(self):
+        """Calcula quantos dias o funcionário está na empresa"""
+        if self.data_admissao:
+            from datetime import date
+            hoje = date.today()
+            if self.data_demissao:
+                return (self.data_demissao - self.data_admissao).days
+            return (hoje - self.data_admissao).days
+        return 0
+    
     def __repr__(self):
         return f'<Funcionario {self.nome}>'
     

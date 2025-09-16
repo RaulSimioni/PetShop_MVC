@@ -4,6 +4,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from flask import Flask, send_from_directory, render_template, session, redirect, url_for, flash, request
 from functools import wraps
 from flask_cors import CORS
+
+# Adicionar o diretório pai ao path para permitir importações
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.model.models import db
 from src.model.services.cliente_service import ClienteService
 
@@ -68,8 +72,11 @@ def login_required(f):
     return decorated_function
 
 @app.before_request
-def before_request():
-    if request.endpoint and 'static' not in request.endpoint and request.endpoint != 'auth_views.login' and request.endpoint != 'auth_views.register' and request.endpoint != 'api_info':
+def before_request():    
+    # Lista de endpoints que não precisam de autenticação
+    public_endpoints = ['auth_views.login', 'auth_views.register', 'api_info', 'static']
+    
+    if request.endpoint and not any(endpoint in request.endpoint for endpoint in public_endpoints):
         if 'logged_in' not in session or not session['logged_in']:
             if request.blueprint == 'auth_views':
                 pass

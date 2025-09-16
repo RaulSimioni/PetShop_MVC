@@ -103,6 +103,7 @@
                     <tr>
                         <th>Data/Hora</th>
                         <th>Cliente</th>
+                        <th>Pet</th>
                         <th>Serviço</th>
                         <th>Funcionário</th>
                         <th>Status</th>
@@ -129,6 +130,17 @@
                                     <div class="fw-bold">{{ agendamento.cliente.nome if agendamento.cliente else 'N/A' }}</div>
                                     {% if agendamento.cliente %}
                                     <small class="text-muted">{{ agendamento.cliente.telefone }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-muted">pets</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.pet.nome if agendamento.pet else 'N/A' }}</div>
+                                    {% if agendamento.pet %}
+                                    <small class="text-muted">{{ agendamento.pet.especie }} - {{ agendamento.pet.raca }}</small>
                                     {% endif %}
                                 </div>
                             </div>
@@ -180,7 +192,7 @@
                                     <span class="material-symbols-outlined">visibility</span>
                                 </a>
                                 <a href="{{ url_for('agendamento_views.editar', id=agendamento.id) }}" 
-                                   class="btn btn-outline-primary" title="Editar">
+                                   class="btn btn-outline-warning" title="Editar">
                                     <span class="material-symbols-outlined">edit</span>
                                 </a>
                                 {% if agendamento.status != 'Cancelado' %}

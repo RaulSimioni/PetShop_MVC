@@ -114,6 +114,7 @@ def criar():
     try:
         cliente_id = int(request.form.get('cliente_id'))
         servico_id = int(request.form.get('servico_id'))
+        pet_id = int(request.form.get('pet_id'))
         data_agendamento_str = request.form.get('data_agendamento')
         funcionario_id = request.form.get('funcionario_id')
         observacoes = request.form.get('observacoes')
@@ -139,7 +140,7 @@ def criar():
             servico_id=servico_id,
             data_agendamento=data_agendamento,
             funcionario_id=funcionario_id,
-            pet_id=None,  # Por enquanto None até pets ser implementado
+            pet_id=pet_id,
             observacoes=observacoes,
             valor_estimado=valor_estimado
         )
@@ -214,6 +215,7 @@ def atualizar(id):
     try:
         cliente_id = int(request.form.get('cliente_id'))
         servico_id = int(request.form.get('servico_id'))
+        pet_id = int(request.form.get('pet_id'))
         data_agendamento_str = request.form.get('data_agendamento')
         funcionario_id = request.form.get('funcionario_id')
         status = request.form.get('status')
@@ -239,6 +241,7 @@ def atualizar(id):
             agendamento_id=id,
             cliente_id=cliente_id,
             servico_id=servico_id,
+            pet_id=pet_id,
             data_agendamento=data_agendamento,
             funcionario_id=funcionario_id,
             status=status,

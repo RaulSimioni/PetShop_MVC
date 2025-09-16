@@ -186,9 +186,8 @@
                                 <td>{{ pet.especie }}</td>
                                 <td>{{ pet.raca or '-' }}</td>
                                 <td>
-                                    {% if pet.data_nascimento %}
-                                        {% set idade = (moment().date() - pet.data_nascimento).days // 365 %}
-                                        {{ idade }} anos
+                                    {% if pet.idade %}
+                                        {{ pet.idade }} anos
                                     {% else %}
                                         -
                                     {% endif %}

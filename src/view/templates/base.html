@@ -54,7 +54,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/funcionarios">
+                            <a class="nav-link {% if request.endpoint and 'funcionario' in request.endpoint %}active{% endif %}" href="/funcionarios">
                                 <span class="material-symbols-outlined">badge</span>
                                 <span class="nav-text">Funcionários</span>
                             </a>

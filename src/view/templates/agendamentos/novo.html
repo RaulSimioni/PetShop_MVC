@@ -56,6 +56,21 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="pet_id" class="form-label">Pet <span class="text-danger">*</span></label>
+                                <select class="form-select" id="pet_id" name="pet_id" required>
+                                    <option value="">Primeiro selecione um cliente</option>
+                                </select>
+                                <div class="invalid-feedback" id="pet_id-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label for="data_agendamento" class="form-label">Data e Hora <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control" id="data_agendamento" name="data_agendamento" required>
                                 <div class="invalid-feedback" id="data_agendamento-error"></div>
@@ -93,17 +108,6 @@
                                            step="0.01" min="0" placeholder="0,00">
                                 </div>
                                 <div class="form-text">Será preenchido automaticamente com o valor do serviço se não informado</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Espaço para futura implementação de pets -->
-                            <div class="mb-3">
-                                <label class="form-label">Pet</label>
-                                <div class="form-control bg-light text-muted d-flex align-items-center">
-                                    <span class="material-symbols-outlined me-2">pets</span>
-                                    Funcionalidade em desenvolvimento
-                                </div>
-                                <div class="form-text">Em breve você poderá selecionar o pet do cliente</div>
                             </div>
                         </div>
                     </div>
@@ -146,6 +150,10 @@
                 <div class="mb-3">
                     <small class="text-muted">Cliente Selecionado:</small>
                     <div id="cliente-resumo" class="fw-bold">Nenhum cliente selecionado</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Pet Selecionado:</small>
+                    <div id="pet-resumo" class="fw-bold">Nenhum pet selecionado</div>
                 </div>
                 <div class="mb-3">
                     <small class="text-muted">Serviço Selecionado:</small>
@@ -196,7 +204,7 @@
                     </li>
                     <li class="mb-0">
                         <span class="material-symbols-outlined text-primary me-2" style="font-size: 1rem;">pets</span>
-                        <small>Em breve: seleção de pets por cliente</small>
+                        <small>Selecione o cliente primeiro para ver os pets disponíveis</small>
                     </li>
                 </ul>
             </div>
@@ -220,8 +228,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const servicoSelect = document.getElementById('servico_id');
     const funcionarioSelect = document.getElementById('funcionario_id');
     const valorInput = document.getElementById('valor_estimado');
+    const petSelect = document.getElementById('pet_id');
 
-    clienteSelect.addEventListener('change', atualizarResumo);
+    clienteSelect.addEventListener('change', function() {
+        atualizarResumo();
+        carregarPetsDoCliente();
+    });
     servicoSelect.addEventListener('change', function() {
         atualizarResumo();
         atualizarValorEstimado();
@@ -229,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
     funcionarioSelect.addEventListener('change', atualizarResumo);
     dataInput.addEventListener('change', atualizarResumo);
     valorInput.addEventListener('input', atualizarResumo);
+    petSelect.addEventListener('change', atualizarResumo);
 
     // Validação em tempo real
     const form = document.getElementById('agendamentoForm');
@@ -258,6 +271,7 @@ function verificarSuporteDatetime() {
 
 function atualizarResumo() {
     const clienteSelect = document.getElementById('cliente_id');
+    const petSelect = document.getElementById('pet_id');
     const servicoSelect = document.getElementById('servico_id');
     const funcionarioSelect = document.getElementById('funcionario_id');
     const dataInput = document.getElementById('data_agendamento');
@@ -266,6 +280,10 @@ function atualizarResumo() {
     // Cliente
     const clienteResumo = document.getElementById('cliente-resumo');
     clienteResumo.textContent = clienteSelect.selectedOptions[0]?.text || 'Nenhum cliente selecionado';
+
+    // Pet
+    const petResumo = document.getElementById('pet-resumo');
+    petResumo.textContent = petSelect.selectedOptions[0]?.text || 'Nenhum pet selecionado';
 
     // Serviço
     const servicoResumo = document.getElementById('servico-resumo');
@@ -374,6 +392,15 @@ function validarFormulario() {
         limparErro('servico_id');
     }
 
+    // Validar pet
+    const petSelect = document.getElementById('pet_id');
+    if (!petSelect.value) {
+        mostrarErro('pet_id', 'Por favor, selecione um pet');
+        valido = false;
+    } else {
+        limparErro('pet_id');
+    }
+
     // Validar data
     const dataInput = document.getElementById('data_agendamento');
     if (!dataInput.value) {
@@ -387,6 +414,41 @@ function validarFormulario() {
     }
 
     return valido;
+}
+
+function carregarPetsDoCliente() {
+    const clienteSelect = document.getElementById('cliente_id');
+    const petSelect = document.getElementById('pet_id');
+    
+    // Limpar options atuais
+    petSelect.innerHTML = '<option value="">Carregando pets...</option>';
+    
+    if (!clienteSelect.value) {
+        petSelect.innerHTML = '<option value="">Primeiro selecione um cliente</option>';
+        return;
+    }
+    
+    // Fazer requisição para buscar pets do cliente
+    fetch(`/api/pets?cliente_id=${clienteSelect.value}`)
+        .then(response => response.json())
+        .then(pets => {
+            petSelect.innerHTML = '<option value="">Selecione um pet</option>';
+            
+            if (pets && pets.length > 0) {
+                pets.forEach(pet => {
+                    const option = document.createElement('option');
+                    option.value = pet.id;
+                    option.textContent = `${pet.nome} (${pet.especie}${pet.raca ? ' - ' + pet.raca : ''})`;
+                    petSelect.appendChild(option);
+                });
+            } else {
+                petSelect.innerHTML = '<option value="">Este cliente não possui pets cadastrados</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar pets:', error);
+            petSelect.innerHTML = '<option value="">Erro ao carregar pets</option>';
+        });
 }
 
 function mostrarErro(campo, mensagem) {

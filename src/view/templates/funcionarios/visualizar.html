@@ -129,8 +129,7 @@
                     <dd class="col-sm-8">
                         {{ funcionario.data_admissao.strftime('%d/%m/%Y') if funcionario.data_admissao else 'N/A' }}
                         {% if funcionario.data_admissao %}
-                            {% set dias_empresa = (moment().date() - funcionario.data_admissao).days %}
-                            <br><small class="text-muted">{{ dias_empresa }} dias na empresa</small>
+                            <br><small class="text-muted">{{ funcionario.dias_empresa }} dias na empresa</small>
                         {% endif %}
                     </dd>
                     

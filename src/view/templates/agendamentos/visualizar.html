@@ -84,6 +84,24 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
+                            <label class="form-label text-muted">Pet</label>
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-2 text-primary">pets</span>
+                                <div>
+                                    <div class="fw-bold">{{ agendamento.pet.nome if agendamento.pet else 'N/A' }}</div>
+                                    {% if agendamento.pet %}
+                                    <div class="text-muted">{{ agendamento.pet.especie }} - {{ agendamento.pet.raca }}</div>
+                                    <div class="text-muted">{{ agendamento.pet.idade }} anos{% if agendamento.pet.peso %} - {{ agendamento.pet.peso }}kg{% endif %}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
                             <label class="form-label text-muted">Funcionário</label>
                             {% if agendamento.funcionario %}
                             <div class="d-flex align-items-center">
@@ -102,10 +120,7 @@
                             {% endif %}
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label text-muted">Serviço</label>
                             <div class="d-flex align-items-center">

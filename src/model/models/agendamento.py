@@ -17,7 +17,7 @@ class Agendamento(db.Model):
     
     # Chaves estrangeiras
     cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
-    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'), nullable=True)  # Opcional até pets ser implementado
+    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'), nullable=False)  # Pet agora é obrigatório
     servico_id = db.Column(db.Integer, db.ForeignKey('servicos.id'), nullable=False)
     funcionario_id = db.Column(db.Integer, db.ForeignKey('funcionarios.id'), nullable=True)
     

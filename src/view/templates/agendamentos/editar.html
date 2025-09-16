@@ -78,6 +78,26 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="pet_id" class="form-label">Pet <span class="text-danger">*</span></label>
+                                <select class="form-select" id="pet_id" name="pet_id" required>
+                                    <option value="">Selecione primeiro um cliente</option>
+                                    {% if agendamento.pet %}
+                                    <option value="{{ agendamento.pet.id }}" selected>
+                                        {{ agendamento.pet.nome }} - {{ agendamento.pet.especie }}
+                                    </option>
+                                    {% endif %}
+                                </select>
+                                <div class="invalid-feedback" id="pet_id-error"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label for="data_agendamento" class="form-label">Data e Hora <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control" id="data_agendamento" name="data_agendamento" 
                                        value="{{ agendamento.data_agendamento.strftime('%Y-%m-%dT%H:%M') }}" required>
@@ -495,6 +515,15 @@ function validarFormulario() {
         limparErro('servico_id');
     }
 
+    // Validar pet
+    const petSelect = document.getElementById('pet_id');
+    if (!petSelect.value) {
+        mostrarErro('pet_id', 'Por favor, selecione um pet');
+        valido = false;
+    } else {
+        limparErro('pet_id');
+    }
+
     // Validar data
     const dataInput = document.getElementById('data_agendamento');
     const statusSelect = document.getElementById('status');
@@ -534,6 +563,68 @@ function resetarFormulario() {
 function visualizarAgendamento() {
     window.location.href = "{{ url_for('agendamento_views.visualizar', id=agendamento.id) }}";
 }
+
+// Função para carregar pets do cliente selecionado
+async function carregarPetsDoCliente(clienteId) {
+    const petSelect = document.getElementById('pet_id');
+    const petIdAtual = "{{ agendamento.pet_id if agendamento.pet_id else '' }}";
+    
+    if (!clienteId) {
+        petSelect.innerHTML = '<option value="">Selecione primeiro um cliente</option>';
+        petSelect.disabled = true;
+        return;
+    }
+    
+    try {
+        petSelect.disabled = true;
+        petSelect.innerHTML = '<option value="">Carregando pets...</option>';
+        
+        const response = await fetch(`/api/pets?cliente_id=${clienteId}`);
+        if (!response.ok) {
+            throw new Error('Erro ao carregar pets');
+        }
+        
+        const pets = await response.json();
+        
+        // Limpar e popular o select
+        petSelect.innerHTML = '<option value="">Selecione um pet</option>';
+        
+        if (pets.length === 0) {
+            petSelect.innerHTML = '<option value="">Nenhum pet encontrado para este cliente</option>';
+            petSelect.disabled = true;
+        } else {
+            pets.forEach(pet => {
+                const option = document.createElement('option');
+                option.value = pet.id;
+                option.textContent = `${pet.nome} - ${pet.especie}`;
+                if (pet.id == petIdAtual) {
+                    option.selected = true;
+                }
+                petSelect.appendChild(option);
+            });
+            petSelect.disabled = false;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar pets:', error);
+        petSelect.innerHTML = '<option value="">Erro ao carregar pets</option>';
+        petSelect.disabled = true;
+    }
+}
+
+// Adicionar event listener para mudança de cliente
+document.addEventListener('DOMContentLoaded', function() {
+    const clienteSelect = document.getElementById('cliente_id');
+    
+    // Carregar pets do cliente atual se existir
+    if (clienteSelect.value) {
+        carregarPetsDoCliente(clienteSelect.value);
+    }
+    
+    // Event listener para mudança de cliente
+    clienteSelect.addEventListener('change', function() {
+        carregarPetsDoCliente(this.value);
+    });
+});
 
 // Atalhos de teclado
 document.addEventListener('keydown', function(e) {
